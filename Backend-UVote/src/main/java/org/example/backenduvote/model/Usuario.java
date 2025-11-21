@@ -1,4 +1,4 @@
-package model;
+package org.example.backenduvote.model;
 
 import jakarta.persistence.*;
 

@@ -1,11 +1,11 @@
-package service;
+package org.example.backenduvote.service;
 
-import dtos.UsuarioRegistroRequest;
-import dtos.UsuarioResponse;
-import model.Usuario;
+import org.example.backenduvote.dtos.UsuarioRegistroRequest;
+import org.example.backenduvote.dtos.UsuarioResponse;
+import org.example.backenduvote.model.Usuario;
+import org.example.backenduvote.repository.UsuarioRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import repository.UsuarioRepository;
 
 import java.util.List;
 
@@ -13,10 +13,12 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository,
+                          BCryptPasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UsuarioResponse registrarUsuario(UsuarioRegistroRequest request) {

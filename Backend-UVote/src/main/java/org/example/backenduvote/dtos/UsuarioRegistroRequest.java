@@ -1,4 +1,4 @@
-package dtos;
+package org.example.backenduvote.dtos;
 
 
 import jakarta.validation.constraints.Email;

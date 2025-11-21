@@ -1,4 +1,4 @@
-package dtos;
+package org.example.backenduvote.dtos;
 
 import java.time.OffsetDateTime;
 
