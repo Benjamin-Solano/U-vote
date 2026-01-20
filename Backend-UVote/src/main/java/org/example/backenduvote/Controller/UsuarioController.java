@@ -3,10 +3,10 @@ package org.example.backenduvote.Controller;
 import org.example.backenduvote.dtos.UsuarioRegistroRequest;
 import org.example.backenduvote.dtos.UsuarioResponse;
 import jakarta.validation.Valid;
+import org.example.backenduvote.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.example.backenduvote.service.UsuarioService;
 
 import java.util.List;
 
@@ -23,24 +23,31 @@ public class UsuarioController {
     // Registrar usuario
     @PostMapping
     public ResponseEntity<UsuarioResponse> registrarUsuario(
-            @Valid @RequestBody UsuarioRegistroRequest request)
-    {
+            @Valid @RequestBody UsuarioRegistroRequest request
+    ) {
         UsuarioResponse usuario = usuarioService.registrarUsuario(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
     }
 
-    // Listar todos los usuarios
+    // Listar usuarios
     @GetMapping
     public List<UsuarioResponse> listarUsuarios() {
         return usuarioService.listarUsuarios();
     }
 
     // Obtener usuario por nombre
-    @GetMapping("/{nombreUsuario}")
-    public ResponseEntity<UsuarioResponse> getUsuario(
-            @PathVariable String nombreUsuario)
-    {
+    @GetMapping("/nombre/{nombreUsuario}")
+    public ResponseEntity<UsuarioResponse> getUsuarioPorNombre(
+            @PathVariable String nombreUsuario
+    ) {
         UsuarioResponse usuario = usuarioService.obtenerPorNombre(nombreUsuario);
         return ResponseEntity.ok(usuario);
+    }
+
+    // Eliminar usuario por id
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity<Void> eliminarUsuarioPorId(@PathVariable Long id) {
+        usuarioService.eliminarPorId(id);
+        return ResponseEntity.noContent().build(); // 204
     }
 }

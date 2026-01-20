@@ -6,6 +6,7 @@ import org.example.backenduvote.model.Usuario;
 import org.example.backenduvote.repository.UsuarioRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -59,4 +60,13 @@ public class UsuarioService {
     public long contarUsuarios() {
         return usuarioRepository.count();
     }
+
+    @Transactional
+    public void eliminarPorId(Long id) {
+        if(!usuarioRepository.existsById(id)) {
+            throw new IllegalArgumentException("El usuario no existe");
+        }
+        usuarioRepository.deleteById(id);
+    }
+
 }
