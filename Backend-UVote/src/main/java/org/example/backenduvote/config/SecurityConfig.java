@@ -49,6 +49,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,  "/api/encuestas", "/api/encuestas/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/encuestas", "/api/encuestas/**").authenticated()
 
+                        // Opciones: lectura pública
+                        .requestMatchers(HttpMethod.GET, "/api/encuestas/*/opciones", "/api/encuestas/**/opciones").permitAll()
+
+                        // Opciones: creación y borrado requieren auth
+                        .requestMatchers(HttpMethod.POST, "/api/encuestas/**/opciones").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/opciones/**").authenticated()
+
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
