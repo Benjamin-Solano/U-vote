@@ -49,12 +49,23 @@ public class OpcionService {
             throw new IllegalArgumentException("Ya existe una opción con ese nombre en esta encuesta");
         }
 
+
+
+
+
         Opcion opcion = new Opcion();
         opcion.setEncuestaId(encuestaId);
         opcion.setNombre(request.getNombre());
         opcion.setDescripcion(request.getDescripcion());
         opcion.setImagenUrl(request.getImagenUrl());
         opcion.setOrden(request.getOrden());
+        Integer orden = request.getOrden();
+
+        if (orden == null) {
+            Integer maxOrden = opcionRepository.findMaxOrdenByEncuestaId(encuestaId).orElse(0);
+            orden = maxOrden + 1;
+        }
+        opcion.setOrden(orden);
 
         Opcion guardada = opcionRepository.save(opcion);
         return mapToResponse(guardada);
@@ -99,6 +110,7 @@ public class OpcionService {
         return usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario autenticado no encontrado"));
     }
+
 
     private OpcionResponse mapToResponse(Opcion o) {
         return new OpcionResponse(
