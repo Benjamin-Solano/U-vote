@@ -56,6 +56,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/encuestas/**/opciones").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/opciones/**").authenticated()
 
+                        // Votos
+                        .requestMatchers(HttpMethod.POST, "/api/encuestas/**/votos").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/encuestas/**/resultados").permitAll()
+
 
                         .anyRequest().authenticated()
                 )
