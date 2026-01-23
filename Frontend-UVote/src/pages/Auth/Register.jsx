@@ -1,174 +1,225 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { usersApi } from "../../api/users.api";
+import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { FiMail, FiLock, FiUser, FiCheckCircle } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
-function Register() {
+import "./login.css";
+import logo from "../../assets/U-VoteLogo.png";
+
+// Ajusta esta importación a tu archivo real
+import { authApi } from "../../api/auth.api";
+import { useAuth } from "../../auth/useAuth";
+
+export default function Register() {
+   const { isAuthenticated } = useAuth();
    const navigate = useNavigate();
 
    const [form, setForm] = useState({
-      nombreUsuario: "",
+      nombre: "",
       correo: "",
       contrasena: "",
-      confirmar: "",
+      confirmarContrasena: "",
    });
 
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState("");
-   const [ok, setOk] = useState("");
+   const [okMsg, setOkMsg] = useState("");
+
+   useEffect(() => {
+      if (isAuthenticated) {
+         navigate("/", { replace: true });
+      }
+   }, [isAuthenticated, navigate]);
+
+   const passwordsMatch = useMemo(() => {
+      return form.contrasena.length > 0 && form.contrasena === form.confirmarContrasena;
+   }, [form.contrasena, form.confirmarContrasena]);
+
+   const canSubmit = useMemo(() => {
+      return (
+         form.nombre.trim().length >= 2 &&
+         form.correo.trim().length > 0 &&
+         form.contrasena.trim().length >= 8 &&
+         passwordsMatch
+      );
+   }, [form.nombre, form.correo, form.contrasena, passwordsMatch]);
 
    const onChange = (e) => {
-      setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+      const { name, value } = e.target;
+      setForm((prev) => ({ ...prev, [name]: value }));
+      setError("");
+      setOkMsg("");
    };
 
    const onSubmit = async (e) => {
       e.preventDefault();
+      if (!canSubmit || loading) return;
+
+      setLoading(true);
       setError("");
-      setOk("");
-
-      const nombreUsuario = form.nombreUsuario.trim();
-      const correo = form.correo.trim();
-      const contrasena = form.contrasena;
-
-      if (!nombreUsuario || !correo || !contrasena) {
-         setError("Completa nombre de usuario, correo y contraseña.");
-         return;
-      }
-
-      if (contrasena.length < 6) {
-         setError("La contraseña debe tener al menos 6 caracteres.");
-         return;
-      }
-
-      if (form.confirmar !== contrasena) {
-         setError("Las contraseñas no coinciden.");
-         return;
-      }
+      setOkMsg("");
 
       try {
-         setLoading(true);
-
-         await usersApi.create({
-            nombreUsuario,
-            correo,
-            contrasena,
+         // ✅ Ajusta el payload a lo que tu backend espera
+         // (te lo dejo con nombres comunes; si tu backend usa otros, lo adaptamos)
+         await authApi.register({
+            nombreUsuario: form.nombre,
+            correo: form.correo,
+            contrasena: form.contrasena,
          });
 
-         setOk("Registro exitoso. Ahora puedes iniciar sesión.");
-         // redirige al login luego de un instante (o directo)
-         setTimeout(() => navigate("/login", { replace: true }), 600);
+
+
+         setOkMsg("Cuenta creada con éxito. Ahora puedes iniciar sesión.");
+         // Redirigir luego de un pequeño instante (sin tool async extra)
+         setTimeout(() => navigate("/login", { replace: true }), 700);
       } catch (err) {
-         const status = err?.response?.status;
-
-         const backendMsg =
-            err?.response?.data?.message ||
-            err?.response?.data?.error ||
-            err?.response?.data ||
-            "";
-
          const msg =
-            (typeof backendMsg === "string" && backendMsg.trim()) ||
-            (status === 409
-               ? "Ya existe un usuario con ese correo."
-               : status === 400
-                  ? "Datos inválidos. Revisa los campos."
-                  : "Error registrando usuario. Revisa el backend o la conexión.");
-
+            err?.response?.data?.message ||
+            err?.message ||
+            "No se pudo crear la cuenta. Verifica los datos e inténtalo de nuevo.";
          setError(msg);
       } finally {
          setLoading(false);
       }
    };
 
+   if (isAuthenticated) return null;
+
    return (
-      <div style={{ maxWidth: 480, margin: "40px auto", padding: 16 }}>
-         <h1>Registro</h1>
+      <div className="uv-login-page">
+         <motion.section
+            className="uv-login-card"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+         >
+            {/* Panel izquierdo */}
+            <div className="uv-login-left" aria-hidden="true">
+               <div className="uv-login-left-inner">
+                  <motion.img
+                     className="uv-login-logo"
+                     src={logo}
+                     alt="U-Vote"
+                     initial={{ y: 0, scale: 1 }}
+                     animate={{ y: [0, -6, 0], scale: [1, 1.012, 1] }}
+                     transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+                     draggable={false}
+                  />
+                  <p className="uv-login-left-sub">Registrate y haz que tu voto cuente.</p>
 
-         {error && (
-            <div
-               style={{
-                  background: "#ffe5e5",
-                  border: "1px solid #ffb3b3",
-                  padding: 10,
-                  borderRadius: 8,
-                  marginBottom: 12,
-               }}
-            >
-               {error}
+               </div>
             </div>
-         )}
 
-         {ok && (
-            <div
-               style={{
-                  background: "#e8fff0",
-                  border: "1px solid #b7f0c6",
-                  padding: 10,
-                  borderRadius: 8,
-                  marginBottom: 12,
-               }}
-            >
-               {ok}
+            {/* Panel derecho */}
+            <div className="uv-login-right">
+               <div className="uv-login-header">
+                  <h1>Crear cuenta</h1>
+                  <p>Completa los datos para registrarte en U-Vote.</p>
+               </div>
+
+               {error && (
+                  <div className="uv-login-alert" role="alert">
+                     {error}
+                  </div>
+               )}
+
+               {okMsg && (
+                  <div className="uv-login-alert" role="status">
+                     <FiCheckCircle style={{ marginRight: 8 }} />
+                     {okMsg}
+                  </div>
+               )}
+
+               <form className="uv-login-form" onSubmit={onSubmit}>
+                  <label className="uv-field">
+                     <span>Nombre</span>
+                     <div className="uv-input-wrap">
+                        <FiUser className="uv-input-icon" />
+                        <input
+                           type="text"
+                           name="nombre"
+                           placeholder="Tu nombre"
+                           value={form.nombre}
+                           onChange={onChange}
+                           autoComplete="name"
+                           required
+                        />
+                     </div>
+                  </label>
+
+                  <label className="uv-field">
+                     <span>Correo electrónico</span>
+                     <div className="uv-input-wrap">
+                        <FiMail className="uv-input-icon" />
+                        <input
+                           type="email"
+                           name="correo"
+                           placeholder="ejemplo@correo.com"
+                           value={form.correo}
+                           onChange={onChange}
+                           autoComplete="email"
+                           required
+                        />
+                     </div>
+                  </label>
+
+                  <label className="uv-field">
+                     <span>Contraseña</span>
+                     <div className="uv-input-wrap">
+                        <FiLock className="uv-input-icon" />
+                        <input
+                           type="password"
+                           name="contrasena"
+                           placeholder="Mínimo 8 caracteres"
+                           value={form.contrasena}
+                           onChange={onChange}
+                           autoComplete="new-password"
+                           required
+                        />
+                     </div>
+                  </label>
+
+                  <label className="uv-field">
+                     <span>Confirmar contraseña</span>
+                     <div className="uv-input-wrap">
+                        <FiLock className="uv-input-icon" />
+                        <input
+                           type="password"
+                           name="confirmarContrasena"
+                           placeholder="Repite la contraseña"
+                           value={form.confirmarContrasena}
+                           onChange={onChange}
+                           autoComplete="new-password"
+                           required
+                        />
+                     </div>
+                  </label>
+
+                  {/* Feedback sutil de coincidencia */}
+                  {!passwordsMatch && form.confirmarContrasena.length > 0 && (
+                     <div className="uv-login-alert" role="alert">
+                        Las contraseñas no coinciden.
+                     </div>
+                  )}
+
+                  <button className="uv-primary-btn" type="submit" disabled={!canSubmit || loading}>
+                     {loading ? "Creando cuenta..." : "Registrarme"}
+                  </button>
+
+                  <div className="uv-login-footer">
+                     <span>¿Ya tienes una cuenta?</span>
+                     <button
+                        type="button"
+                        className="uv-link-as-btn"
+                        onClick={() => navigate("/login")}
+                     >
+                        Iniciar sesión
+                     </button>
+                  </div>
+               </form>
             </div>
-         )}
-
-         <form onSubmit={onSubmit} style={{ display: "grid", gap: 10 }}>
-            <label style={{ display: "grid", gap: 6 }}>
-               Nombre de usuario
-               <input
-                  name="nombreUsuario"
-                  value={form.nombreUsuario}
-                  onChange={onChange}
-                  placeholder="ale"
-                  autoComplete="nickname"
-               />
-            </label>
-
-            <label style={{ display: "grid", gap: 6 }}>
-               Correo
-               <input
-                  type="email"
-                  name="correo"
-                  value={form.correo}
-                  onChange={onChange}
-                  placeholder="ale@example.com"
-                  autoComplete="email"
-               />
-            </label>
-
-            <label style={{ display: "grid", gap: 6 }}>
-               Contraseña
-               <input
-                  type="password"
-                  name="contrasena"
-                  value={form.contrasena}
-                  onChange={onChange}
-                  placeholder="••••••••"
-                  autoComplete="new-password"
-               />
-            </label>
-
-            <label style={{ display: "grid", gap: 6 }}>
-               Confirmar contraseña
-               <input
-                  type="password"
-                  name="confirmar"
-                  value={form.confirmar}
-                  onChange={onChange}
-                  placeholder="••••••••"
-                  autoComplete="new-password"
-               />
-            </label>
-
-            <button type="submit" disabled={loading}>
-               {loading ? "Registrando..." : "Crear cuenta"}
-            </button>
-         </form>
-
-         <p style={{ marginTop: 12 }}>
-            ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
-         </p>
+         </motion.section>
       </div>
    );
 }
-
-export default Register;

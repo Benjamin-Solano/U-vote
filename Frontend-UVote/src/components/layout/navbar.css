@@ -79,3 +79,83 @@
    align-items: center;
    gap: 8px;
 }
+
+.uv-link.uv-cta {
+   background: #302f2c;
+   color: #efede3;
+   border-color: rgba(48, 47, 44, 0.25);
+}
+
+.uv-link.uv-cta:hover {
+   background: #302f2c;
+   border-color: rgba(48, 47, 44, 0.35);
+   filter: brightness(1.02);
+}
+
+/* --- User menu (navbar) --- */
+.uv-user {
+   position: relative;
+}
+
+.uv-user-btn {
+   padding: 10px 12px;
+   border-radius: 10px;
+   font-weight: 650;
+   color: rgba(48, 47, 44, 0.85);
+   border: 1px solid transparent;
+   background: transparent;
+   cursor: pointer;
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+}
+
+.uv-user-btn:hover {
+   background: rgba(48, 47, 44, 0.06);
+   border-color: rgba(48, 47, 44, 0.12);
+}
+
+.uv-user-name {
+   max-width: 160px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.uv-user-menu {
+   position: absolute;
+   right: 0;
+   top: calc(100% + 10px);
+   min-width: 210px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   background: rgba(239, 237, 227, 0.96);
+   backdrop-filter: blur(10px);
+   box-shadow: 0 16px 45px rgba(0, 0, 0, 0.14);
+   padding: 8px;
+   z-index: 50;
+}
+
+.uv-user-item {
+   width: 100%;
+   border: none;
+   background: transparent;
+   cursor: pointer;
+   padding: 10px 10px;
+   border-radius: 10px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   color: rgba(48, 47, 44, 0.9);
+   font-weight: 650;
+}
+
+.uv-user-item:hover {
+   background: rgba(48, 47, 44, 0.06);
+}
+
+.uv-user-sep {
+   height: 1px;
+   margin: 6px 6px;
+   background: rgba(48, 47, 44, 0.12);
+}

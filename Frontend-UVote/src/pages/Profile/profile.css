@@ -1,0 +1,203 @@
+.uv-profile {
+   padding: 24px 0;
+}
+
+.uv-profile-card {
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   border-radius: 18px;
+   background: rgba(239, 237, 227, 0.78);
+   backdrop-filter: blur(10px);
+   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.10);
+   padding: 22px;
+}
+
+.uv-profile-header {
+   display: flex;
+   align-items: flex-start;
+   justify-content: space-between;
+   gap: 16px;
+   border-bottom: 1px solid rgba(48, 47, 44, 0.10);
+   padding-bottom: 14px;
+   margin-bottom: 14px;
+}
+
+.uv-profile-header h1 {
+   margin: 0;
+   color: #302f2c;
+   font-size: 1.8rem;
+   letter-spacing: -0.02em;
+}
+
+.uv-profile-header p {
+   margin: 8px 0 0;
+   color: rgba(48, 47, 44, 0.75);
+}
+
+.uv-profile-logout {
+   border: 1px solid rgba(48, 47, 44, 0.16);
+   background: rgba(48, 47, 44, 0.06);
+   color: #302f2c;
+   padding: 10px 12px;
+   border-radius: 12px;
+   cursor: pointer;
+   font-weight: 700;
+}
+
+.uv-profile-logout:hover {
+   background: rgba(48, 47, 44, 0.10);
+}
+
+.uv-profile-alert {
+   margin: 12px 0;
+   padding: 12px 14px;
+   border-radius: 12px;
+   border: 1px solid rgba(48, 47, 44, 0.20);
+   background: rgba(255, 255, 255, 0.55);
+   color: #302f2c;
+}
+
+.uv-profile-grid {
+   display: grid;
+   grid-template-columns: 1fr 1.2fr;
+   gap: 16px;
+   margin-top: 10px;
+}
+
+.uv-profile-box {
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.35);
+   border-radius: 16px;
+   padding: 16px;
+}
+
+.uv-profile-box h2 {
+   margin: 0 0 12px;
+   color: #302f2c;
+   font-size: 1.1rem;
+}
+
+.uv-profile-row {
+   display: flex;
+   justify-content: space-between;
+   gap: 14px;
+   padding: 10px 0;
+   border-top: 1px solid rgba(48, 47, 44, 0.08);
+}
+
+.uv-profile-row:first-of-type {
+   border-top: none;
+}
+
+.uv-k {
+   color: rgba(48, 47, 44, 0.72);
+   font-weight: 650;
+}
+
+.uv-v {
+   color: #302f2c;
+   font-weight: 700;
+}
+
+.uv-inline {
+   display: inline-flex;
+   align-items: center;
+   gap: 10px;
+}
+
+.uv-inline-btn {
+   border: none;
+   background: rgba(48, 47, 44, 0.06);
+   cursor: pointer;
+   border-radius: 10px;
+   padding: 8px 10px;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.uv-inline-btn:hover {
+   background: rgba(48, 47, 44, 0.10);
+}
+
+.uv-edit {
+   display: flex;
+   gap: 10px;
+   align-items: center;
+   flex-wrap: wrap;
+}
+
+.uv-edit-input {
+   border: 1px solid rgba(48, 47, 44, 0.16);
+   border-radius: 12px;
+   padding: 10px 12px;
+   background: rgba(255, 255, 255, 0.55);
+   outline: none;
+   color: #302f2c;
+   min-width: 220px;
+}
+
+.uv-edit-btn {
+   border: 1px solid rgba(48, 47, 44, 0.18);
+   border-radius: 12px;
+   padding: 10px 12px;
+   cursor: pointer;
+   font-weight: 800;
+   background: #302f2c;
+   color: #efede3;
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+}
+
+.uv-edit-btn:disabled {
+   opacity: 0.6;
+   cursor: not-allowed;
+}
+
+.uv-edit-cancel {
+   background: rgba(48, 47, 44, 0.08);
+   color: #302f2c;
+}
+
+.uv-muted {
+   color: rgba(48, 47, 44, 0.72);
+}
+
+.uv-polls-list {
+   display: grid;
+   gap: 10px;
+}
+
+.uv-poll-item {
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   border-radius: 14px;
+   padding: 12px;
+   background: rgba(255, 255, 255, 0.45);
+}
+
+.uv-poll-title {
+   font-weight: 900;
+   color: #302f2c;
+}
+
+.uv-poll-meta {
+   margin-top: 8px;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+}
+
+.uv-pill {
+   border: 1px solid rgba(48, 47, 44, 0.18);
+   border-radius: 999px;
+   padding: 5px 10px;
+   font-weight: 800;
+   background: rgba(48, 47, 44, 0.06);
+   color: #302f2c;
+}
+
+@media (max-width: 900px) {
+   .uv-profile-grid {
+      grid-template-columns: 1fr;
+   }
+}

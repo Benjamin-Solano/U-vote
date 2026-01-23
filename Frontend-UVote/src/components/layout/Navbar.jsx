@@ -1,42 +1,99 @@
-import { Link, NavLink } from "react-router-dom";
-import { motion } from "framer-motion";
-import { FiHome, FiInfo, FiPlusCircle, FiLogIn } from "react-icons/fi";
+import { useEffect, useRef, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { FiHome, FiInfo, FiPlusCircle, FiLogIn, FiUser, FiLogOut } from "react-icons/fi";
 import "./navbar.css";
 
-function Navbar() {
+import { useAuth } from "../../auth/useAuth";
+
+export default function Navbar() {
+   const { isAuthenticated, usuario, logout } = useAuth();
+   const navigate = useNavigate();
+
+   const [open, setOpen] = useState(false);
+   const menuRef = useRef(null);
+
+   const linkClass = ({ isActive }) => `uv-link ${isActive ? "active" : ""}`;
+
+   useEffect(() => {
+      const onDocClick = (e) => {
+         if (!menuRef.current) return;
+         if (!menuRef.current.contains(e.target)) setOpen(false);
+      };
+      document.addEventListener("mousedown", onDocClick);
+      return () => document.removeEventListener("mousedown", onDocClick);
+   }, []);
+
+   const handleLogout = () => {
+      logout();
+      setOpen(false);
+      navigate("/", { replace: true });
+   };
+
    return (
-      <motion.header
-         className="uv-nav"
-         initial={{ opacity: 0, y: -8 }}
-         animate={{ opacity: 1, y: 0 }}
-         transition={{ duration: 0.25, ease: "easeOut" }}
-      >
+      <header className="uv-nav">
          <div className="container uv-nav-inner">
-            <Link to="/" className="uv-brand">
-               <span className="uv-brand-badge">U</span>
+            {/* Brand */}
+            <NavLink to="/" className="uv-brand">
+               <span className="uv-brand-badge">u</span>
                <span className="uv-brand-text">U-Vote</span>
-            </Link>
+            </NavLink>
 
             <nav className="uv-links">
-               <NavLink to="/" className="uv-link">
-                  <FiHome size={16} /> Inicio
+               <NavLink to="/" className={linkClass}>
+                  <FiHome /> Inicio
                </NavLink>
 
-               <NavLink to="/about" className="uv-link">
-                  <FiInfo size={16} /> About
+               <NavLink to="/about" className={linkClass}>
+                  <FiInfo /> About
                </NavLink>
 
-               <NavLink to="/admin/polls" className="uv-link">
-                  <FiPlusCircle size={16} /> Crear Encuesta
+               <NavLink to="/polls" className={linkClass}>
+                  <FiPlusCircle /> Crear Encuesta
                </NavLink>
 
-               <NavLink to="/login" className="btn btn-primary pill">
-                  <FiLogIn size={16} /> Iniciar Sesión
-               </NavLink>
+               {/* Derecha: si NO hay sesión */}
+               {!isAuthenticated ? (
+                  <NavLink to="/login" className={linkClass}>
+                     <FiLogIn /> Iniciar Sesión
+                  </NavLink>
+               ) : (
+                  // ✅ Si hay sesión: menú de usuario
+                  <div className="uv-user" ref={menuRef}>
+                     <button
+                        type="button"
+                        className="uv-user-btn"
+                        onClick={() => setOpen((v) => !v)}
+                     >
+                        <FiUser />
+                        <span className="uv-user-name">
+                           {usuario?.nombreUsuario ?? "Mi cuenta"}
+                        </span>
+                     </button>
+
+                     {open && (
+                        <div className="uv-user-menu" role="menu">
+                           <button
+                              type="button"
+                              className="uv-user-item"
+                              onClick={() => {
+                                 setOpen(false);
+                                 navigate("/perfil");
+                              }}
+                           >
+                              <FiUser /> Perfil
+                           </button>
+
+                           <div className="uv-user-sep" />
+
+                           <button type="button" className="uv-user-item" onClick={handleLogout}>
+                              <FiLogOut /> Cerrar sesión
+                           </button>
+                        </div>
+                     )}
+                  </div>
+               )}
             </nav>
          </div>
-      </motion.header>
+      </header>
    );
 }
-
-export default Navbar;
