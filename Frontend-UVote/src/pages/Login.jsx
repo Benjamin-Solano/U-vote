@@ -1,75 +1,35 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { authApi } from "../api/auth.api";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useAuth } from "../auth/useAuth";
 
 function Login() {
+   const { login } = useAuth();
    const navigate = useNavigate();
+   const location = useLocation();
 
-   const [form, setForm] = useState({
-      correo: "",
-      contrasena: "",
-   });
+   // Si venía de una ruta protegida, vuelve ahí; si no, /polls
+   const from = location.state?.from?.pathname || "/polls";
 
-   const [loading, setLoading] = useState(false);
+   const [correo, setCorreo] = useState("");
+   const [contrasena, setContrasena] = useState("");
    const [error, setError] = useState("");
-
-   const onChange = (e) => {
-      setForm((prev) => ({
-         ...prev,
-         [e.target.name]: e.target.value,
-      }));
-   };
+   const [loading, setLoading] = useState(false);
 
    const onSubmit = async (e) => {
       e.preventDefault();
       setError("");
 
-      if (!form.correo.trim() || !form.contrasena.trim()) {
+      if (!correo.trim() || !contrasena.trim()) {
          setError("Completa correo y contraseña.");
          return;
       }
 
       try {
          setLoading(true);
-
-         // ✅ Payload EXACTO que tu backend espera
-         const res = await authApi.login({
-            correo: form.correo.trim(),
-            contrasena: form.contrasena,
-         });
-
-         const token = res?.data?.token;
-         const usuario = res?.data?.usuario;
-
-         if (!token) {
-            setError("No se recibió token del servidor.");
-            return;
-         }
-
-         // Guarda token y usuario (opcional, pero útil)
-         localStorage.setItem("token", token);
-         if (usuario) localStorage.setItem("usuario", JSON.stringify(usuario));
-
-         navigate("/polls", { replace: true });
-      } catch (err) {
-         const status = err?.response?.status;
-
-         // Mensaje del backend si existe (si no, algo amigable)
-         const backendMsg =
-            err?.response?.data?.message ||
-            err?.response?.data?.error ||
-            err?.response?.data ||
-            "";
-
-         const msg =
-            (typeof backendMsg === "string" && backendMsg.trim()) ||
-            (status === 401
-               ? "Credenciales inválidas."
-               : status === 400
-                  ? "Petición inválida (revisa los campos correo/contrasena)."
-                  : "Error al iniciar sesión. Revisa el backend o la conexión.");
-
-         setError(msg);
+         await login(correo.trim(), contrasena);
+         navigate(from, { replace: true });
+      } catch (_) {
+         setError("Correo o contraseña inválidos.");
       } finally {
          setLoading(false);
       }
@@ -93,14 +53,13 @@ function Login() {
             </div>
          )}
 
-         <form onSubmit={onSubmit} style={{ display: "grid", gap: 10 }}>
+         <form onSubmit={onSubmit} style={{ display: "grid", gap: 12 }}>
             <label style={{ display: "grid", gap: 6 }}>
                Correo
                <input
                   type="email"
-                  name="correo"
-                  value={form.correo}
-                  onChange={onChange}
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
                   placeholder="ale@example.com"
                   autoComplete="username"
                />
@@ -110,9 +69,8 @@ function Login() {
                Contraseña
                <input
                   type="password"
-                  name="contrasena"
-                  value={form.contrasena}
-                  onChange={onChange}
+                  value={contrasena}
+                  onChange={(e) => setContrasena(e.target.value)}
                   placeholder="••••••••"
                   autoComplete="current-password"
                />
