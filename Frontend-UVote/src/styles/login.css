@@ -1,0 +1,258 @@
+/* src/styles/login.css */
+
+:root {
+   --bg: #2f2f2f;
+   --grid: rgba(255, 255, 255, 0.06);
+
+   --card: #f6f4ef;
+   --card-border: rgba(0, 0, 0, 0.06);
+
+   --text: #1f2937;
+   --muted: #6b7280;
+
+   --input-bg: #ffffff;
+   --input-border: #cfd6e2;
+   --input-border-focus: #9aa6bb;
+
+   --primary: #162233;
+   /* azul oscuro del botón */
+   --primary-2: #0f1a28;
+
+   --shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+   --radius: 18px;
+}
+
+.uv-auth-page {
+   min-height: 100vh;
+   display: grid;
+   place-items: center;
+   padding: 28px 16px;
+
+   /* Fondo oscuro con patrón sutil */
+   background:
+      radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.06), transparent 45%),
+      radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.05), transparent 50%),
+      linear-gradient(180deg, #2d2d2d, #2a2a2a);
+   position: relative;
+   overflow: hidden;
+}
+
+/* patrón tipo “tejido” */
+.uv-auth-page::before {
+   content: "";
+   position: absolute;
+   inset: 0;
+   background:
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 10px 10px,
+      linear-gradient(0deg, var(--grid) 1px, transparent 1px) 0 0 / 10px 10px;
+   opacity: 0.35;
+   pointer-events: none;
+}
+
+.uv-auth-card {
+   width: min(520px, 94vw);
+   border-radius: var(--radius);
+   background: var(--card);
+   border: 1px solid var(--card-border);
+   box-shadow: var(--shadow);
+   padding: 34px 34px 26px;
+   position: relative;
+   z-index: 1;
+}
+
+/* Header */
+.uv-auth-header {
+   text-align: center;
+   margin-bottom: 22px;
+}
+
+.uv-auth-title {
+   margin: 0;
+   font-size: 34px;
+   font-weight: 800;
+   color: var(--text);
+   letter-spacing: 0.2px;
+   text-transform: none;
+   /* ya no uppercase */
+}
+
+.uv-auth-subtitle {
+   margin: 8px 0 0;
+   font-size: 14px;
+   color: var(--muted);
+   letter-spacing: 0.2px;
+   text-transform: none;
+}
+
+/* Alertas */
+.uv-alert {
+   border-radius: 12px;
+   padding: 12px 14px;
+   margin-bottom: 14px;
+   font-size: 14px;
+   border: 1px solid rgba(0, 0, 0, 0.08);
+   background: rgba(0, 0, 0, 0.03);
+   color: var(--text);
+}
+
+.uv-alert.uv-alert-error {
+   border-color: rgba(239, 68, 68, 0.25);
+   background: rgba(239, 68, 68, 0.08);
+   color: #7f1d1d;
+}
+
+/* Form */
+.uv-auth-body {
+   max-width: 420px;
+   margin: 0 auto;
+}
+
+.uv-form {
+   display: grid;
+   gap: 14px;
+}
+
+.uv-field {
+   display: grid;
+   gap: 8px;
+}
+
+.uv-label {
+   font-size: 13px;
+   color: #374151;
+   font-weight: 600;
+}
+
+/* input group con ícono */
+.uv-input-wrap {
+   position: relative;
+}
+
+.uv-input {
+   width: 100%;
+   background: var(--input-bg);
+   border: 1px solid var(--input-border);
+   border-radius: 8px;
+   padding: 12px 12px 12px 42px;
+   /* espacio para icono */
+   outline: none;
+   color: var(--text);
+   font-size: 14px;
+   transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.uv-input::placeholder {
+   color: #9aa3b2;
+}
+
+.uv-input:focus {
+   border-color: var(--input-border-focus);
+   box-shadow: 0 0 0 3px rgba(15, 26, 40, 0.08);
+}
+
+/* icono izquierdo (dibujado con CSS, simple) */
+.uv-icon {
+   position: absolute;
+   left: 12px;
+   top: 50%;
+   transform: translateY(-50%);
+   width: 18px;
+   height: 18px;
+   opacity: 0.55;
+}
+
+/* “email” */
+.uv-icon.uv-icon-mail {
+   border: 1.6px solid #6b7280;
+   border-radius: 3px;
+   box-sizing: border-box;
+}
+
+.uv-icon.uv-icon-mail::after {
+   content: "";
+   position: absolute;
+   left: 2px;
+   right: 2px;
+   top: 4px;
+   height: 0;
+   border-top: 1.6px solid #6b7280;
+   transform: skewY(-18deg);
+}
+
+/* “lock” */
+.uv-icon.uv-icon-lock {
+   box-sizing: border-box;
+   border: 1.6px solid #6b7280;
+   border-radius: 3px;
+}
+
+.uv-icon.uv-icon-lock::before {
+   content: "";
+   position: absolute;
+   left: 3px;
+   right: 3px;
+   top: -6px;
+   height: 8px;
+   border: 1.6px solid #6b7280;
+   border-bottom: none;
+   border-radius: 8px 8px 0 0;
+}
+
+/* Botón principal */
+.uv-btn {
+   margin-top: 8px;
+   width: 100%;
+   border: none;
+   border-radius: 10px;
+   padding: 12px 14px;
+   font-weight: 700;
+   font-size: 14px;
+   color: white;
+   background: linear-gradient(180deg, var(--primary), var(--primary-2));
+   box-shadow: 0 8px 18px rgba(15, 26, 40, 0.22);
+   cursor: pointer;
+   transition: transform 120ms ease, filter 120ms ease, opacity 120ms ease;
+}
+
+.uv-btn:hover {
+   transform: translateY(-1px);
+   filter: brightness(1.03);
+}
+
+.uv-btn:active {
+   transform: translateY(0);
+   filter: brightness(0.98);
+}
+
+.uv-btn:disabled {
+   opacity: 0.7;
+   cursor: not-allowed;
+}
+
+/* Footer link */
+.uv-auth-footer {
+   margin-top: 14px;
+   text-align: center;
+   color: var(--muted);
+   font-size: 13px;
+}
+
+.uv-auth-footer a {
+   color: var(--primary);
+   text-decoration: none;
+   font-weight: 700;
+}
+
+.uv-auth-footer a:hover {
+   text-decoration: underline;
+}
+
+@media (max-width: 420px) {
+   .uv-auth-card {
+      padding: 28px 18px 20px;
+   }
+
+   .uv-auth-title {
+      font-size: 30px;
+   }
+}
