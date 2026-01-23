@@ -1,0 +1,86 @@
+.uv-home {
+   padding: 42px 0 0;
+}
+
+.uv-hero {
+   text-align: center;
+   padding: 46px 0 30px;
+}
+
+.uv-hero-title {
+   margin: 0;
+   font-size: clamp(36px, 4.2vw, 56px);
+   letter-spacing: -0.5px;
+}
+
+.uv-hero-sub {
+   margin: 14px auto 0;
+   max-width: 720px;
+   color: rgba(48, 47, 44, 0.78);
+   line-height: 1.6;
+}
+
+.uv-hero-actions {
+   display: flex;
+   gap: 12px;
+   justify-content: center;
+   margin-top: 18px;
+   flex-wrap: wrap;
+}
+
+.uv-features {
+   padding: 34px 0 20px;
+}
+
+.uv-section-title {
+   text-align: center;
+   margin: 0 0 22px;
+   font-size: 22px;
+}
+
+.uv-grid {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 16px;
+}
+
+.uv-feature {
+   padding: 16px;
+   display: flex;
+   gap: 12px;
+   align-items: flex-start;
+}
+
+.uv-feature-icon {
+   width: 42px;
+   height: 42px;
+   border-radius: 12px;
+   display: grid;
+   place-items: center;
+   background: rgba(48, 47, 44, 0.08);
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   font-weight: 900;
+}
+
+.uv-feature-title {
+   margin: 2px 0 6px;
+   font-size: 16px;
+}
+
+.uv-feature-text {
+   margin: 0;
+   color: rgba(48, 47, 44, 0.75);
+   line-height: 1.5;
+   font-size: 14px;
+}
+
+@media (max-width: 900px) {
+   .uv-grid {
+      grid-template-columns: 1fr;
+   }
+}
+
+.uv-feature-icon svg {
+   width: 18px;
+   height: 18px;
+}

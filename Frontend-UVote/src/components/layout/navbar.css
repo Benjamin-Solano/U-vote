@@ -1,0 +1,81 @@
+.uv-nav {
+   position: sticky;
+   top: 0;
+   z-index: 20;
+   background: rgba(239, 237, 227, 0.78);
+   backdrop-filter: blur(10px);
+   border-bottom: 1px solid rgba(48, 47, 44, 0.10);
+}
+
+.uv-nav-inner {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 14px 0;
+}
+
+.uv-brand {
+   display: inline-flex;
+   align-items: center;
+   gap: 10px;
+   font-weight: 800;
+   letter-spacing: 0.2px;
+}
+
+.uv-brand-badge {
+   width: 34px;
+   height: 34px;
+   border-radius: 10px;
+   display: grid;
+   place-items: center;
+   background: #302f2c;
+   color: #efede3;
+   font-size: 16px;
+}
+
+.uv-brand-text {
+   font-size: 18px;
+   color: #302f2c;
+}
+
+.uv-links {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+}
+
+.uv-link {
+   padding: 10px 12px;
+   border-radius: 10px;
+   font-weight: 650;
+   color: rgba(48, 47, 44, 0.85);
+   border: 1px solid transparent;
+}
+
+.uv-link:hover {
+   background: rgba(48, 47, 44, 0.06);
+   border-color: rgba(48, 47, 44, 0.12);
+}
+
+.uv-link.active {
+   background: rgba(48, 47, 44, 0.08);
+   border-color: rgba(48, 47, 44, 0.16);
+}
+
+@media (max-width: 760px) {
+   .uv-links {
+      gap: 6px;
+   }
+
+   .uv-link {
+      padding: 8px 10px;
+      font-size: 14px;
+   }
+}
+
+.uv-link,
+.btn {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+}

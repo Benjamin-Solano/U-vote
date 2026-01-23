@@ -1,35 +1,47 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Polls from "./pages/polls/Polls";
-import PollDetail from "./pages/polls/PollDetail";
-import AdminPolls from "./pages/admin/AdminPolls";
+import Home from "./pages/Home/Home";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
 
+import Polls from "./pages/Polls/Polls";
+import PollDetail from "./pages/Polls/PollDetail";
+
+import AdminPolls from "./pages/Admin/AdminPolls";
 import ProtectedRoute from "./auth/ProtectedRoute";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/polls" replace />} />
+    <div className="app-layout">
+      <Navbar />
 
-      {/* Públicas */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <main className="app-content">
+        <Routes>
+          {/* Públicas */}
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<div className="container" style={{ padding: 24 }}>About (pendiente)</div>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-      {/* Públicas (según tu SecurityConfig, GET encuestas es público) */}
-      <Route path="/polls" element={<Polls />} />
-      <Route path="/polls/:id" element={<PollDetail />} />
+          {/* (Por backend: GET encuestas es público) */}
+          <Route path="/polls" element={<Polls />} />
+          <Route path="/polls/:id" element={<PollDetail />} />
 
-      {/* Protegidas */}
-      <Route element={<ProtectedRoute />}>
-        <Route path="/admin/polls" element={<AdminPolls />} />
-        {/* aquí luego metemos crear/editar opciones, etc */}
-      </Route>
+          {/* Protegidas */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/admin/polls" element={<AdminPolls />} />
+          </Route>
 
-      <Route path="*" element={<h2>Página no encontrada</h2>} />
-    </Routes>
+          {/* 404 */}
+          <Route path="*" element={<div className="container" style={{ padding: 24 }}>404 - No encontrado</div>} />
+        </Routes>
+      </main>
+
+      <Footer />
+    </div>
   );
 }
 

@@ -1,0 +1,102 @@
+.uv-footer {
+   margin-top: 60px;
+   background: #302f2c;
+   color: rgba(239, 237, 227, 0.92);
+}
+
+.uv-footer-inner {
+   padding: 36px 0;
+   display: flex;
+   gap: 24px;
+   justify-content: space-between;
+   flex-wrap: wrap;
+}
+
+.uv-footer-title {
+   font-size: 18px;
+   font-weight: 800;
+   letter-spacing: 0.2px;
+}
+
+.uv-footer-sub {
+   margin-top: 8px;
+   max-width: 360px;
+   color: rgba(239, 237, 227, 0.72);
+   line-height: 1.5;
+   font-size: 14px;
+}
+
+.uv-footer-cols {
+   display: flex;
+   gap: 42px;
+   flex-wrap: wrap;
+}
+
+.uv-footer-h {
+   font-weight: 800;
+   margin-bottom: 10px;
+   letter-spacing: 0.2px;
+}
+
+.uv-footer-link {
+   display: block;
+   padding: 6px 0;
+   color: rgba(239, 237, 227, 0.72);
+}
+
+.uv-footer-link:hover {
+   color: rgba(239, 237, 227, 0.95);
+}
+
+.uv-social {
+   display: flex;
+   gap: 10px;
+   align-items: center;
+}
+
+.uv-social-btn {
+   width: 36px;
+   height: 36px;
+   border-radius: 10px;
+   display: grid;
+   place-items: center;
+   border: 1px solid rgba(239, 237, 227, 0.18);
+   color: rgba(239, 237, 227, 0.92);
+   font-weight: 800;
+   text-transform: uppercase;
+}
+
+.uv-social-btn:hover {
+   background: rgba(239, 237, 227, 0.08);
+}
+
+.uv-footer-bottom {
+   border-top: 1px solid rgba(239, 237, 227, 0.14);
+   padding: 14px 0;
+   color: rgba(239, 237, 227, 0.68);
+   font-size: 13px;
+}
+
+.uv-footer-bottom-inner {
+   display: flex;
+   justify-content: space-between;
+   gap: 10px;
+   flex-wrap: wrap;
+}
+
+.uv-footer-dot {
+   opacity: 0.6;
+}
+
+.uv-social-btn svg {
+   width: 16px;
+   height: 16px;
+}
+
+.uv-social-btn {
+   transition: transform 120ms ease, background 120ms ease;
+}
+
+.uv-social-btn:hover {
+   transform: translateY(-1px);
+}

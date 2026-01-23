@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { useAuth } from "../auth/useAuth";
-import "../styles/login.css";
+import { useAuth } from "../../auth/useAuth";
+import "./login.css";
 
 function Login() {
    const { login } = useAuth();
