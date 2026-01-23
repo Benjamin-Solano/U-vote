@@ -2,8 +2,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Polls from "./pages/Polls";
-import PollDetail from "./pages/PollDetail";
+import Polls from "./pages/polls/Polls";
+import PollDetail from "./pages/polls/PollDetail";
 
 function App() {
   return (
