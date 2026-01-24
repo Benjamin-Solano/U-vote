@@ -46,7 +46,8 @@ public class AuthService {
                 usuario.getId(),
                 usuario.getNombreUsuario(),
                 usuario.getCorreo(),
-                usuario.getCreadoEn()
+                usuario.getCreadoEn(),
+                usuario.getFotoPerfil()
         );
     }
 }

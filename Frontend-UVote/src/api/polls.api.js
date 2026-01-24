@@ -10,5 +10,5 @@ export const pollsApi = {
 
 
    // Ajusta a tu endpoint real:
-   listByCreadorId: (creadorId) => api.get(`/polls?creadorId=${creadorId}`),
+   listByCreadorId: (creadorId) => api.get(`/encuestas?creadorId=${creadorId}`),
 };

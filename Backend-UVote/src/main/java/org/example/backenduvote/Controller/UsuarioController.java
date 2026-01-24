@@ -3,10 +3,16 @@ package org.example.backenduvote.Controller;
 import org.example.backenduvote.dtos.UsuarioRegistroRequest;
 import org.example.backenduvote.dtos.UsuarioResponse;
 import jakarta.validation.Valid;
+import org.example.backenduvote.dtos.UsuarioUpdateRequest;
 import org.example.backenduvote.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -50,4 +56,24 @@ public class UsuarioController {
         usuarioService.eliminarPorId(id);
         return ResponseEntity.noContent().build(); // 204
     }
+
+    @PutMapping("/id/{id}")
+    public ResponseEntity<UsuarioResponse> actualizarUsuario(
+            @PathVariable Long id,
+            @Valid @RequestBody UsuarioUpdateRequest request
+    ) {
+        UsuarioResponse actualizado = usuarioService.actualizarUsuario(id, request);
+        return ResponseEntity.ok(actualizado);
+    }
+
+
+    @PostMapping(value = "/id/{id}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UsuarioResponse> subirFotoPerfil(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file
+    ) {
+        UsuarioResponse actualizado = usuarioService.actualizarFotoPerfil(id, file);
+        return ResponseEntity.ok(actualizado);
+    }
+
 }

@@ -5,11 +5,18 @@ export const usersApi = {
    list: () => api.get("/usuarios"),
    getById: (id) => api.get(`/usuarios/${id}`),
 
-   // si ya lo tienes por nombre:
    getByNombreUsuario: (nombreUsuario) =>
       api.get(`/usuarios/nombre/${encodeURIComponent(nombreUsuario)}`),
 
-   // editar usuario (ajusta endpoint según tu backend)
    updateNombreUsuario: (id, payload) =>
       api.put(`/usuarios/id/${id}`, payload),
+
+   uploadFotoPerfil: (id, file) => {
+      const form = new FormData();
+      form.append("file", file);
+
+      return api.post(`/usuarios/id/${id}/foto`, form, {
+         headers: { "Content-Type": "multipart/form-data" },
+      });
+   },
 };

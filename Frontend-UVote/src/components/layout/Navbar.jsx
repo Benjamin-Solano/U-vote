@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FiHome, FiInfo, FiPlusCircle, FiLogIn, FiUser, FiLogOut } from "react-icons/fi";
+import { FiHome, FiInfo, FiPlusCircle, FiLogIn, FiLogOut } from "react-icons/fi";
 import "./navbar.css";
 
 import { useAuth } from "../../auth/useAuth";
+import logo from "../../assets/U-VoteLogo.png";
+
 
 export default function Navbar() {
    const { isAuthenticated, usuario, logout } = useAuth();
@@ -13,6 +15,20 @@ export default function Navbar() {
    const menuRef = useRef(null);
 
    const linkClass = ({ isActive }) => `uv-link ${isActive ? "active" : ""}`;
+
+   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+
+   const fotoSrc = useMemo(() => {
+      const path = usuario?.fotoPerfil;
+      if (!path) return "";
+      if (path.startsWith("http://") || path.startsWith("https://")) return path;
+      return `${BACKEND_URL}${path}`;
+   }, [usuario?.fotoPerfil, BACKEND_URL]);
+
+   const initial = useMemo(() => {
+      const n = (usuario?.nombreUsuario || "").trim();
+      return n ? n.slice(0, 1).toUpperCase() : "U";
+   }, [usuario?.nombreUsuario]);
 
    useEffect(() => {
       const onDocClick = (e) => {
@@ -33,12 +49,17 @@ export default function Navbar() {
       <header className="uv-nav">
          <div className="container uv-nav-inner">
             {/* Brand */}
-            <NavLink to="/" className="uv-brand">
-               <span className="uv-brand-badge">u</span>
+            <NavLink to="/" className="uv-brand" aria-label="Ir al inicio">
+               <img
+                  src={logo}
+                  alt="U-Vote"
+                  className="uv-brand-logo"
+               />
                <span className="uv-brand-text">U-Vote</span>
             </NavLink>
 
-            <nav className="uv-links">
+
+            <nav className="uv-links" aria-label="Navegación principal">
                <NavLink to="/" className={linkClass}>
                   <FiHome /> Inicio
                </NavLink>
@@ -51,20 +72,28 @@ export default function Navbar() {
                   <FiPlusCircle /> Crear Encuesta
                </NavLink>
 
-               {/* Derecha: si NO hay sesión */}
+               {/* Derecha */}
                {!isAuthenticated ? (
-                  <NavLink to="/login" className={linkClass}>
+                  <NavLink to="/login" className={`${linkClass({ isActive: false })} uv-link-primary`}>
                      <FiLogIn /> Iniciar Sesión
                   </NavLink>
                ) : (
-                  // ✅ Si hay sesión: menú de usuario
                   <div className="uv-user" ref={menuRef}>
                      <button
                         type="button"
-                        className="uv-user-btn"
+                        className={`uv-user-btn ${open ? "open" : ""}`}
                         onClick={() => setOpen((v) => !v)}
+                        aria-haspopup="menu"
+                        aria-expanded={open}
                      >
-                        <FiUser />
+                        <span className="uv-avatar-nav" aria-hidden="true">
+                           {fotoSrc ? (
+                              <img src={fotoSrc} alt="" />
+                           ) : (
+                              <span className="uv-avatar-fallback">{initial}</span>
+                           )}
+                        </span>
+
                         <span className="uv-user-name">
                            {usuario?.nombreUsuario ?? "Mi cuenta"}
                         </span>
@@ -79,13 +108,19 @@ export default function Navbar() {
                                  setOpen(false);
                                  navigate("/perfil");
                               }}
+                              role="menuitem"
                            >
-                              <FiUser /> Perfil
+                              Perfil
                            </button>
 
                            <div className="uv-user-sep" />
 
-                           <button type="button" className="uv-user-item" onClick={handleLogout}>
+                           <button
+                              type="button"
+                              className="uv-user-item danger"
+                              onClick={handleLogout}
+                              role="menuitem"
+                           >
                               <FiLogOut /> Cerrar sesión
                            </button>
                         </div>

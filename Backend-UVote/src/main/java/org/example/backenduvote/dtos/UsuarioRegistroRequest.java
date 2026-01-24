@@ -24,6 +24,11 @@ public class UsuarioRegistroRequest {
     @Size(min = 8, max = 72) // 72 es buen límite para BCrypt
     private String contrasena;
 
+
+    // ✅ NUEVO (opcional): URL o ruta
+    @Size(max = 500)
+    private String fotoPerfil;
+
     public UsuarioRegistroRequest() {}
 
     public String getNombreUsuario() {
@@ -49,4 +54,7 @@ public class UsuarioRegistroRequest {
     public void setContrasena(String contrasena) {
         this.contrasena = contrasena;
     }
+
+    public String getFotoPerfil() { return fotoPerfil; }
+    public void setFotoPerfil(String fotoPerfil) { this.fotoPerfil = fotoPerfil; }
 }

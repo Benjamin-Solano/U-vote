@@ -14,148 +14,206 @@
    padding: 14px 0;
 }
 
+/* Brand */
 .uv-brand {
    display: inline-flex;
    align-items: center;
    gap: 10px;
-   font-weight: 800;
+   font-weight: 900;
    letter-spacing: 0.2px;
+   text-decoration: none;
 }
 
-.uv-brand-badge {
+
+
+/* Logo brand */
+.uv-brand-logo {
    width: 34px;
    height: 34px;
-   border-radius: 10px;
-   display: grid;
-   place-items: center;
-   background: #302f2c;
-   color: #efede3;
-   font-size: 16px;
+   object-fit: contain;
+   display: block;
 }
+
 
 .uv-brand-text {
    font-size: 18px;
    color: #302f2c;
 }
 
+/* Links container */
 .uv-links {
    display: flex;
    align-items: center;
-   gap: 10px;
+   gap: 6px;
+   /* más minimalista */
 }
 
+/* Link minimal */
 .uv-link {
-   padding: 10px 12px;
-   border-radius: 10px;
-   font-weight: 650;
-   color: rgba(48, 47, 44, 0.85);
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+
+   padding: 9px 10px;
+   border-radius: 999px;
+   /* pill */
+   font-weight: 750;
+   color: rgba(48, 47, 44, 0.82);
    border: 1px solid transparent;
+   text-decoration: none;
+
+   transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
 .uv-link:hover {
    background: rgba(48, 47, 44, 0.06);
-   border-color: rgba(48, 47, 44, 0.12);
+   border-color: rgba(48, 47, 44, 0.10);
 }
 
 .uv-link.active {
    background: rgba(48, 47, 44, 0.08);
    border-color: rgba(48, 47, 44, 0.16);
+   color: rgba(48, 47, 44, 0.92);
 }
 
-@media (max-width: 760px) {
-   .uv-links {
-      gap: 6px;
-   }
+/* Call to action suave (Login) */
+.uv-link-primary {
+   background: #efede3;
+   color: rgba(48, 47, 44, 0.92);
 
-   .uv-link {
-      padding: 8px 10px;
-      font-size: 14px;
-   }
 }
 
-.uv-link,
-.btn {
-   display: inline-flex;
-   align-items: center;
-   gap: 8px;
+.uv-link-primary:hover {
+   filter: brightness(1.05);
 }
 
-.uv-link.uv-cta {
-   background: #302f2c;
-   color: #efede3;
-   border-color: rgba(48, 47, 44, 0.25);
-}
-
-.uv-link.uv-cta:hover {
-   background: #302f2c;
-   border-color: rgba(48, 47, 44, 0.35);
-   filter: brightness(1.02);
-}
-
-/* --- User menu (navbar) --- */
+/* User menu */
 .uv-user {
    position: relative;
 }
 
+/* Botón usuario minimal con avatar */
 .uv-user-btn {
-   padding: 10px 12px;
-   border-radius: 10px;
-   font-weight: 650;
-   color: rgba(48, 47, 44, 0.85);
-   border: 1px solid transparent;
-   background: transparent;
-   cursor: pointer;
    display: inline-flex;
    align-items: center;
-   gap: 8px;
+   gap: 10px;
+
+   padding: 7px 10px;
+   border-radius: 999px;
+   border: 1px solid rgba(48, 47, 44, 0.10);
+   background: rgba(255, 255, 255, 0.35);
+   cursor: pointer;
+
+   transition: background 160ms ease, border-color 160ms ease;
 }
 
 .uv-user-btn:hover {
    background: rgba(48, 47, 44, 0.06);
-   border-color: rgba(48, 47, 44, 0.12);
+   border-color: rgba(48, 47, 44, 0.16);
+}
+
+.uv-user-btn.open {
+   background: rgba(48, 47, 44, 0.08);
+   border-color: rgba(48, 47, 44, 0.18);
 }
 
 .uv-user-name {
-   max-width: 160px;
+   font-weight: 850;
+   color: rgba(48, 47, 44, 0.92);
+   max-width: 200px;
+   white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
-   white-space: nowrap;
 }
 
+/* Avatar pequeño navbar */
+.uv-avatar-nav {
+   width: 28px;
+   height: 28px;
+   border-radius: 999px;
+   overflow: hidden;
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   background: rgba(255, 255, 255, 0.55);
+   display: grid;
+   place-items: center;
+   flex: 0 0 auto;
+}
+
+.uv-avatar-nav img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+}
+
+.uv-avatar-fallback {
+   font-weight: 900;
+   font-size: 13px;
+   color: #302f2c;
+}
+
+/* Dropdown */
 .uv-user-menu {
    position: absolute;
    right: 0;
    top: calc(100% + 10px);
-   min-width: 210px;
-   border-radius: 14px;
-   border: 1px solid rgba(48, 47, 44, 0.14);
-   background: rgba(239, 237, 227, 0.96);
+   width: 220px;
+
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(239, 237, 227, 0.92);
    backdrop-filter: blur(10px);
-   box-shadow: 0 16px 45px rgba(0, 0, 0, 0.14);
+   border-radius: 14px;
+   box-shadow: 0 18px 46px rgba(48, 47, 44, 0.14);
    padding: 8px;
-   z-index: 50;
 }
 
 .uv-user-item {
    width: 100%;
-   border: none;
-   background: transparent;
-   cursor: pointer;
-   padding: 10px 10px;
-   border-radius: 10px;
-   display: flex;
+   display: inline-flex;
    align-items: center;
    gap: 10px;
-   color: rgba(48, 47, 44, 0.9);
-   font-weight: 650;
+
+   border: 1px solid transparent;
+   background: transparent;
+   cursor: pointer;
+
+   padding: 10px 10px;
+   border-radius: 12px;
+
+   font-weight: 850;
+   color: rgba(48, 47, 44, 0.88);
+   text-align: left;
+
+   transition: background 160ms ease, border-color 160ms ease;
 }
 
 .uv-user-item:hover {
    background: rgba(48, 47, 44, 0.06);
+   border-color: rgba(48, 47, 44, 0.10);
+}
+
+.uv-user-item.danger {
+   color: rgba(48, 47, 44, 0.92);
 }
 
 .uv-user-sep {
    height: 1px;
-   margin: 6px 6px;
-   background: rgba(48, 47, 44, 0.12);
+   margin: 8px 6px;
+   background: rgba(48, 47, 44, 0.10);
+}
+
+/* Responsive */
+@media (max-width: 760px) {
+   .uv-links {
+      gap: 4px;
+   }
+
+   .uv-link {
+      padding: 8px 9px;
+      font-size: 14px;
+   }
+
+   .uv-user-name {
+      display: none;
+      /* compacto en móvil */
+   }
 }

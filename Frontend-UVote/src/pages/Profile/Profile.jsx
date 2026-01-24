@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { FiEdit3, FiSave, FiXCircle } from "react-icons/fi";
+import { FiEdit3, FiSave, FiXCircle, FiUpload, FiImage, FiSearch } from "react-icons/fi";
 
 import { useAuth } from "../../auth/useAuth";
 import { usersApi } from "../../api/users.api";
@@ -17,18 +17,40 @@ export default function Profile() {
    const [loading, setLoading] = useState(true);
    const [pollsLoading, setPollsLoading] = useState(true);
 
+   // editar nombre
    const [editMode, setEditMode] = useState(false);
    const [nombreUsuario, setNombreUsuario] = useState(usuario?.nombreUsuario ?? "");
+   const [savingName, setSavingName] = useState(false);
+
+   // foto (upload + preview)
+   const [selectedFile, setSelectedFile] = useState(null);
+   const [previewUrl, setPreviewUrl] = useState("");
+   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+
+   // buscador de encuestas
+   const [query, setQuery] = useState("");
+
+
+   const PAGE_SIZE = 5;
+   const [page, setPage] = useState(1);
+
 
    const [error, setError] = useState("");
    const [okMsg, setOkMsg] = useState("");
 
    const userId = profile?.id;
+   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+
+   const syncLocalUser = (newUser) => {
+      try {
+         localStorage.setItem("usuario", JSON.stringify(newUser));
+      } catch (_) { }
+   };
 
    const estadoLabel = (p) => {
-      // Ajusta según tu modelo: cerrado/activo/fechaCierre etc.
       if (p?.cerrada === true) return "Cerrada";
-      if (p?.estado) return p.estado; // si viene string
+      if (p?.estado) return p.estado;
+      if (p?.fechaCierre) return "Cerrada";
       return "Activa";
    };
 
@@ -39,16 +61,16 @@ export default function Profile() {
          setOkMsg("");
 
          try {
-            // Refrescar datos del usuario desde backend (opcional, pero pro)
             if (usuario?.nombreUsuario) {
                const res = await usersApi.getByNombreUsuario(usuario.nombreUsuario);
-               setProfile(res?.data ?? usuario);
-               setNombreUsuario((res?.data?.nombreUsuario ?? usuario.nombreUsuario) || "");
+               const data = res?.data ?? usuario;
+               setProfile(data);
+               setNombreUsuario(data?.nombreUsuario ?? usuario.nombreUsuario ?? "");
+               syncLocalUser(data);
             } else {
                setProfile(usuario);
             }
-         } catch (e) {
-            // si falla, usamos lo del contexto
+         } catch (_) {
             setProfile(usuario);
          } finally {
             setLoading(false);
@@ -56,7 +78,8 @@ export default function Profile() {
       };
 
       run();
-   }, [usuario]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [usuario?.nombreUsuario]);
 
    useEffect(() => {
       const run = async () => {
@@ -66,8 +89,7 @@ export default function Profile() {
          try {
             const res = await pollsApi.listByCreadorId(userId);
             setPolls(res?.data ?? []);
-         } catch (e) {
-            // Si el endpoint aún no existe, no rompemos UI
+         } catch (_) {
             setPolls([]);
          } finally {
             setPollsLoading(false);
@@ -77,19 +99,70 @@ export default function Profile() {
       run();
    }, [userId]);
 
-   const canSave = useMemo(() => {
-      return nombreUsuario.trim().length >= 3 && nombreUsuario.trim().length <= 100;
+   // preview de imagen seleccionada
+   useEffect(() => {
+      if (!selectedFile) {
+         setPreviewUrl("");
+         return;
+      }
+      const url = URL.createObjectURL(selectedFile);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+   }, [selectedFile]);
+
+   const canSaveName = useMemo(() => {
+      const v = nombreUsuario.trim();
+      return v.length >= 3 && v.length <= 100;
    }, [nombreUsuario]);
 
-   const onSave = async () => {
+   const fotoSrc = useMemo(() => {
+      const path = profile?.fotoPerfil;
+      if (!path) return "";
+      if (path.startsWith("http://") || path.startsWith("https://")) return path;
+      return `${BACKEND_URL}${path}`;
+   }, [profile?.fotoPerfil, BACKEND_URL]);
+
+   const initials = useMemo(() => {
+      const n = (profile?.nombreUsuario || "").trim();
+      return n ? n.slice(0, 1).toUpperCase() : "U";
+   }, [profile?.nombreUsuario]);
+
+   const filteredPolls = useMemo(() => {
+      const q = query.trim().toLowerCase();
+      if (!q) return polls;
+
+      return polls.filter((p) => {
+         const name = (p?.titulo ?? p?.nombre ?? "").toLowerCase();
+         return name.includes(q);
+      });
+   }, [polls, query]);
+   useEffect(() => {
+      setPage(1);
+   }, [query, polls.length]);
+
+   const totalPages = useMemo(() => {
+      return Math.max(1, Math.ceil(filteredPolls.length / PAGE_SIZE));
+   }, [filteredPolls.length]);
+
+   const pageItems = useMemo(() => {
+      const start = (page - 1) * PAGE_SIZE;
+      return filteredPolls.slice(start, start + PAGE_SIZE);
+   }, [filteredPolls, page]);
+
+
+   const onSaveName = async () => {
       setError("");
       setOkMsg("");
+      if (!userId) return;
 
       try {
-         // Actualizar en backend (requiere endpoint PUT)
+         setSavingName(true);
          await usersApi.updateNombreUsuario(userId, { nombreUsuario: nombreUsuario.trim() });
 
-         setProfile((prev) => ({ ...prev, nombreUsuario: nombreUsuario.trim() }));
+         const updated = { ...profile, nombreUsuario: nombreUsuario.trim() };
+         setProfile(updated);
+         syncLocalUser(updated);
+
          setEditMode(false);
          setOkMsg("Nombre de usuario actualizado.");
       } catch (err) {
@@ -99,6 +172,66 @@ export default function Profile() {
             err?.message ||
             "No se pudo actualizar el nombre de usuario.";
          setError(msg);
+      } finally {
+         setSavingName(false);
+      }
+   };
+
+   const onPickFile = (e) => {
+      setError("");
+      setOkMsg("");
+
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      if (!file.type?.startsWith("image/")) {
+         setError("Solo se permiten archivos de imagen.");
+         e.target.value = "";
+         return;
+      }
+
+      const maxBytes = 2 * 1024 * 1024;
+      if (file.size > maxBytes) {
+         setError("La imagen excede el tamaño permitido (2MB).");
+         e.target.value = "";
+         return;
+      }
+
+      setSelectedFile(file);
+   };
+
+   const onUploadPhoto = async () => {
+      setError("");
+      setOkMsg("");
+      if (!userId) return;
+
+      if (!selectedFile) {
+         setError("Selecciona una imagen antes de subirla.");
+         return;
+      }
+
+      try {
+         setUploadingPhoto(true);
+
+         const res = await usersApi.uploadFotoPerfil(userId, selectedFile);
+         const updated = res?.data ?? null;
+
+         if (updated) {
+            setProfile(updated);
+            syncLocalUser(updated);
+         }
+
+         setSelectedFile(null);
+         setOkMsg("Foto de perfil actualizada.");
+      } catch (err) {
+         const msg =
+            err?.response?.data?.message ||
+            err?.response?.data?.error ||
+            err?.message ||
+            "No se pudo subir la imagen.";
+         setError(msg);
+      } finally {
+         setUploadingPhoto(false);
       }
    };
 
@@ -121,7 +254,7 @@ export default function Profile() {
             <div className="uv-profile-header">
                <div>
                   <h1>Mi perfil</h1>
-                  <p>Consulta tu información y tus encuestas creadas.</p>
+                  <p>Gestiona tu foto, tu información y tus encuestas creadas.</p>
                </div>
 
                <button className="uv-profile-logout" onClick={logout}>
@@ -132,15 +265,58 @@ export default function Profile() {
             {error && <div className="uv-profile-alert">{error}</div>}
             {okMsg && <div className="uv-profile-alert">{okMsg}</div>}
 
-            <div className="uv-profile-grid">
-               {/* Info */}
-               <section className="uv-profile-box">
-                  <h2>Información</h2>
+            {/* BLOQUES 1 y 2: Foto + Info, horizontal */}
+            <div className="uv-profile-top">
+               {/* 1) Foto */}
+               <section className="uv-profile-box uv-photo-box">
+                  <div className="uv-photo-stack">
+                     <div className="uv-avatar uv-avatar-xl">
+                        {previewUrl ? (
+                           <img src={previewUrl} alt="Vista previa" />
+                        ) : fotoSrc ? (
+                           <img src={fotoSrc} alt="Foto de perfil" />
+                        ) : (
+                           <span className="uv-avatar-fallback">{initials}</span>
+                        )}
+                     </div>
 
-                  <div className="uv-profile-row">
-                     <span className="uv-k">ID</span>
-                     <span className="uv-v">{profile?.id ?? "-"}</span>
+                     <div className="uv-photo-actions">
+                        <label className="uv-file-btn">
+                           <FiImage />
+                           <span>Elegir imagen</span>
+                           <input type="file" accept="image/*" onChange={onPickFile} />
+                        </label>
+
+                        <button
+                           className="uv-edit-btn"
+                           type="button"
+                           disabled={!selectedFile || uploadingPhoto}
+                           onClick={onUploadPhoto}
+                        >
+                           <FiUpload />
+                           {uploadingPhoto ? "Subiendo..." : "Subir"}
+                        </button>
+
+                        {selectedFile && (
+                           <button
+                              className="uv-edit-btn uv-edit-cancel"
+                              type="button"
+                              onClick={() => setSelectedFile(null)}
+                           >
+                              <FiXCircle /> Quitar
+                           </button>
+                        )}
+
+                        <p className="uv-muted uv-photo-hint">
+                           Recomendado: imagen cuadrada. Máx. 2MB.
+                        </p>
+                     </div>
                   </div>
+               </section>
+
+               {/* 2) Info */}
+               <section className="uv-profile-box uv-info-box">
+                  <h2>Información</h2>
 
                   <div className="uv-profile-row">
                      <span className="uv-k">Correo</span>
@@ -174,12 +350,18 @@ export default function Profile() {
                               placeholder="Nuevo nombre de usuario"
                            />
 
-                           <button className="uv-edit-btn" disabled={!canSave} onClick={onSave}>
-                              <FiSave /> Guardar
+                           <button
+                              className="uv-edit-btn"
+                              disabled={!canSaveName || savingName}
+                              onClick={onSaveName}
+                              type="button"
+                           >
+                              <FiSave /> {savingName ? "Guardando..." : "Guardar"}
                            </button>
 
                            <button
                               className="uv-edit-btn uv-edit-cancel"
+                              type="button"
                               onClick={() => {
                                  setEditMode(false);
                                  setNombreUsuario(profile?.nombreUsuario ?? "");
@@ -190,31 +372,81 @@ export default function Profile() {
                         </div>
                      )}
                   </div>
+
                </section>
+            </div>
 
-               {/* Encuestas */}
-               <section className="uv-profile-box">
-                  <h2>Mis encuestas</h2>
+            {/* 3) Encuestas: buscador + lista */}
+            <section className="uv-profile-box uv-polls-box">
+               <div className="uv-polls-header">
+                  <div>
+                     <h2>Mis encuestas</h2>
+                     <p className="uv-muted">Busca por nombre y revisa el estado de cada encuesta.</p>
+                  </div>
 
-                  {pollsLoading ? (
-                     <p className="uv-muted">Cargando encuestas...</p>
-                  ) : polls.length === 0 ? (
-                     <p className="uv-muted">Aún no has creado encuestas.</p>
-                  ) : (
-                     <div className="uv-polls-list">
-                        {polls.map((p) => (
+                  <div className="uv-search">
+                     <FiSearch className="uv-search-ico" />
+                     <input
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Buscar encuesta por nombre..."
+                        className="uv-search-input"
+                     />
+                     {query && (
+                        <button className="uv-search-clear" onClick={() => setQuery("")} title="Limpiar">
+                           <FiXCircle />
+                        </button>
+                     )}
+                  </div>
+               </div>
+
+               {pollsLoading ? (
+                  <p className="uv-muted">Cargando encuestas...</p>
+               ) : filteredPolls.length === 0 ? (
+                  <p className="uv-muted">
+                     {polls.length === 0 ? "Aún no has creado encuestas." : "No hay resultados."}
+                  </p>
+               ) : (
+                  <>
+                     {/* Lista con scroll interno */}
+                     <div className="uv-polls-list uv-polls-scroll">
+                        {pageItems.map((p) => (
                            <div key={p.id} className="uv-poll-item">
-                              <div className="uv-poll-title">{p.titulo ?? `Encuesta #${p.id}`}</div>
+                              <div className="uv-poll-title">{p.titulo ?? p.nombre ?? "Encuesta"}</div>
                               <div className="uv-poll-meta">
                                  <span className="uv-pill">{estadoLabel(p)}</span>
-                                 <span className="uv-muted">ID: {p.id}</span>
                               </div>
                            </div>
                         ))}
                      </div>
-                  )}
-               </section>
-            </div>
+
+                     {/* Paginación (solo si hay más de 5) */}
+                     {filteredPolls.length > PAGE_SIZE && (
+                        <div className="uv-pagination">
+                           <button
+                              className="uv-page-btn"
+                              onClick={() => setPage((p) => Math.max(1, p - 1))}
+                              disabled={page === 1}
+                           >
+                              Anterior
+                           </button>
+
+                           <div className="uv-page-info">
+                              Página <strong>{page}</strong> de <strong>{totalPages}</strong>
+                           </div>
+
+                           <button
+                              className="uv-page-btn"
+                              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                              disabled={page === totalPages}
+                           >
+                              Siguiente
+                           </button>
+                        </div>
+                     )}
+                  </>
+               )}
+            </section>
          </motion.div>
       </div>
    );

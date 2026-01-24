@@ -25,6 +25,9 @@ public class Usuario {
     @Column(name = "contrasena_hash", nullable = false)
     private String contrasenaHash;
 
+    @Column(name = "foto_perfil")
+    private String fotoPerfil;
+
     @Column(name = "creado_en", nullable = false, columnDefinition = "TIMESTAMPTZ")
     private OffsetDateTime creadoEn;
 
@@ -52,6 +55,7 @@ public class Usuario {
     public String getNombreUsuario() { return nombreUsuario; }
     public String getCorreo() { return correo;}
     public String getContrasenaHash() { return contrasenaHash;}
+    public String getFotoPerfil() { return fotoPerfil; }
     public OffsetDateTime getCreadoEn() { return creadoEn;}
 
     // Sets
@@ -59,5 +63,6 @@ public class Usuario {
     public void setNombreUsuario(String nombreUsuario) { this.nombreUsuario = nombreUsuario;}
     public void setCorreo(String correo) { this.correo = correo;}
     public void setContrasenaHash(String contrasenaHash) { this.contrasenaHash = contrasenaHash;}
+    public void setFotoPerfil(String fotoPerfil) { this.fotoPerfil = fotoPerfil; }
     public void setCreadoEn(OffsetDateTime creadoEn) { this.creadoEn = creadoEn;}
 }
