@@ -83,15 +83,19 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/usuarios", "/api/usuarios/**").permitAll()
 
                         // ✅ PUT usuario (nombre/descripcion) -> requiere token
-                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/id/**").authenticated()
+                        // ⚠️ Cambiado de "/**" a "/*" para evitar PatternParseException y ser más preciso
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/id/*").authenticated()
 
                         // ✅ Subir foto -> requiere token
-                        .requestMatchers(HttpMethod.POST, "/api/usuarios/id/**/foto").authenticated()
+                        // ⚠️ Cambiado de "/**/foto" a "/*/foto" (tu ruta real es /id/{id}/foto)
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/id/*/foto").authenticated()
 
                         // Encuestas (lectura pública)
                         .requestMatchers(HttpMethod.GET, "/api/encuestas", "/api/encuestas/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/encuestas/*/opciones").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/encuestas/**/resultados").permitAll()
+
+                        // ⚠️ Cambiado de "/**/resultados" a "/*/resultados" (tu ruta real es /{id}/resultados)
+                        .requestMatchers(HttpMethod.GET, "/api/encuestas/*/resultados").permitAll()
 
                         // TODO lo demás requiere token
                         .anyRequest().authenticated()

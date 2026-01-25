@@ -7,26 +7,32 @@
 --   Tabla: usuarios
 -- =======================================
 CREATE TABLE usuarios (
-    id              BIGSERIAL PRIMARY KEY,
-    nombre_usuario  VARCHAR(100) NOT NULL UNIQUE,
-    correo          VARCHAR(100) NOT NULL UNIQUE,
-    contrasena_hash VARCHAR(255) NOT NULL,
-    creado_en       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    id               BIGSERIAL PRIMARY KEY,
+    nombre_usuario   VARCHAR(100) NOT NULL UNIQUE,
+    correo           VARCHAR(100) NOT NULL UNIQUE,
+    contrasena_hash  VARCHAR(255) NOT NULL,
+    foto_perfil      TEXT,
+    descripcion      VARCHAR(500),
+    creado_en        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
-ALTER TABLE usuarios
-ADD COLUMN foto_perfil TEXT;
+
+
+
 
 -- =======================================
 --   Tabla: encuestas
 -- =======================================
 CREATE TABLE encuestas (
-    id           BIGSERIAL PRIMARY KEY,
-    usuario_id   BIGINT NOT NULL REFERENCES usuarios(id),
-    nombre       VARCHAR(100) NOT NULL,
-    descripcion  VARCHAR(1000),
-    creada_en    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    fecha_cierre TIMESTAMPTZ
+    id            BIGSERIAL PRIMARY KEY,
+    usuario_id    BIGINT NOT NULL REFERENCES usuarios(id),
+    nombre        VARCHAR(100) NOT NULL,
+    descripcion   VARCHAR(1000),
+    imagen_url    TEXT, -- foto / portada de la encuesta
+    creada_en     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    fecha_cierre  TIMESTAMPTZ
 );
+
+
 
 -- =======================================
 --   Tabla: opciones
@@ -45,16 +51,19 @@ CREATE TABLE opciones (
 --   Tabla: votos
 -- =======================================
 CREATE TABLE votos (
-    id           BIGSERIAL PRIMARY KEY,
-    usuario_id   BIGINT NOT NULL REFERENCES usuarios(id),
-    encuesta_id  BIGINT NOT NULL REFERENCES encuestas(id) ON DELETE CASCADE,
-    opcion_id    BIGINT NOT NULL REFERENCES opciones(id),
-    creado_en    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    id            BIGSERIAL PRIMARY KEY,
+    usuario_id    BIGINT NOT NULL REFERENCES usuarios(id),
+    encuesta_id   BIGINT NOT NULL REFERENCES encuestas(id) ON DELETE CASCADE,
+    opcion_id     BIGINT NOT NULL REFERENCES opciones(id),
+    imagen_url    TEXT, -- foto asociada al voto (evidencia, avatar, etc.)
+    creado_en     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
     -- Garantiza voto único por usuario por encuesta
     CONSTRAINT voto_unico_por_usuario_encuesta
         UNIQUE (usuario_id, encuesta_id)
 );
+
+
 
 -- Índices recomendados
 CREATE INDEX idx_votos_encuesta ON votos (encuesta_id);
