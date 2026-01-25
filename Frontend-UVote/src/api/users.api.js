@@ -19,4 +19,7 @@ export const usersApi = {
          headers: { "Content-Type": "multipart/form-data" },
       });
    },
+
+   updateUsuario: (id, payload) => api.put(`/usuarios/id/${id}`, payload),
+
 };

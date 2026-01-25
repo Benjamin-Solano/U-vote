@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { FiEdit3, FiSave, FiXCircle, FiUpload, FiImage, FiSearch } from "react-icons/fi";
 
 import { useAuth } from "../../auth/useAuth";
@@ -10,6 +11,7 @@ import "./profile.css";
 
 export default function Profile() {
    const { usuario, logout } = useAuth();
+   const navigate = useNavigate();
 
    const [profile, setProfile] = useState(usuario);
    const [polls, setPolls] = useState([]);
@@ -26,20 +28,26 @@ export default function Profile() {
    const [selectedFile, setSelectedFile] = useState(null);
    const [previewUrl, setPreviewUrl] = useState("");
    const [uploadingPhoto, setUploadingPhoto] = useState(false);
+   const [photoVersion, setPhotoVersion] = useState(0);
+
+   // editar descripcion
+   const [editDescMode, setEditDescMode] = useState(false);
+   const [descripcion, setDescripcion] = useState("");
+   const [savingDesc, setSavingDesc] = useState(false);
 
    // buscador de encuestas
    const [query, setQuery] = useState("");
 
-
    const PAGE_SIZE = 5;
    const [page, setPage] = useState(1);
-
 
    const [error, setError] = useState("");
    const [okMsg, setOkMsg] = useState("");
 
    const userId = profile?.id;
    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+
+   const DESC_MAX = 500;
 
    const syncLocalUser = (newUser) => {
       try {
@@ -64,8 +72,10 @@ export default function Profile() {
             if (usuario?.nombreUsuario) {
                const res = await usersApi.getByNombreUsuario(usuario.nombreUsuario);
                const data = res?.data ?? usuario;
+
                setProfile(data);
                setNombreUsuario(data?.nombreUsuario ?? usuario.nombreUsuario ?? "");
+               setDescripcion(data?.descripcion ?? "");
                syncLocalUser(data);
             } else {
                setProfile(usuario);
@@ -115,12 +125,21 @@ export default function Profile() {
       return v.length >= 3 && v.length <= 100;
    }, [nombreUsuario]);
 
+   const descRemaining = useMemo(() => {
+      const len = (descripcion ?? "").length;
+      return Math.max(0, DESC_MAX - len);
+   }, [descripcion]);
+
+   const canSaveDesc = useMemo(() => {
+      return (descripcion ?? "").length <= DESC_MAX;
+   }, [descripcion]);
+
    const fotoSrc = useMemo(() => {
       const path = profile?.fotoPerfil;
       if (!path) return "";
-      if (path.startsWith("http://") || path.startsWith("https://")) return path;
-      return `${BACKEND_URL}${path}`;
-   }, [profile?.fotoPerfil, BACKEND_URL]);
+      const raw = path.startsWith("http") ? path : `${BACKEND_URL}${path}`;
+      return `${raw}?v=${photoVersion}`;
+   }, [profile?.fotoPerfil, BACKEND_URL, photoVersion]);
 
    const initials = useMemo(() => {
       const n = (profile?.nombreUsuario || "").trim();
@@ -136,6 +155,7 @@ export default function Profile() {
          return name.includes(q);
       });
    }, [polls, query]);
+
    useEffect(() => {
       setPage(1);
    }, [query, polls.length]);
@@ -149,7 +169,6 @@ export default function Profile() {
       return filteredPolls.slice(start, start + PAGE_SIZE);
    }, [filteredPolls, page]);
 
-
    const onSaveName = async () => {
       setError("");
       setOkMsg("");
@@ -157,7 +176,7 @@ export default function Profile() {
 
       try {
          setSavingName(true);
-         await usersApi.updateNombreUsuario(userId, { nombreUsuario: nombreUsuario.trim() });
+         await usersApi.updateUsuario(userId, { nombreUsuario: nombreUsuario.trim() });
 
          const updated = { ...profile, nombreUsuario: nombreUsuario.trim() };
          setProfile(updated);
@@ -174,6 +193,35 @@ export default function Profile() {
          setError(msg);
       } finally {
          setSavingName(false);
+      }
+   };
+
+   const onSaveDesc = async () => {
+      setError("");
+      setOkMsg("");
+      if (!userId) return;
+
+      try {
+         setSavingDesc(true);
+
+         const clean = (descripcion ?? "").trim();
+         await usersApi.updateUsuario(userId, { descripcion: clean });
+
+         const updated = { ...profile, descripcion: clean };
+         setProfile(updated);
+         syncLocalUser(updated);
+
+         setEditDescMode(false);
+         setOkMsg("Descripción actualizada.");
+      } catch (err) {
+         const msg =
+            err?.response?.data?.message ||
+            err?.response?.data?.error ||
+            err?.message ||
+            "No se pudo actualizar la descripción.";
+         setError(msg);
+      } finally {
+         setSavingDesc(false);
       }
    };
 
@@ -223,6 +271,7 @@ export default function Profile() {
 
          setSelectedFile(null);
          setOkMsg("Foto de perfil actualizada.");
+         setPhotoVersion((v) => v + 1);
       } catch (err) {
          const msg =
             err?.response?.data?.message ||
@@ -235,6 +284,11 @@ export default function Profile() {
       }
    };
 
+   const goToPoll = (pollId) => {
+      if (!pollId) return;
+      navigate(`/encuestas/${pollId}`);
+   };
+
    if (loading) {
       return (
          <div className="container" style={{ padding: 24 }}>
@@ -242,6 +296,9 @@ export default function Profile() {
          </div>
       );
    }
+
+   const descText =
+      profile?.descripcion?.trim() ? profile.descripcion : "Sin descripción.";
 
    return (
       <div className="container uv-profile">
@@ -257,17 +314,25 @@ export default function Profile() {
                   <p>Gestiona tu foto, tu información y tus encuestas creadas.</p>
                </div>
 
-               <button className="uv-profile-logout" onClick={logout}>
-                  Cerrar sesión
-               </button>
+               <div className="uv-logout-wrap">
+                  <button className="uv-profile-logout" onClick={logout} type="button">
+                     Cerrar sesión
+                  </button>
+
+                  <div className="uv-created-at">
+                     Cuenta creada:{" "}
+                     <strong>
+                        {profile?.creadoEn ? new Date(profile.creadoEn).toLocaleString() : "—"}
+                     </strong>
+                  </div>
+               </div>
             </div>
 
             {error && <div className="uv-profile-alert">{error}</div>}
             {okMsg && <div className="uv-profile-alert">{okMsg}</div>}
 
-            {/* BLOQUES 1 y 2: Foto + Info, horizontal */}
             <div className="uv-profile-top">
-               {/* 1) Foto */}
+               {/* Foto */}
                <section className="uv-profile-box uv-photo-box">
                   <div className="uv-photo-stack">
                      <div className="uv-avatar uv-avatar-xl">
@@ -314,7 +379,7 @@ export default function Profile() {
                   </div>
                </section>
 
-               {/* 2) Info */}
+               {/* Info */}
                <section className="uv-profile-box uv-info-box">
                   <h2>Información</h2>
 
@@ -323,6 +388,7 @@ export default function Profile() {
                      <span className="uv-v">{profile?.correo ?? "-"}</span>
                   </div>
 
+                  {/* Nombre */}
                   <div className="uv-profile-row uv-profile-row-edit">
                      <span className="uv-k">Nombre de usuario</span>
 
@@ -337,6 +403,7 @@ export default function Profile() {
                                  setError("");
                               }}
                               title="Editar"
+                              type="button"
                            >
                               <FiEdit3 />
                            </button>
@@ -373,15 +440,98 @@ export default function Profile() {
                      )}
                   </div>
 
+
+                  {/* ✅ Descripción (label arriba, bloque debajo) */}
+                  <div className="uv-profile-row uv-profile-row-desc-vertical">
+                     <span className="uv-k">Descripción</span>
+
+                     {!editDescMode ? (
+                        <div className="uv-desc-box uv-desc-box-with-action">
+                           <button
+                              className="uv-inline-btn uv-desc-edit"
+                              onClick={() => {
+                                 setEditDescMode(true);
+                                 setDescripcion(profile?.descripcion ?? "");
+                                 setOkMsg("");
+                                 setError("");
+                              }}
+                              title="Editar"
+                              type="button"
+                           >
+                              <FiEdit3 />
+                           </button>
+
+                           <div className="uv-desc-text">
+                              {profile?.descripcion?.trim()
+                                 ? profile.descripcion
+                                 : "Sin descripción."}
+                           </div>
+                        </div>
+                     ) : (
+                        <>
+                           <div className="uv-desc-box uv-desc-box-with-action">
+                              <textarea
+                                 value={descripcion}
+                                 onChange={(e) => setDescripcion(e.target.value)}
+                                 className="uv-edit-textarea uv-edit-textarea-fixed uv-desc-textarea"
+                                 placeholder="Escribe una descripción (máx. 500 caracteres)"
+                                 maxLength={DESC_MAX}
+                              />
+                           </div>
+
+                           <div
+                              className="uv-desc-counter"
+                              style={{
+                                 width: "100%",
+                                 display: "flex",
+                                 justifyContent: "flex-end",
+                                 marginTop: 8,
+                                 fontSize: 12,
+                                 fontWeight: 800,
+                                 color:
+                                    descRemaining <= 25
+                                       ? "rgba(160, 60, 60, 0.90)"
+                                       : "rgba(48, 47, 44, 0.62)",
+                              }}
+                           >
+                              {descRemaining} caracteres restantes
+                           </div>
+
+                           <div className="uv-edit-actions">
+                              <button
+                                 className="uv-edit-btn"
+                                 disabled={!canSaveDesc || savingDesc}
+                                 onClick={onSaveDesc}
+                                 type="button"
+                              >
+                                 <FiSave /> {savingDesc ? "Guardando..." : "Guardar"}
+                              </button>
+
+                              <button
+                                 className="uv-edit-btn uv-edit-cancel"
+                                 type="button"
+                                 onClick={() => {
+                                    setEditDescMode(false);
+                                    setDescripcion(profile?.descripcion ?? "");
+                                 }}
+                              >
+                                 <FiXCircle /> Cancelar
+                              </button>
+                           </div>
+                        </>
+                     )}
+                  </div>
+
+
                </section>
             </div>
 
-            {/* 3) Encuestas: buscador + lista */}
+            {/* Encuestas */}
             <section className="uv-profile-box uv-polls-box">
                <div className="uv-polls-header">
                   <div>
                      <h2>Mis encuestas</h2>
-                     <p className="uv-muted">Busca por nombre y revisa el estado de cada encuesta.</p>
+                     <p className="uv-muted">Haz click en una encuesta para ver sus detalles.</p>
                   </div>
 
                   <div className="uv-search">
@@ -393,7 +543,12 @@ export default function Profile() {
                         className="uv-search-input"
                      />
                      {query && (
-                        <button className="uv-search-clear" onClick={() => setQuery("")} title="Limpiar">
+                        <button
+                           className="uv-search-clear"
+                           onClick={() => setQuery("")}
+                           title="Limpiar"
+                           type="button"
+                        >
                            <FiXCircle />
                         </button>
                      )}
@@ -408,25 +563,30 @@ export default function Profile() {
                   </p>
                ) : (
                   <>
-                     {/* Lista con scroll interno */}
                      <div className="uv-polls-list uv-polls-scroll">
                         {pageItems.map((p) => (
-                           <div key={p.id} className="uv-poll-item">
+                           <button
+                              key={p.id}
+                              className="uv-poll-item"
+                              type="button"
+                              onClick={() => goToPoll(p.id)}
+                              title="Ver detalles de la encuesta"
+                           >
                               <div className="uv-poll-title">{p.titulo ?? p.nombre ?? "Encuesta"}</div>
                               <div className="uv-poll-meta">
                                  <span className="uv-pill">{estadoLabel(p)}</span>
                               </div>
-                           </div>
+                           </button>
                         ))}
                      </div>
 
-                     {/* Paginación (solo si hay más de 5) */}
                      {filteredPolls.length > PAGE_SIZE && (
                         <div className="uv-pagination">
                            <button
                               className="uv-page-btn"
                               onClick={() => setPage((p) => Math.max(1, p - 1))}
                               disabled={page === 1}
+                              type="button"
                            >
                               Anterior
                            </button>
@@ -439,6 +599,7 @@ export default function Profile() {
                               className="uv-page-btn"
                               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                               disabled={page === totalPages}
+                              type="button"
                            >
                               Siguiente
                            </button>

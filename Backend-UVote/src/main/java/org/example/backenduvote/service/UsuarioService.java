@@ -12,6 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
@@ -101,8 +106,14 @@ public class UsuarioService {
             usuario.setNombreUsuario(nuevo);
         }
 
+        if (request.getDescripcion() != null) {
+            String desc = request.getDescripcion().trim();
+            usuario.setDescripcion(desc.isBlank() ? null : desc);
+        }
+
         return mapToResponse(usuarioRepository.save(usuario));
     }
+
 
     // -------------------------
     // Subir foto de perfil (Multipart) - Opción 1
@@ -157,6 +168,36 @@ public class UsuarioService {
         return mapToResponse(usuario);
     }
 
+
+    @Transactional
+    public UsuarioResponse actualizarUsuarioSeguro(Long id, UsuarioUpdateRequest request, Authentication auth) {
+        String correoAuth = auth.getName();
+
+        Usuario usuarioAuth = usuarioRepository.findByCorreo(correoAuth)
+                .orElseThrow(() -> new IllegalArgumentException("El usuario no existe"));
+
+        if (!usuarioAuth.getId().equals(id)) {
+            throw new AccessDeniedException("No tienes permiso para modificar este usuario");
+        }
+
+        return actualizarUsuario(id, request);
+    }
+
+    @Transactional
+    public UsuarioResponse actualizarFotoPerfilSeguro(Long id, MultipartFile file, Authentication auth) {
+        String correoAuth = auth.getName();
+
+        Usuario usuarioAuth = usuarioRepository.findByCorreo(correoAuth)
+                .orElseThrow(() -> new IllegalArgumentException("El usuario no existe"));
+
+        if (!usuarioAuth.getId().equals(id)) {
+            throw new AccessDeniedException("No tienes permiso para modificar este usuario");
+        }
+
+        return actualizarFotoPerfil(id, file);
+    }
+
+
     // -------------------------
     // Mapper
     // -------------------------
@@ -166,8 +207,9 @@ public class UsuarioService {
                 usuario.getNombreUsuario(),
                 usuario.getCorreo(),
                 usuario.getCreadoEn(),
-                usuario.getFotoPerfil()// ✅ ahora /api/files/profile/<file>
-
+                usuario.getFotoPerfil(),
+                usuario.getDescripcion()
         );
     }
+
 }

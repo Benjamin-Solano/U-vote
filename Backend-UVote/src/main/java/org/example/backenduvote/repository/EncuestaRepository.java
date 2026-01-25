@@ -8,4 +8,6 @@ import java.util.List;
 public interface EncuestaRepository extends JpaRepository<Encuesta, Long> {
 
     List<Encuesta> findByUsuarioId(Long usuarioId);
+    List<Encuesta> findByUsuarioIdOrderByIdDesc(Long usuarioId);
+
 }

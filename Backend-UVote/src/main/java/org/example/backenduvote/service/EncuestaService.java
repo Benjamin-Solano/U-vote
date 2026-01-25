@@ -82,6 +82,14 @@ public class EncuestaService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuario autenticado no encontrado"));
     }
 
+    public List<EncuestaResponse> listarPorCreador(Long usuarioId) {
+        return encuestaRepository.findByUsuarioIdOrderByIdDesc(usuarioId)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+
     private EncuestaResponse mapToResponse(Encuesta e) {
         return new EncuestaResponse(
                 e.getId(),

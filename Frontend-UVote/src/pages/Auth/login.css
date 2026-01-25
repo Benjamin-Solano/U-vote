@@ -8,10 +8,9 @@
 }
 
 .uv-login-page {
-   min-height: calc(100vh - 0px);
+   min-height: calc(80vh - 0px);
    display: grid;
    place-items: center;
-   padding: 32px 16px;
    background: var(--uv-bg);
 }
 

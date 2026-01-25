@@ -8,15 +8,17 @@ public class UsuarioResponse {
     private String correo;
     private OffsetDateTime creadoEn;
     private String fotoPerfil;
+    private String descripcion;
 
     public UsuarioResponse() {}
 
-    public UsuarioResponse(Long id, String nombreUsuario, String correo, OffsetDateTime creadoEn, String fotoPerfil) {
+    public UsuarioResponse(Long id, String nombreUsuario, String correo, OffsetDateTime creadoEn, String fotoPerfil, String descripcion) {
         this.id = id;
         this.nombreUsuario = nombreUsuario;
         this.correo = correo;
         this.fotoPerfil = fotoPerfil;
         this.creadoEn = creadoEn;
+        this.descripcion = descripcion;
     }
 
     public Long getId() {
@@ -37,6 +39,8 @@ public class UsuarioResponse {
 
     public String getFotoPerfil() { return fotoPerfil; }
 
+    public String getDescripcion() { return descripcion; }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -55,4 +59,6 @@ public class UsuarioResponse {
         this.creadoEn = creadoEn;
     }
 
+
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 }

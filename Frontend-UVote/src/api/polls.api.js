@@ -8,6 +8,8 @@ export const pollsApi = {
    // Requiere JWT
    create: (payload) => api.post("/encuestas", payload),
    close: (id) => api.post(`/encuestas/${id}/cerrar`),
+   listByCreadorId: (id) => api.get(`/encuestas/creador/${id}`),
+
 };
 
 

@@ -13,6 +13,8 @@ CREATE TABLE usuarios (
     contrasena_hash VARCHAR(255) NOT NULL,
     creado_en       TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+ALTER TABLE usuarios
+ADD COLUMN foto_perfil TEXT;
 
 -- =======================================
 --   Tabla: encuestas

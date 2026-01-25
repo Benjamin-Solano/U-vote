@@ -44,4 +44,10 @@ public class EncuestaController {
     public ResponseEntity<EncuestaResponse> cerrar(@PathVariable Long id) {
         return ResponseEntity.ok(encuestaService.cerrarEncuesta(id));
     }
+
+    @GetMapping("/creador/{id}")
+    public List<EncuestaResponse> listarPorCreador(@PathVariable Long id) {
+        return encuestaService.listarPorCreador(id);
+    }
+
 }

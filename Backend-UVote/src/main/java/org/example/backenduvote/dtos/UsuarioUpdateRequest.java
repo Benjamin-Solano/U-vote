@@ -10,6 +10,9 @@ public class UsuarioUpdateRequest {
     @Size(max = 500)
     private String fotoPerfil;
 
+    @Size(max = 500)
+    private String descripcion;
+
     public UsuarioUpdateRequest() {}
 
     public String getNombreUsuario() { return nombreUsuario; }
@@ -17,4 +20,7 @@ public class UsuarioUpdateRequest {
 
     public String getFotoPerfil() { return fotoPerfil; }
     public void setFotoPerfil(String fotoPerfil) { this.fotoPerfil = fotoPerfil; }
+
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 }

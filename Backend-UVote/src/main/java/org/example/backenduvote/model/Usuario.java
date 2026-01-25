@@ -31,6 +31,11 @@ public class Usuario {
     @Column(name = "creado_en", nullable = false, columnDefinition = "TIMESTAMPTZ")
     private OffsetDateTime creadoEn;
 
+
+    @Column(name = "descripcion", length = 500)
+    private String descripcion;
+
+
     // Validacion de OffsetDateTime
     @PrePersist
     protected void onCreate() {
@@ -57,6 +62,8 @@ public class Usuario {
     public String getContrasenaHash() { return contrasenaHash;}
     public String getFotoPerfil() { return fotoPerfil; }
     public OffsetDateTime getCreadoEn() { return creadoEn;}
+    public String getDescripcion() { return descripcion; }
+
 
     // Sets
     public void setId(Long id) { this.id = id;}
@@ -65,4 +72,6 @@ public class Usuario {
     public void setContrasenaHash(String contrasenaHash) { this.contrasenaHash = contrasenaHash;}
     public void setFotoPerfil(String fotoPerfil) { this.fotoPerfil = fotoPerfil; }
     public void setCreadoEn(OffsetDateTime creadoEn) { this.creadoEn = creadoEn;}
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+
 }

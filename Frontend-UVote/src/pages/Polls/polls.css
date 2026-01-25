@@ -11,7 +11,7 @@
    ========================================================= */
 .uv-polls-scope {
    /* “aire” debajo del navbar */
-   padding-top: 18px;
+   padding-top: 34px;
 }
 
 /* =========================================================
@@ -78,16 +78,29 @@
    border: 1px solid rgba(48, 47, 44, 0.16);
    background: rgba(255, 255, 255, 0.55);
    cursor: pointer;
+   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
 }
 
 .uv-polls-scope .uv-btn:hover {
    transform: translateY(-1px);
+   background: rgba(255, 255, 255, 0.68);
+   border-color: rgba(48, 47, 44, 0.22);
+}
+
+.uv-polls-scope .uv-btn:disabled {
+   opacity: 0.6;
+   cursor: not-allowed;
+   transform: none;
 }
 
 .uv-polls-scope .uv-btn-dark {
    background: #302f2c;
    color: #efede3;
    border-color: #302f2c;
+}
+
+.uv-polls-scope .uv-btn-dark:hover {
+   filter: brightness(1.03);
 }
 
 /* Grid de cards */
@@ -173,6 +186,7 @@
    margin-top: 12px;
    font-size: 12px;
    color: rgba(48, 47, 44, 0.6);
+   gap: 12px;
 }
 
 /* ✅ Renombrado para no colisionar con .uv-pill de profile.css */
@@ -562,7 +576,6 @@
    }
 }
 
-
 /* =========================================================
    [PAGE] PollDetail - Detalle de encuesta (ficha contenedora)
    ========================================================= */
@@ -583,4 +596,345 @@
    background: rgba(255, 255, 255, 0.55);
    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
    padding: 18px;
+}
+
+/* ===== PollDetail additions (tabs / stats / charts) ===== */
+
+.uv-polls-scope .uv-tabs {
+   display: flex;
+   gap: 8px;
+   margin-top: 12px;
+   padding-top: 2px;
+   border-bottom: 1px solid rgba(48, 47, 44, 0.12);
+}
+
+.uv-polls-scope .uv-tab {
+   padding: 10px 14px;
+   background: transparent;
+   border: none;
+   font-weight: 800;
+   color: rgba(48, 47, 44, 0.62);
+   cursor: pointer;
+   position: relative;
+   border-radius: 12px 12px 0 0;
+   transition: color 120ms ease, background 120ms ease;
+}
+
+.uv-polls-scope .uv-tab:hover {
+   background: rgba(255, 255, 255, 0.35);
+   color: rgba(48, 47, 44, 0.82);
+}
+
+.uv-polls-scope .uv-tab.active {
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-tab.active::after {
+   content: "";
+   position: absolute;
+   left: 10px;
+   right: 10px;
+   bottom: -1px;
+   height: 2px;
+   background: #302f2c;
+   border-radius: 2px;
+}
+
+.uv-polls-scope .uv-detail-h2 {
+   margin: 10px 0;
+   color: #302f2c;
+   font-size: 18px;
+}
+
+/* Grid 2 columnas para opciones en detail */
+.uv-polls-scope .uv-detail-grid-2 {
+   grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 860px) {
+   .uv-polls-scope .uv-detail-grid-2 {
+      grid-template-columns: 1fr;
+   }
+}
+
+/* Links sutiles */
+.uv-polls-scope .uv-muted-link {
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.75);
+   text-decoration: none;
+   border-bottom: 1px solid rgba(48, 47, 44, 0.22);
+}
+
+.uv-polls-scope .uv-muted-link:hover {
+   border-bottom-color: rgba(48, 47, 44, 0.55);
+}
+
+/* Hint */
+.uv-polls-scope .uv-hint {
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.7);
+}
+
+/* Stats block */
+.uv-polls-scope .uv-stats-head {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   gap: 12px;
+}
+
+.uv-polls-scope .uv-stats-title {
+   font-weight: 900;
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-stats-total {
+   display: inline-flex;
+   align-items: baseline;
+   gap: 10px;
+   color: rgba(48, 47, 44, 0.75);
+   font-weight: 800;
+}
+
+.uv-polls-scope .uv-stats-total strong {
+   color: #302f2c;
+}
+
+/* Results list */
+.uv-polls-scope .uv-results-list {
+   margin-top: 12px;
+   display: grid;
+   gap: 10px;
+}
+
+.uv-polls-scope .uv-result-row {
+   display: grid;
+   gap: 6px;
+}
+
+.uv-polls-scope .uv-result-head {
+   display: flex;
+   justify-content: space-between;
+   gap: 12px;
+   align-items: baseline;
+}
+
+.uv-polls-scope .uv-result-name {
+   font-weight: 800;
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-result-val {
+   font-weight: 800;
+   color: rgba(48, 47, 44, 0.82);
+}
+
+.uv-polls-scope .uv-result-val span {
+   color: rgba(48, 47, 44, 0.62);
+}
+
+/* Bar */
+.uv-polls-scope .uv-bar {
+   height: 10px;
+   border-radius: 999px;
+   background: rgba(48, 47, 44, 0.10);
+   overflow: hidden;
+}
+
+.uv-polls-scope .uv-bar>div {
+   height: 100%;
+   background: #302f2c;
+}
+
+/* Chart toolbar */
+.uv-polls-scope .uv-chart-toolbar {
+   display: inline-flex;
+   gap: 8px;
+   flex-wrap: wrap;
+   justify-content: flex-end;
+}
+
+.uv-polls-scope .uv-chip {
+   border: 1px solid rgba(48, 47, 44, 0.16);
+   background: rgba(255, 255, 255, 0.45);
+   color: rgba(48, 47, 44, 0.85);
+   font-weight: 850;
+   border-radius: 999px;
+   padding: 8px 10px;
+   cursor: pointer;
+   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+   font-size: 12px;
+}
+
+.uv-polls-scope .uv-chip:hover {
+   transform: translateY(-1px);
+   background: rgba(255, 255, 255, 0.62);
+   border-color: rgba(48, 47, 44, 0.22);
+}
+
+.uv-polls-scope .uv-chip.active {
+   background: rgba(48, 47, 44, 0.10);
+   border-color: rgba(48, 47, 44, 0.26);
+   color: #302f2c;
+}
+
+/* Chart container */
+.uv-polls-scope .uv-chart-box {
+   margin-top: 12px;
+   border-radius: 16px;
+   border: 1px dashed rgba(48, 47, 44, 0.18);
+   background: rgba(239, 237, 227, 0.35);
+   padding: 14px;
+}
+
+/* Placeholder */
+.uv-polls-scope .uv-chart-placeholder {
+   min-height: 220px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.45);
+   display: grid;
+   place-items: center;
+   text-align: center;
+   gap: 6px;
+   color: rgba(48, 47, 44, 0.78);
+}
+
+.uv-polls-scope .uv-chart-ph-title {
+   font-weight: 900;
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-chart-ph-sub {
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.65);
+}
+
+
+
+
+/* Cards más limpias (menos sombra) */
+.uv-polls-scope .uv-poll-card.uv-flat {
+   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+}
+
+.uv-polls-scope .uv-poll-card.uv-flat:hover {
+   transform: translateY(-1px);
+   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   Charts styles
+   ========================================================= */
+
+/* ===== Charts (Recharts) ===== */
+
+.uv-polls-scope .uv-chart-box {
+   margin-top: 12px;
+   border-radius: 16px;
+   border: 1px dashed rgba(48, 47, 44, 0.18);
+   background: rgba(239, 237, 227, 0.30);
+   padding: 14px;
+}
+
+.uv-polls-scope .uv-chart-empty {
+   min-height: 220px;
+   display: grid;
+   place-items: center;
+   color: rgba(48, 47, 44, 0.70);
+   font-weight: 700;
+   background: rgba(255, 255, 255, 0.40);
+   border: 1px solid rgba(48, 47, 44, 0.10);
+   border-radius: 14px;
+}
+
+.uv-polls-scope .uv-chart-shell {
+   width: 100%;
+}
+
+.uv-polls-scope .uv-chart-tooltip {
+   background: rgba(255, 255, 255, 0.92);
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   border-radius: 12px;
+   padding: 10px 12px;
+   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
+}
+
+.uv-polls-scope .uv-tt-title {
+   font-weight: 900;
+   color: #302f2c;
+   margin-bottom: 4px;
+}
+
+.uv-polls-scope .uv-tt-val {
+   font-weight: 800;
+   color: rgba(48, 47, 44, 0.86);
+}
+
+.uv-polls-scope .uv-tt-sub {
+   margin-top: 4px;
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.65);
+   font-weight: 800;
+}
+
+/* Recharts: que respete la paleta */
+.uv-polls-scope .recharts-cartesian-grid-horizontal line,
+.uv-polls-scope .recharts-cartesian-grid-vertical line {
+   stroke: rgba(48, 47, 44, 0.12);
+}
+
+.uv-polls-scope .recharts-text {
+   fill: rgba(48, 47, 44, 0.82);
+   font-weight: 700;
+}
+
+.uv-polls-scope .recharts-bar-rectangle path {
+   fill: #302f2c;
+}
+
+/* Leyenda pastel minimalista */
+.uv-polls-scope .uv-pie-legend {
+   margin-top: 10px;
+   display: grid;
+   gap: 8px;
+}
+
+.uv-polls-scope .uv-pie-item {
+   display: grid;
+   grid-template-columns: 14px 1fr auto;
+   gap: 10px;
+   align-items: center;
+   padding: 10px 12px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.10);
+   background: rgba(255, 255, 255, 0.40);
+}
+
+.uv-polls-scope .uv-dot {
+   width: 10px;
+   height: 10px;
+   border-radius: 999px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+}
+
+.uv-polls-scope .uv-pie-name {
+   font-weight: 850;
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-pie-val {
+   font-weight: 900;
+   color: rgba(48, 47, 44, 0.80);
+}
+
+
+/* Empuja contenido para que el footer no aparezca en el primer pantallazo */
+.uv-polls-scope .uv-detail-wrap,
+.uv-polls-scope .uv-polls-page,
+.uv-polls-scope .uv-search-page,
+.uv-polls-scope .uv-create-wrap {
+   padding-bottom: 220px;
+   /* ✅ fuerza scroll y footer fuera de vista */
 }

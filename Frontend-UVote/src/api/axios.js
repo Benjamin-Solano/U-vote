@@ -1,13 +1,25 @@
 import axios from "axios";
 
 export const api = axios.create({
-   baseURL: import.meta.env.VITE_API_URL, // ✅ debe ser http://localhost:8080/api
-   headers: { "Content-Type": "application/json" },
+   baseURL: import.meta.env.VITE_API_URL, // http://localhost:8080/api
+   headers: {
+      "Content-Type": "application/json",
+   },
 });
 
-// (Opcional) Si usas token en AuthProvider, puedes meter interceptor aquí:
-api.interceptors.request.use((config) => {
-   const token = localStorage.getItem("token");
-   if (token) config.headers.Authorization = `Bearer ${token}`;
-   return config;
-});
+// 🔐 Interceptor JWT (VERSIÓN SEGURA)
+api.interceptors.request.use(
+   (config) => {
+      const token = localStorage.getItem("token");
+
+      // ⛑️ Garantiza que headers exista
+      config.headers = config.headers ?? {};
+
+      if (token) {
+         config.headers.Authorization = `Bearer ${token}`;
+      }
+
+      return config;
+   },
+   (error) => Promise.reject(error)
+);

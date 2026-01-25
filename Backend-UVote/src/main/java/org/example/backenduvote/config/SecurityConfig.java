@@ -26,49 +26,35 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * CORS para permitir que el frontend (Vite) en http://localhost:5173
-     * pueda llamar al backend en http://localhost:8080.
-     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // ✅ Origen del frontend
         config.setAllowedOrigins(List.of("http://localhost:5173"));
-
-        // ✅ Métodos permitidos (incluye OPTIONS para preflight)
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-        // ✅ Headers permitidos
         config.setAllowedHeaders(List.of("*"));
 
-        // ✅ Si usas cookies/sesión no aplica mucho porque es JWT stateless,
-        // pero lo dejamos habilitado por compatibilidad (si no lo necesitas, puedes poner false)
+        // Si NO usas cookies, podrías poner false.
+        // Con true, el origin NO puede ser "*", y tú lo tienes bien (localhost:5173).
         config.setAllowCredentials(true);
 
-        // Opcional: headers expuestos
         config.setExposedHeaders(List.of("Authorization"));
-
-
-
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
 
-    // 1) Auth: público y sin filtro JWT
+    // 1) Auth: público y sin JWT filter
     @Bean
     @Order(1)
     public SecurityFilterChain authChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/api/auth/**")
-                .cors(Customizer.withDefaults()) // ✅ Habilita CORS
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // ✅ Preflight
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().permitAll()
                 );
@@ -76,7 +62,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 2) API: reglas + filtro JWT
+    // 2) API: JWT filter + reglas
     @Bean
     @Order(2)
     public SecurityFilterChain apiChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter) throws Exception {
@@ -89,28 +75,29 @@ public class SecurityConfig {
                         // Preflight
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // ✅ Archivos públicos (foto perfil)
+                        // Files públicos
                         .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
 
-                        // ✅ Usuarios (registro y lectura públicas por ahora)
-                        .requestMatchers(HttpMethod.POST, "/api/usuarios", "/api/usuarios/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,  "/api/usuarios", "/api/usuarios/**").permitAll()
+                        // Usuarios
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/usuarios", "/api/usuarios/**").permitAll()
 
-                        // ✅ Encuestas: GET público
-                        .requestMatchers(HttpMethod.GET,  "/api/encuestas", "/api/encuestas/**").permitAll()
+                        // ✅ PUT usuario (nombre/descripcion) -> requiere token
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/id/**").authenticated()
 
-                        // ✅ Opciones: lectura pública (ID como 1 segmento)
+                        // ✅ Subir foto -> requiere token
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/id/**/foto").authenticated()
+
+                        // Encuestas (lectura pública)
+                        .requestMatchers(HttpMethod.GET, "/api/encuestas", "/api/encuestas/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/encuestas/*/opciones").permitAll()
-
-                        // ✅ Votos: resultados públicos
                         .requestMatchers(HttpMethod.GET, "/api/encuestas/**/resultados").permitAll()
 
-                        // ✅ Todo lo demás requiere auth
+                        // TODO lo demás requiere token
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 }
