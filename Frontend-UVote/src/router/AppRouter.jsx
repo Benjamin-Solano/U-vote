@@ -1,17 +1,23 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Home from "../pages/Home/Home";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 
-import Polls from "../pages/Polls/Polls";
+import SearchPolls from "../pages/Polls/SearchPolls";
 import PollDetail from "../pages/Polls/PollDetail";
+import CreatePoll from "../pages/Polls/CreatePoll";
 
-import AdminPolls from "../pages/Admin/AdminPolls";
+
 import ProtectedRoute from "../auth/ProtectedRoute";
-
 import Profile from "../pages/Profile/Profile";
 
+function PollsIdRedirect() {
+   const location = useLocation();
+   // /polls/123 -> /encuestas/123
+   const next = location.pathname.replace("/polls/", "/encuestas/");
+   return <Navigate to={next} replace />;
+}
 
 export default function AppRouter() {
    return (
@@ -25,20 +31,21 @@ export default function AppRouter() {
          <Route path="/login" element={<Login />} />
          <Route path="/register" element={<Register />} />
 
-         {/* (Por backend: GET encuestas es público) */}
-         <Route path="/polls" element={<Polls />} />
-         <Route path="/polls/:id" element={<PollDetail />} />
+         {/* Encuestas (público: solo búsqueda + detalle) */}
+         <Route path="/encuestas" element={<Navigate to="/encuestas/buscar" replace />} />
+         <Route path="/encuestas/buscar" element={<SearchPolls />} />
+         <Route path="/encuestas/:id" element={<PollDetail />} />
+
+         {/* Compatibilidad */}
+         <Route path="/polls" element={<Navigate to="/encuestas/buscar" replace />} />
+         <Route path="/polls/:id" element={<PollsIdRedirect />} />
 
          {/* Protegidas */}
          <Route element={<ProtectedRoute />}>
-            <Route path="/admin/polls" element={<AdminPolls />} />
-         </Route>
-
-         <Route element={<ProtectedRoute />}>
+            <Route path="/encuestas/crear" element={<CreatePoll />} />
             <Route path="/perfil" element={<Profile />} />
-            <Route path="/admin/polls" element={<AdminPolls />} />
-         </Route>
 
+         </Route>
 
          {/* 404 */}
          <Route

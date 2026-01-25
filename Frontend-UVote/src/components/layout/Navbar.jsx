@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FiHome, FiInfo, FiPlusCircle, FiLogIn, FiLogOut } from "react-icons/fi";
+import { FiHome, FiInfo, FiPlusCircle, FiLogIn, FiLogOut, FiSearch } from "react-icons/fi";
 import "./navbar.css";
 
 import { useAuth } from "../../auth/useAuth";
@@ -68,10 +68,16 @@ export default function Navbar() {
                   <FiInfo /> About
                </NavLink>
 
-               <NavLink to="/polls" className={linkClass}>
+
+               <NavLink to="/encuestas/buscar" className={linkClass}>
+                  <FiSearch /> Buscar Encuestas
+               </NavLink>
+               <NavLink
+                  to={isAuthenticated ? "/encuestas/crear" : "/login"}
+                  className={linkClass}
+               >
                   <FiPlusCircle /> Crear Encuesta
                </NavLink>
-
                {/* Derecha */}
                {!isAuthenticated ? (
                   <NavLink to="/login" className={`${linkClass({ isActive: false })} uv-link-primary`}>

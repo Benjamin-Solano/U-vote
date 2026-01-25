@@ -1,14 +1,13 @@
 import { api } from "./axios";
 
 export const pollsApi = {
+   // Público
    list: () => api.get("/encuestas"),
    getById: (id) => api.get(`/encuestas/${id}`),
 
+   // Requiere JWT
    create: (payload) => api.post("/encuestas", payload),
-   delete: (id) => api.delete(`/encuestas/${id}`),
    close: (id) => api.post(`/encuestas/${id}/cerrar`),
-
-
-   // Ajusta a tu endpoint real:
-   listByCreadorId: (creadorId) => api.get(`/encuestas?creadorId=${creadorId}`),
 };
+
+

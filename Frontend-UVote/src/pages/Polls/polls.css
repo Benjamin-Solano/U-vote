@@ -1,0 +1,586 @@
+/* =========================================================
+   POLLS / ENCUESTAS - styles scoped
+   Regla clave:
+   - Todo lo de encuestas vive bajo .uv-polls-scope
+   - Así evitamos colisiones con profile.css u otros módulos
+   ========================================================= */
+
+/* =========================================================
+   Global scope spacing (separa el body del navbar)
+   Aplica SOLO a encuestas (no afecta Profile).
+   ========================================================= */
+.uv-polls-scope {
+   /* “aire” debajo del navbar */
+   padding-top: 18px;
+}
+
+/* =========================================================
+   [PAGE] Polls / Listado (uv-polls-page)
+   ========================================================= */
+.uv-polls-scope .uv-polls-page {
+   max-width: 1050px;
+   margin: 0 auto;
+   padding: 24px 16px 40px;
+}
+
+.uv-polls-scope .uv-polls-head {
+   display: flex;
+   align-items: flex-end;
+   justify-content: space-between;
+   gap: 16px;
+   margin-bottom: 16px;
+}
+
+.uv-polls-scope .uv-polls-title {
+   margin: 0;
+   font-size: 28px;
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-polls-sub {
+   margin: 6px 0 0;
+   color: rgba(48, 47, 44, 0.75);
+   font-size: 14px;
+}
+
+.uv-polls-scope .uv-polls-actions {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+}
+
+.uv-polls-scope .uv-polls-search {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   padding: 10px 12px;
+   border-radius: 14px;
+   background: rgba(255, 255, 255, 0.5);
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   min-width: 320px;
+}
+
+.uv-polls-scope .uv-polls-search-input {
+   width: 100%;
+   border: 0;
+   outline: none;
+   background: transparent;
+   color: #302f2c;
+}
+
+/* Botones (solo en scope de encuestas) */
+.uv-polls-scope .uv-btn {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   padding: 10px 14px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.16);
+   background: rgba(255, 255, 255, 0.55);
+   cursor: pointer;
+}
+
+.uv-polls-scope .uv-btn:hover {
+   transform: translateY(-1px);
+}
+
+.uv-polls-scope .uv-btn-dark {
+   background: #302f2c;
+   color: #efede3;
+   border-color: #302f2c;
+}
+
+/* Grid de cards */
+.uv-polls-scope .uv-polls-grid {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 12px;
+   margin-top: 14px;
+}
+
+@media (max-width: 980px) {
+   .uv-polls-scope .uv-polls-grid {
+      grid-template-columns: repeat(2, 1fr);
+   }
+
+   .uv-polls-scope .uv-polls-search {
+      min-width: 220px;
+   }
+}
+
+@media (max-width: 620px) {
+   .uv-polls-scope .uv-polls-head {
+      flex-direction: column;
+      align-items: stretch;
+   }
+
+   .uv-polls-scope .uv-polls-actions {
+      justify-content: space-between;
+   }
+
+   .uv-polls-scope .uv-polls-grid {
+      grid-template-columns: 1fr;
+   }
+
+   .uv-polls-scope .uv-polls-search {
+      min-width: 0;
+      width: 100%;
+   }
+}
+
+/* Card base encuestas/opciones */
+.uv-polls-scope .uv-poll-card {
+   text-align: left;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   border-radius: 16px;
+   background: rgba(255, 255, 255, 0.55);
+   padding: 14px;
+   cursor: pointer;
+   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+   transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.uv-polls-scope .uv-poll-card:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+}
+
+.uv-polls-scope .uv-poll-card-top {
+   display: flex;
+   align-items: flex-start;
+   justify-content: space-between;
+   gap: 10px;
+}
+
+.uv-polls-scope .uv-poll-name {
+   font-weight: 700;
+   color: #302f2c;
+   font-size: 16px;
+}
+
+.uv-polls-scope .uv-poll-desc {
+   margin-top: 8px;
+   color: rgba(48, 47, 44, 0.78);
+   font-size: 13px;
+   line-height: 1.35;
+   min-height: 34px;
+}
+
+/* ✅ Renombrado para no colisionar con Profile */
+.uv-polls-scope .uv-poll-meta-row {
+   display: flex;
+   justify-content: space-between;
+   margin-top: 12px;
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.6);
+}
+
+/* ✅ Renombrado para no colisionar con .uv-pill de profile.css */
+.uv-polls-scope .uv-pills {
+   font-size: 12px;
+   padding: 6px 10px;
+   border-radius: 999px;
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   white-space: nowrap;
+}
+
+.uv-polls-scope .uv-pills.open {
+   background: rgba(255, 255, 255, 0.55);
+}
+
+.uv-polls-scope .uv-pills.closed {
+   background: rgba(48, 47, 44, 0.08);
+}
+
+/* Estados */
+.uv-polls-scope .uv-polls-state {
+   margin-top: 18px;
+   padding: 14px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.45);
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-polls-error {
+   margin-top: 18px;
+   padding: 14px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.18);
+   background: rgba(48, 47, 44, 0.06);
+   color: #302f2c;
+}
+
+/* =========================================================
+   [PAGE] SearchPolls - Buscar encuestas (Google-like)
+   ========================================================= */
+.uv-polls-scope .uv-search-page {
+   min-height: calc(100vh - 220px);
+   padding: 34px 16px 40px;
+   /* ✅ más separación del navbar */
+   display: flex;
+   flex-direction: column;
+   gap: 18px;
+}
+
+.uv-polls-scope .uv-search-center {
+   width: 100%;
+   max-width: 720px;
+   margin: 0 auto;
+   text-align: center;
+   padding-top: 56px;
+   /* ✅ baja el bloque para centrar visualmente */
+}
+
+.uv-polls-scope .uv-search-title {
+   margin: 0;
+   font-size: 56px;
+   font-weight: 800;
+   color: #302f2c;
+   letter-spacing: -0.02em;
+}
+
+.uv-polls-scope .uv-search-sub {
+   margin: 10px 0 18px;
+   font-size: 14px;
+   color: rgba(48, 47, 44, 0.75);
+}
+
+.uv-polls-scope .uv-search-bar {
+   margin: 0 auto;
+   width: 100%;
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   padding: 14px 16px;
+   border-radius: 999px;
+   background: rgba(255, 255, 255, 0.50);
+   border: 1px solid rgba(48, 47, 44, 0.16);
+   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+}
+
+.uv-polls-scope .uv-search-icon {
+   flex: 0 0 auto;
+   color: rgba(48, 47, 44, 0.65);
+}
+
+/* Input de búsqueda SOLO para SearchPolls */
+.uv-polls-scope .uv-search-input-field {
+   width: 100%;
+   border: 0;
+   outline: none;
+   background: transparent;
+   color: #302f2c;
+   font-size: 15px;
+}
+
+.uv-polls-scope .uv-search-hint {
+   margin-top: 14px;
+   color: rgba(48, 47, 44, 0.7);
+   font-size: 13px;
+}
+
+.uv-polls-scope .uv-search-error {
+   margin-top: 14px;
+   padding: 12px 14px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.18);
+   background: rgba(48, 47, 44, 0.06);
+   color: #302f2c;
+   max-width: 720px;
+   margin-left: auto;
+   margin-right: auto;
+   text-align: left;
+}
+
+.uv-polls-scope .uv-search-results {
+   width: 100%;
+   max-width: 980px;
+   margin: 0 auto;
+}
+
+.uv-polls-scope .uv-search-grid {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 12px;
+   margin-top: 8px;
+}
+
+@media (max-width: 980px) {
+   .uv-polls-scope .uv-search-grid {
+      grid-template-columns: repeat(2, 1fr);
+   }
+
+   .uv-polls-scope .uv-search-title {
+      font-size: 44px;
+   }
+
+   .uv-polls-scope .uv-search-center {
+      padding-top: 44px;
+   }
+}
+
+@media (max-width: 620px) {
+   .uv-polls-scope .uv-search-grid {
+      grid-template-columns: 1fr;
+   }
+
+   .uv-polls-scope .uv-search-title {
+      font-size: 38px;
+   }
+
+   .uv-polls-scope .uv-search-center {
+      padding-top: 30px;
+   }
+}
+
+.uv-polls-scope .uv-poll-card-compact {
+   cursor: pointer;
+   text-align: left;
+}
+
+.uv-polls-scope .uv-poll-card-compact .uv-poll-name {
+   font-size: 16px;
+}
+
+.uv-polls-scope .uv-poll-card-compact .uv-poll-desc {
+   min-height: unset;
+}
+
+/* =========================================================
+   Shared inputs used in CreatePoll/PollDetail forms
+   ========================================================= */
+.uv-polls-scope .uv-input,
+.uv-polls-scope .uv-textarea {
+   width: 100%;
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   background: rgba(255, 255, 255, 0.55);
+   border-radius: 14px;
+   padding: 12px 12px;
+   outline: none;
+   color: #302f2c;
+   font-size: 14px;
+}
+
+.uv-polls-scope .uv-textarea {
+   resize: vertical;
+   min-height: 96px;
+}
+
+.uv-polls-scope .uv-input:focus,
+.uv-polls-scope .uv-textarea:focus {
+   border-color: rgba(48, 47, 44, 0.28);
+}
+
+/* =========================================================
+   [PAGE] CreatePoll - Crear encuesta
+   ========================================================= */
+.uv-polls-scope .uv-create-wrap {
+   min-height: calc(100vh - 220px);
+   padding: 40px 16px 40px;
+   /* ✅ más separación navbar */
+   display: grid;
+   place-items: center;
+}
+
+.uv-polls-scope .uv-create-card {
+   width: 100%;
+   max-width: 980px;
+   margin: 0 auto;
+   /* ✅ refuerza centrado */
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   border-radius: 18px;
+   background: rgba(255, 255, 255, 0.55);
+   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+   padding: 18px;
+}
+
+.uv-polls-scope .uv-create-head {
+   display: grid;
+   grid-template-columns: auto 1fr;
+   gap: 14px;
+   align-items: center;
+}
+
+.uv-polls-scope .uv-create-titleblock {
+   display: grid;
+   gap: 4px;
+}
+
+.uv-polls-scope .uv-create-title {
+   margin: 0;
+   font-size: 22px;
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-create-sub {
+   margin: 0;
+   font-size: 13px;
+   color: rgba(48, 47, 44, 0.72);
+}
+
+.uv-polls-scope .uv-create-grid {
+   margin-top: 14px;
+   display: grid;
+   grid-template-columns: 1.1fr 0.9fr;
+   gap: 12px;
+}
+
+.uv-polls-scope .uv-field {
+   display: grid;
+   gap: 6px;
+}
+
+.uv-polls-scope .uv-field label {
+   font-size: 13px;
+   font-weight: 600;
+   color: rgba(48, 47, 44, 0.85);
+}
+
+.uv-polls-scope .uv-field-span {
+   grid-column: 1 / 2;
+}
+
+.uv-polls-scope .uv-textarea-fixed {
+   resize: none;
+}
+
+.uv-polls-scope .uv-inline-error {
+   margin-top: 12px;
+   padding: 12px 14px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.18);
+   background: rgba(48, 47, 44, 0.06);
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-section {
+   margin-top: 18px;
+}
+
+.uv-polls-scope .uv-section-title {
+   font-weight: 800;
+   color: #302f2c;
+   margin-bottom: 10px;
+}
+
+.uv-polls-scope .uv-options-list {
+   display: grid;
+   gap: 10px;
+}
+
+.uv-polls-scope .uv-option-row {
+   display: grid;
+   grid-template-columns: 320px 1fr auto;
+   gap: 10px;
+   align-items: start;
+   padding: 12px;
+   border-radius: 16px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.45);
+}
+
+.uv-polls-scope .uv-option-photo {
+   display: grid;
+   gap: 10px;
+}
+
+.uv-polls-scope .uv-photo-box {
+   height: 96px;
+   border-radius: 14px;
+   border: 1px dashed rgba(48, 47, 44, 0.25);
+   display: grid;
+   place-items: center;
+   color: rgba(48, 47, 44, 0.75);
+   background: rgba(239, 237, 227, 0.45);
+}
+
+.uv-polls-scope .uv-photo-box span {
+   font-size: 12px;
+   margin-top: 6px;
+}
+
+.uv-polls-scope .uv-option-fields {
+   display: grid;
+   gap: 10px;
+}
+
+.uv-polls-scope .uv-btn-icon {
+   padding: 10px 12px;
+}
+
+.uv-polls-scope .uv-input-invalid {
+   border-color: rgba(220, 53, 69, 0.55) !important;
+   background: rgba(220, 53, 69, 0.06) !important;
+}
+
+.uv-polls-scope .uv-create-actions {
+   margin-top: 12px;
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px;
+   justify-content: center;
+   /* ✅ centra los botones */
+}
+
+.uv-polls-scope .uv-toast {
+   position: fixed;
+   right: 18px;
+   bottom: 18px;
+   padding: 12px 14px;
+   border-radius: 14px;
+   font-size: 13px;
+   font-weight: 600;
+   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+   max-width: 360px;
+   z-index: 9999;
+}
+
+.uv-polls-scope .uv-toast.ok {
+   background: rgba(25, 135, 84, 0.15);
+   border: 1px solid rgba(25, 135, 84, 0.35);
+   color: #1b6e45;
+}
+
+.uv-polls-scope .uv-toast.bad {
+   background: rgba(220, 53, 69, 0.14);
+   border: 1px solid rgba(220, 53, 69, 0.35);
+   color: #a51d2d;
+}
+
+@media (max-width: 980px) {
+   .uv-polls-scope .uv-create-grid {
+      grid-template-columns: 1fr;
+   }
+
+   .uv-polls-scope .uv-field-span {
+      grid-column: auto;
+   }
+
+   .uv-polls-scope .uv-option-row {
+      grid-template-columns: 1fr;
+   }
+}
+
+
+/* =========================================================
+   [PAGE] PollDetail - Detalle de encuesta (ficha contenedora)
+   ========================================================= */
+.uv-polls-scope .uv-detail-wrap {
+   min-height: calc(100vh - 220px);
+   padding: 40px 16px 40px;
+   display: grid;
+   place-items: start center;
+   /* centrado horizontal, arriba con aire */
+}
+
+.uv-polls-scope .uv-detail-card {
+   width: 100%;
+   max-width: 1050px;
+   margin: 0 auto;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   border-radius: 18px;
+   background: rgba(255, 255, 255, 0.55);
+   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+   padding: 18px;
+}

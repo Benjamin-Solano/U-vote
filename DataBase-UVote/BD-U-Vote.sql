@@ -160,7 +160,7 @@ INSERT INTO votos (usuario_id, encuesta_id, opcion_id) VALUES
 
 
 
-SELECT * FROM Encuestas;
+SELECT * FROM encuestas;
 
 
 

@@ -1,9 +1,6 @@
 import { api } from "./axios";
 
 export const votesApi = {
-   vote: (pollId, payload) =>
-      api.post(`/encuestas/${pollId}/votos`, payload),
-
-   results: (pollId) =>
-      api.get(`/encuestas/${pollId}/resultados`),
+   vote: (encuestaId, opcionId) => api.post(`/encuestas/${encuestaId}/votos`, { opcionId }),
+   results: (encuestaId) => api.get(`/encuestas/${encuestaId}/resultados`),
 };

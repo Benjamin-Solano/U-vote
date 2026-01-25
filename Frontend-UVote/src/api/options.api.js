@@ -1,12 +1,7 @@
 import { api } from "./axios";
 
 export const optionsApi = {
-   listByPoll: (pollId) =>
-      api.get(`/encuestas/${pollId}/opciones`),
-
-   create: (pollId, payload) =>
-      api.post(`/encuestas/${pollId}/opciones`, payload),
-
-   remove: (optionId) =>
-      api.delete(`/opciones/${optionId}`),
+   listByEncuesta: (encuestaId) => api.get(`/encuestas/${encuestaId}/opciones`),
+   create: (encuestaId, payload) => api.post(`/encuestas/${encuestaId}/opciones`, payload),
+   delete: (opcionId) => api.delete(`/opciones/${opcionId}`),
 };
