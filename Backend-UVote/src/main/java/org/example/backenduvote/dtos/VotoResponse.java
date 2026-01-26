@@ -9,15 +9,17 @@ public class VotoResponse {
     private Long encuestaId;
     private Long opcionId;
     private OffsetDateTime creadoEn;
+    private String imagenUrl;
 
     public VotoResponse() {}
 
-    public VotoResponse(Long id, Long usuarioId, Long encuestaId, Long opcionId, OffsetDateTime creadoEn) {
+    public VotoResponse(Long id, Long usuarioId, Long encuestaId, Long opcionId, String imagenUrl, OffsetDateTime creadoEn) {
         this.id = id;
         this.usuarioId = usuarioId;
         this.encuestaId = encuestaId;
         this.opcionId = opcionId;
         this.creadoEn = creadoEn;
+        this.imagenUrl = imagenUrl;
     }
 
     public Long getId() { return id; }
@@ -25,4 +27,5 @@ public class VotoResponse {
     public Long getEncuestaId() { return encuestaId; }
     public Long getOpcionId() { return opcionId; }
     public OffsetDateTime getCreadoEn() { return creadoEn; }
+    public String getImagenUrl() { return imagenUrl; }
 }

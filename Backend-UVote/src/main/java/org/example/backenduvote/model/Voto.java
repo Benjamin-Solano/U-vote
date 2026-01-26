@@ -32,6 +32,11 @@ public class Voto {
     @Column(name = "creado_en", nullable = false, columnDefinition = "TIMESTAMPTZ")
     private OffsetDateTime creadoEn;
 
+    // Foto asociada al voto (opcional)
+    @Column(name = "imagen_url")
+    private String imagenUrl;
+
+
     public Voto() {}
 
     @PrePersist
@@ -51,6 +56,9 @@ public class Voto {
 
     public Long getOpcionId() { return opcionId; }
     public void setOpcionId(Long opcionId) { this.opcionId = opcionId; }
+
+    public String getImagenUrl() { return imagenUrl; }
+    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
 
     public OffsetDateTime getCreadoEn() { return creadoEn; }
     public void setCreadoEn(OffsetDateTime creadoEn) { this.creadoEn = creadoEn; }

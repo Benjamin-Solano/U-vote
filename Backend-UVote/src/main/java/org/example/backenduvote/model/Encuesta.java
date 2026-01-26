@@ -27,19 +27,37 @@ public class Encuesta {
     @Column(name = "fecha_cierre", columnDefinition = "TIMESTAMPTZ")
     private OffsetDateTime fechaCierre;
 
+    // Foto/portada de la encuesta
+    @Column(name = "imagen_url")
+    private String imagenUrl;
+
+    // Inicio efectivo
+    @Column(name = "fecha_inicio", nullable = false, columnDefinition = "TIMESTAMPTZ")
+    private OffsetDateTime fechaInicio;
+
     public Encuesta() {}
 
     @PrePersist
     protected void onCreate() {
-        if (creadaEn == null) {
-            creadaEn = OffsetDateTime.now();
-        }
+        if (creadaEn == null) creadaEn = OffsetDateTime.now();
+        if (fechaInicio == null) fechaInicio = creadaEn; // abre desde creada_en si no se especifica
     }
 
     public boolean estaCerrada() {
-        return fechaCierre != null;
+        return estaCerradaEn(OffsetDateTime.now());
     }
 
+    public boolean estaCerradaEn(OffsetDateTime ahora) {
+        if (ahora == null) ahora = OffsetDateTime.now();
+
+        // Aún no abre
+        if (fechaInicio != null && ahora.isBefore(fechaInicio)) return true;
+
+        // Ya cerró (si tiene cierre)
+        if (fechaCierre != null && !ahora.isBefore(fechaCierre)) return true;
+
+        return false;
+    }
     // Getters y setters
 
     public Long getId() { return id; }
@@ -58,4 +76,13 @@ public class Encuesta {
 
     public OffsetDateTime getFechaCierre() { return fechaCierre; }
     public void setFechaCierre(OffsetDateTime fechaCierre) { this.fechaCierre = fechaCierre; }
+
+    public String getImagenUrl() { return imagenUrl; }
+    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
+
+    public OffsetDateTime getFechaInicio() { return fechaInicio; }
+    public void setFechaInicio(OffsetDateTime fechaInicio) { this.fechaInicio = fechaInicio; }
 }
+
+
+

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.example.backenduvote.dtos.ResultadoOpcionDetalleResponse;
 
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -45,7 +46,13 @@ public class VotoService {
         Encuesta encuesta = encuestaRepository.findById(encuestaId)
                 .orElseThrow(() -> new IllegalArgumentException("La encuesta no existe"));
 
-        if (encuesta.getFechaCierre() != null) {
+        var ahora = OffsetDateTime.now();
+
+        if (encuesta.getFechaInicio() != null && ahora.isBefore(encuesta.getFechaInicio())) {
+            throw new IllegalArgumentException("La encuesta aún no ha iniciado");
+        }
+
+        if (encuesta.getFechaCierre() != null && !ahora.isBefore(encuesta.getFechaCierre())) {
             throw new IllegalArgumentException("La encuesta ya está cerrada");
         }
 
@@ -67,6 +74,8 @@ public class VotoService {
         voto.setUsuarioId(usuarioActual.getId());
         voto.setEncuestaId(encuestaId);
         voto.setOpcionId(opcionId);
+        voto.setImagenUrl(request.getImagenUrl());
+
 
         try {
             Voto guardado = votoRepository.save(voto);
@@ -103,6 +112,14 @@ public class VotoService {
     }
 
     private VotoResponse mapToResponse(Voto v) {
-        return new VotoResponse(v.getId(), v.getUsuarioId(), v.getEncuestaId(), v.getOpcionId(), v.getCreadoEn());
+        return new VotoResponse(
+                v.getId(),
+                v.getUsuarioId(),
+                v.getEncuestaId(),
+                v.getOpcionId(),
+                v.getImagenUrl(),
+                v.getCreadoEn()
+        );
+
     }
 }

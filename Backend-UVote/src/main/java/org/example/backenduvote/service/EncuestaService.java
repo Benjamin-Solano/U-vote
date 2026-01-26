@@ -30,10 +30,21 @@ public class EncuestaService {
     public EncuestaResponse crearEncuesta(EncuestaCreateRequest request) {
         Usuario usuarioActual = obtenerUsuarioAutenticado();
 
+        // Validación de rango si vienen ambas
+        if (request.getFechaInicio() != null && request.getFechaCierre() != null) {
+            if (!request.getFechaCierre().isAfter(request.getFechaInicio())) {
+                throw new IllegalArgumentException("La fecha de cierre debe ser posterior a la fecha de inicio");
+            }
+        }
+
         Encuesta encuesta = new Encuesta();
         encuesta.setUsuarioId(usuarioActual.getId());
         encuesta.setNombre(request.getNombre());
         encuesta.setDescripcion(request.getDescripcion());
+
+        encuesta.setImagenUrl(request.getImagenUrl());
+        encuesta.setFechaInicio(request.getFechaInicio());   // si null -> @PrePersist la pone
+        encuesta.setFechaCierre(request.getFechaCierre());   // puede ser null (sin cierre)
 
         Encuesta guardada = encuestaRepository.save(encuesta);
         return mapToResponse(guardada);
@@ -63,13 +74,10 @@ public class EncuestaService {
             throw new IllegalArgumentException("No tienes permisos para cerrar esta encuesta");
         }
 
-        if (encuesta.getFechaCierre() != null) {
-            return mapToResponse(encuesta); // ya cerrada, devolvemos estado actual
-        }
-
-        encuesta.setFechaCierre(OffsetDateTime.now());
+        encuesta.setFechaCierre(OffsetDateTime.now()); // cierra ya
         return mapToResponse(encuestaRepository.save(encuesta));
     }
+
 
     private Usuario obtenerUsuarioAutenticado() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -96,9 +104,12 @@ public class EncuestaService {
                 e.getUsuarioId(),
                 e.getNombre(),
                 e.getDescripcion(),
+                e.getImagenUrl(),
                 e.getCreadaEn(),
+                e.getFechaInicio(),
                 e.getFechaCierre(),
                 e.estaCerrada()
         );
     }
+
 }
