@@ -14,11 +14,11 @@ public class EncuestaCreateRequest {
     @Size(max = 1000)
     private String descripcion;
 
-    @Size(max = 500000)
+    @Size(max = 5000000)
     private String imagenUrl;
 
-    private OffsetDateTime fechaInicio;
-    private OffsetDateTime fechaCierre;
+    private OffsetDateTime inicio;
+    private OffsetDateTime cierre;
 
     public EncuestaCreateRequest() {}
 
@@ -32,10 +32,10 @@ public class EncuestaCreateRequest {
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
 
 
-    public OffsetDateTime getFechaInicio() { return fechaInicio; }
-    public void setFechaInicio(OffsetDateTime fechaInicio) { this.fechaInicio = fechaInicio; }
+    public OffsetDateTime getFechaInicio() { return inicio; }
+    public void setFechaInicio(OffsetDateTime fechaInicio) { this.inicio = fechaInicio; }
 
-    public OffsetDateTime getFechaCierre() { return fechaCierre; }
-    public void setFechaCierre(OffsetDateTime fechaCierre) { this.fechaCierre = fechaCierre; }
+    public OffsetDateTime getFechaCierre() { return cierre; }
+    public void setFechaCierre(OffsetDateTime fechaCierre) { this.cierre = fechaCierre; }
 }
 

@@ -1,108 +1,162 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FiPlus, FiCheck, FiTrash2, FiArrowLeft, FiUpload, FiX, FiCalendar, FiMove } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { FiArrowLeft, FiCheck, FiPlus, FiTrash2, FiUpload, FiX } from "react-icons/fi";
+import { useNavigate, useParams } from "react-router-dom";
 import Cropper from "react-easy-crop";
 
+import { api } from "../../api/axios";
 import { pollsApi } from "../../api/polls.api";
 import { optionsApi } from "../../api/options.api";
-import "./polls.css";
+import "./createPoll.css";
 
 const MAX_IMG_MB = 3;
 
 const emptyOption = () => ({
    key: crypto.randomUUID(),
+   id: null,
    nombre: "",
    descripcion: "",
-   imagenUrl: "", // DataURL (base64)
+   imagenUrl: "",
 });
 
-function toIsoOrNull(datetimeLocal) {
-   if (!datetimeLocal) return null;
-   const ms = new Date(datetimeLocal).getTime();
-   if (!Number.isFinite(ms)) return null;
-   return new Date(ms).toISOString();
+function clampFileSizeMB(file, maxMB) {
+   return file && file.size <= maxMB * 1024 * 1024;
+}
+
+const pad2 = (n) => String(n).padStart(2, "0");
+
+function isoToLocalParts(iso) {
+   if (!iso) return { date: "", time: "" };
+   const d = new Date(iso);
+   if (Number.isNaN(d.getTime())) return { date: "", time: "" };
+   return {
+      date: `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`,
+      time: `${pad2(d.getHours())}:${pad2(d.getMinutes())}`,
+   };
+}
+
+// date + time (local) -> ISO Z (OffsetDateTime lo parsea ok)
+function buildISOFromDateTime(dateStr, timeStr) {
+   if (!dateStr && !timeStr) return null;
+   if (!dateStr) return null;
+   const t = timeStr ? timeStr : "00:00";
+   const d = new Date(`${dateStr}T${t}`);
+   if (Number.isNaN(d.getTime())) return null;
+   return d.toISOString();
+}
+
+function loadImage(src) {
+   return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+   });
+}
+
+async function getCroppedBlob(imageSrc, cropPixels, mime = "image/jpeg", quality = 0.92) {
+   const img = await loadImage(imageSrc);
+
+   const canvas = document.createElement("canvas");
+   const ctx = canvas.getContext("2d");
+   if (!ctx) throw new Error("No canvas context");
+
+   canvas.width = cropPixels.width;
+   canvas.height = cropPixels.height;
+
+   ctx.drawImage(
+      img,
+      cropPixels.x,
+      cropPixels.y,
+      cropPixels.width,
+      cropPixels.height,
+      0,
+      0,
+      cropPixels.width,
+      cropPixels.height
+   );
+
+   const blob = await new Promise((resolve) => canvas.toBlob(resolve, mime, quality));
+   if (!blob) throw new Error("No se pudo generar el recorte");
+
+   const previewUrl = URL.createObjectURL(blob);
+   return { blob, previewUrl };
+}
+
+function blobToDataUrl(blob) {
+   return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(String(r.result));
+      r.onerror = reject;
+      r.readAsDataURL(blob);
+   });
 }
 
 function fileToDataUrl(file) {
    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result || ""));
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
+      const r = new FileReader();
+      r.onload = () => resolve(String(r.result));
+      r.onerror = reject;
+      r.readAsDataURL(file);
    });
 }
 
-/** Dropzone simple (para opciones) */
-function ImageDropzone({ value, onChange, disabled, label = "Imagen", hint = "Arrastra o selecciona" }) {
+function Label({ children, required = false }) {
+   return (
+      <label className="uv-label">
+         {children}{" "}
+         {required ? (
+            <span className="uv-req" aria-hidden="true">
+               (requerido)
+            </span>
+         ) : null}
+      </label>
+   );
+}
+
+/* =========================================
+   Dropzone genérico (para opciones)
+========================================= */
+function ImageDropzone({
+   value,
+   disabled,
+   error,
+   onPickFile,
+   onClear,
+   title = "Imagen",
+   subtitle = "Arrastra o selecciona",
+}) {
    const inputRef = useRef(null);
-   const [dragging, setDragging] = useState(false);
-   const hasImg = Boolean(value?.trim());
+   const [drag, setDrag] = useState(false);
+   const hasImg = Boolean(value);
 
    const pick = () => {
       if (disabled) return;
       inputRef.current?.click();
    };
 
-   const onFiles = async (files) => {
-      const f = files?.[0];
-      if (!f) return;
-
-      if (!f.type?.startsWith("image/")) {
-         alert("Selecciona un archivo de imagen (png/jpg/webp/etc).");
-         return;
-      }
-
-      const mb = f.size / (1024 * 1024);
-      if (mb > MAX_IMG_MB) {
-         alert(`La imagen es muy grande. Máximo ${MAX_IMG_MB}MB.`);
-         return;
-      }
-
-      const dataUrl = await fileToDataUrl(f);
-      onChange(dataUrl);
-   };
-
-   const handleDrop = async (e) => {
-      e.preventDefault();
-      if (disabled) return;
-      setDragging(false);
-
-      try {
-         await onFiles(e.dataTransfer?.files);
-      } catch {
-         alert("No se pudo leer la imagen.");
-      }
-   };
-
-   const handleInput = async (e) => {
-      if (disabled) return;
-      try {
-         await onFiles(e.target.files);
-      } catch {
-         alert("No se pudo leer la imagen.");
-      } finally {
-         e.target.value = "";
-      }
-   };
-
-   const clear = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (disabled) return;
-      onChange("");
+   const handleFiles = async (files) => {
+      const file = files?.[0];
+      if (!file) return;
+      await onPickFile(file);
    };
 
    return (
       <div
-         className={`uv-dropzone ${dragging ? "is-drag" : ""} ${hasImg ? "has-img" : ""} uv-dropzone-option`}
+         className={`uv-dropzone uv-dropzone-option ${drag ? "is-drag" : ""} ${error ? "uv-invalid" : ""}`}
          onClick={pick}
          onDragOver={(e) => {
             e.preventDefault();
             if (disabled) return;
-            setDragging(true);
+            setDrag(true);
          }}
-         onDragLeave={() => setDragging(false)}
-         onDrop={handleDrop}
+         onDragLeave={() => setDrag(false)}
+         onDrop={async (e) => {
+            e.preventDefault();
+            if (disabled) return;
+            setDrag(false);
+            await handleFiles(e.dataTransfer?.files);
+         }}
          role="button"
          tabIndex={0}
          aria-label="Subir imagen"
@@ -111,621 +165,707 @@ function ImageDropzone({ value, onChange, disabled, label = "Imagen", hint = "Ar
             ref={inputRef}
             type="file"
             accept="image/*"
-            className="uv-dropzone-input"
-            onChange={handleInput}
+            className="uv-hidden"
             disabled={disabled}
+            onChange={async (e) => {
+               try {
+                  await handleFiles(e.target.files);
+               } finally {
+                  e.target.value = "";
+               }
+            }}
          />
 
          {hasImg ? (
             <>
-               <img
-                  className="uv-dropzone-preview"
-                  src={value}
-                  alt="preview"
-                  style={{ objectFit: "contain", objectPosition: "center" }}
-                  draggable={false}
-               />
-               <button type="button" className="uv-dropzone-clear" onClick={clear} disabled={disabled} title="Quitar">
+               <img className="uv-dropzone-preview" src={value} alt="preview" draggable={false} />
+               <button
+                  type="button"
+                  className="uv-dropzone-clear"
+                  onClick={(e) => {
+                     e.preventDefault();
+                     e.stopPropagation();
+                     if (disabled) return;
+                     onClear?.();
+                  }}
+                  title="Quitar"
+                  disabled={disabled}
+               >
                   <FiX />
                </button>
             </>
          ) : (
             <div className="uv-dropzone-empty">
                <FiUpload />
-               <div className="uv-dropzone-title">{label}</div>
-               <div className="uv-dropzone-sub">{hint}</div>
+               <div className="uv-dropzone-title">{title}</div>
+               <div className="uv-dropzone-sub">{subtitle}</div>
                <div className="uv-dropzone-sub2">Máx {MAX_IMG_MB}MB</div>
             </div>
          )}
-      </div>
-   );
-}
-
-/** Cover uploader + preview (la reposición se hace con react-easy-crop en modal) */
-function CoverBox({ value, onChange, disabled, coverPos = 50, onRequestReposition }) {
-   const inputRef = useRef(null);
-   const [dragging, setDragging] = useState(false);
-   const hasImg = Boolean(value?.trim());
-
-   const pick = () => {
-      if (disabled) return;
-      inputRef.current?.click();
-   };
-
-   const onFiles = async (files) => {
-      const f = files?.[0];
-      if (!f) return;
-
-      if (!f.type?.startsWith("image/")) {
-         alert("Selecciona un archivo de imagen (png/jpg/webp/etc).");
-         return;
-      }
-
-      const mb = f.size / (1024 * 1024);
-      if (mb > MAX_IMG_MB) {
-         alert(`La imagen es muy grande. Máximo ${MAX_IMG_MB}MB.`);
-         return;
-      }
-
-      const dataUrl = await fileToDataUrl(f);
-      onChange(dataUrl);
-   };
-
-   const handleDrop = async (e) => {
-      e.preventDefault();
-      if (disabled) return;
-      setDragging(false);
-      try {
-         await onFiles(e.dataTransfer?.files);
-      } catch {
-         alert("No se pudo leer la imagen.");
-      }
-   };
-
-   const handleInput = async (e) => {
-      if (disabled) return;
-      try {
-         await onFiles(e.target.files);
-      } catch {
-         alert("No se pudo leer la imagen.");
-      } finally {
-         e.target.value = "";
-      }
-   };
-
-   const clear = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (disabled) return;
-      onChange("");
-   };
-
-   return (
-      <div
-         className={`uv-cover-box ${dragging ? "is-drag" : ""} ${hasImg ? "has-img" : ""}`}
-         onClick={pick}
-         onDragOver={(e) => {
-            e.preventDefault();
-            if (disabled) return;
-            setDragging(true);
-         }}
-         onDragLeave={() => setDragging(false)}
-         onDrop={handleDrop}
-         role="button"
-         tabIndex={0}
-         aria-label="Subir portada"
-      >
-         <input
-            ref={inputRef}
-            type="file"
-            accept="image/*"
-            className="uv-dropzone-input"
-            onChange={handleInput}
-            disabled={disabled}
-         />
-
-         {hasImg ? (
-            <>
-               <img
-                  className="uv-cover-img"
-                  src={value}
-                  alt="cover"
-                  draggable={false}
-                  style={{ objectFit: "cover", objectPosition: `50% ${coverPos}%` }}
-               />
-
-               <div className="uv-cover-tools" onClick={(e) => e.stopPropagation()}>
-                  <button
-                     type="button"
-                     className="uv-cover-tool-btn"
-                     onClick={onRequestReposition}
-                     disabled={disabled}
-                     title="Reposicionar portada"
-                  >
-                     <FiMove /> Reposicionar
-                  </button>
-               </div>
-
-               <button
-                  type="button"
-                  className="uv-dropzone-clear uv-dropzone-clear-left"
-                  onClick={clear}
-                  disabled={disabled}
-                  title="Quitar"
-               >
-                  <FiX />
-               </button>
-            </>
-         ) : (
-            <div className="uv-cover-empty">
-               <FiUpload />
-               <div className="uv-dropzone-title">Portada</div>
-               <div className="uv-dropzone-sub">Arrastra una imagen o haz click para seleccionarla</div>
-               <div className="uv-dropzone-sub2">Máx {MAX_IMG_MB}MB</div>
-            </div>
-         )}
-      </div>
-   );
-}
-
-/** Modal editor con react-easy-crop (Guardar/Cancelar) + ✅ preview en tiempo real */
-function CoverCropModal({
-   open,
-   image,
-   disabled,
-   initialCrop,
-   initialZoom,
-   onCancel,
-   onSave,
-   onPreviewCenterY, // ✅ NUEVO: actualiza coverPos en vivo
-}) {
-   const [crop, setCrop] = useState(initialCrop || { x: 0, y: 0 });
-   const [zoom, setZoom] = useState(initialZoom || 1);
-
-   const pendingCenterYRef = useRef(50);
-
-   useEffect(() => {
-      if (!open) return;
-      setCrop(initialCrop || { x: 0, y: 0 });
-      setZoom(initialZoom || 1);
-      pendingCenterYRef.current = 50;
-   }, [open, initialCrop, initialZoom]);
-
-   if (!open) return null;
-
-   const commitCenterY = (croppedAreaPercentages) => {
-      const cy = (croppedAreaPercentages?.y ?? 0) + (croppedAreaPercentages?.height ?? 0) / 2;
-      const next = Math.max(0, Math.min(100, cy));
-      pendingCenterYRef.current = next;
-
-      // ✅ aquí está el FIX: se ve en el preview inmediatamente
-      onPreviewCenterY?.(next);
-   };
-
-   const onCropComplete = (croppedAreaPercentages) => {
-      commitCenterY(croppedAreaPercentages);
-   };
-
-   const handleSave = () => {
-      onSave({
-         crop,
-         zoom,
-         centerY: pendingCenterYRef.current,
-      });
-   };
-
-   return (
-      <div className="uv-cover-modal" role="dialog" aria-modal="true">
-         <div className="uv-cover-modal-card">
-            <div className="uv-cover-modal-head">
-               <div className="uv-cover-modal-title">Reposicionar portada</div>
-
-               <div className="uv-cover-modal-actions">
-                  <button className="uv-cover-tool-btn uv-cover-tool-save" onClick={handleSave} disabled={disabled} type="button">
-                     Guardar posición
-                  </button>
-                  <button className="uv-cover-tool-btn" onClick={onCancel} disabled={disabled} type="button">
-                     Cancelar
-                  </button>
-               </div>
-            </div>
-
-            <div className="uv-cover-cropper">
-               <Cropper
-                  image={image}
-                  crop={crop}
-                  zoom={zoom}
-                  onCropChange={setCrop}
-                  onZoomChange={setZoom}
-                  onCropComplete={onCropComplete}
-                  aspect={16 / 5}
-                  showGrid={false}
-                  restrictPosition={false}
-               />
-               <div className="uv-cover-crop-hint">Arrastra la imagen para reposicionarla</div>
-            </div>
-
-            <div className="uv-cover-zoom">
-               <span>Zoom</span>
-               <input
-                  type="range"
-                  min={1}
-                  max={3}
-                  step={0.01}
-                  value={zoom}
-                  onChange={(e) => setZoom(Number(e.target.value))}
-                  disabled={disabled}
-               />
-            </div>
-         </div>
       </div>
    );
 }
 
 export default function CreatePoll() {
    const navigate = useNavigate();
+   const { id } = useParams();
+   const isEdit = Boolean(id);
 
    // Encuesta
    const [nombre, setNombre] = useState("");
    const [descripcion, setDescripcion] = useState("");
 
-   // Portada
-   const [imagenUrl, setImagenUrl] = useState("");
-   const [coverPos, setCoverPos] = useState(50);
+   // Fecha + hora separadas
+   const [inicioDate, setInicioDate] = useState("");
+   const [inicioTime, setInicioTime] = useState("");
+   const [cierreDate, setCierreDate] = useState("");
+   const [cierreTime, setCierreTime] = useState("");
 
-   // Persistimos valores del editor para reabrir igual
+   // Portada
+   const coverInputRef = useRef(null);
+   const [coverSrc, setCoverSrc] = useState("");
+   const [coverPreview, setCoverPreview] = useState("");
+   const [coverBlob, setCoverBlob] = useState(null);
+   const [coverError, setCoverError] = useState("");
+
+   const [cropOpen, setCropOpen] = useState(false);
    const [coverCrop, setCoverCrop] = useState({ x: 0, y: 0 });
    const [coverZoom, setCoverZoom] = useState(1);
+   const [coverCroppedPixels, setCoverCroppedPixels] = useState(null);
 
-   const [coverEditorOpen, setCoverEditorOpen] = useState(false);
-
-   // ✅ refs para restaurar si se cancela (porque ahora actualizamos en vivo)
-   const prevCoverPosRef = useRef(50);
-   const prevCoverCropRef = useRef({ x: 0, y: 0 });
-   const prevCoverZoomRef = useRef(1);
-
-   // Fechas
-   const [inicio, setInicio] = useState("");
-   const [cierre, setCierre] = useState("");
-
-   // Opciones (mínimo 2)
+   // Opciones
    const [options, setOptions] = useState([emptyOption(), emptyOption()]);
+   const [optImgErrors, setOptImgErrors] = useState({});
 
-   const [loading, setLoading] = useState(false);
+   // Estado
+   const [loading, setLoading] = useState(isEdit);
+   const [saving, setSaving] = useState(false);
+   const [submitted, setSubmitted] = useState(false);
 
-   // Toast
-   const [toast, setToast] = useState({ show: false, type: "success", message: "" });
-   const toastTimer = useRef(null);
+   // Mensajes dentro del formulario
+   const [successMsg, setSuccessMsg] = useState("");
+   const [errorMsg, setErrorMsg] = useState("");
+   const [lastPollId, setLastPollId] = useState(null);
 
-   const showToast = (type, message) => {
-      setToast({ show: true, type, message });
-      if (toastTimer.current) window.clearTimeout(toastTimer.current);
-      toastTimer.current = window.setTimeout(() => setToast((t) => ({ ...t, show: false })), 5000);
-   };
+   const cropperKey = useMemo(() => `${coverSrc}::${cropOpen}`, [coverSrc, cropOpen]);
 
-   useEffect(() => () => toastTimer.current && window.clearTimeout(toastTimer.current), []);
+   useEffect(() => {
+      return () => {
+         if (coverSrc?.startsWith("blob:")) URL.revokeObjectURL(coverSrc);
+         if (coverPreview?.startsWith("blob:")) URL.revokeObjectURL(coverPreview);
+      };
+   }, [coverSrc, coverPreview]);
 
-   const rangeError = useMemo(() => {
-      if (!inicio || !cierre) return "";
-      const a = new Date(inicio).getTime();
-      const b = new Date(cierre).getTime();
-      if (!Number.isFinite(a) || !Number.isFinite(b)) return "Fechas inválidas.";
-      if (a >= b) return "El inicio debe ser anterior al cierre.";
-      return "";
-   }, [inicio, cierre]);
+   // Cargar en edición
+   useEffect(() => {
+      if (!isEdit) return;
 
-   const optionErrors = useMemo(
-      () =>
-         options.map((o) => ({
-            nombre: o.nombre.trim().length === 0,
-            descripcion: o.descripcion.trim().length === 0,
-         })),
-      [options]
-   );
+      let mounted = true;
+      (async () => {
+         try {
+            setLoading(true);
 
-   const canSubmit = useMemo(() => {
-      const pollOk = nombre.trim().length > 0 && descripcion.trim().length > 0;
-      const rangeOk = !rangeError;
-      const optionsOk = options.length >= 2 && optionErrors.every((e) => !e.nombre && !e.descripcion);
-      return pollOk && rangeOk && optionsOk && !loading;
-   }, [nombre, descripcion, rangeError, options, optionErrors, loading]);
+            const pollRes = await pollsApi.getById(id);
+            const poll = pollRes?.data;
+            if (!mounted) return;
 
-   const setOptionField = (idx, field, value) => {
-      setOptions((prev) => {
-         const next = [...prev];
-         next[idx] = { ...next[idx], [field]: value };
-         return next;
-      });
-   };
+            setNombre(poll?.nombre ?? "");
+            setDescripcion(poll?.descripcion ?? "");
 
-   const addOptionRow = () => setOptions((prev) => [...prev, emptyOption()]);
+            const iniISO = poll?.inicio ?? poll?.fechaInicio ?? null;
+            const cieISO = poll?.cierre ?? poll?.fechaCierre ?? null;
 
-   const removeOptionRow = (idx) => {
-      setOptions((prev) => {
-         if (prev.length <= 2) return prev;
-         const next = prev.filter((_, i) => i !== idx);
-         return next.length < 2 ? [emptyOption(), emptyOption()] : next;
-      });
-   };
+            const ini = isoToLocalParts(iniISO);
+            const cie = isoToLocalParts(cieISO);
 
-   const clearAll = () => {
-      setNombre("");
-      setDescripcion("");
-      setImagenUrl("");
-      setCoverPos(50);
-      setCoverCrop({ x: 0, y: 0 });
-      setCoverZoom(1);
-      setInicio("");
-      setCierre("");
-      setOptions([emptyOption(), emptyOption()]);
-   };
+            setInicioDate(ini.date);
+            setInicioTime(ini.time);
+            setCierreDate(cie.date);
+            setCierreTime(cie.time);
 
-   const handleFinish = async () => {
-      if (loading) return;
+            if (poll?.imagenUrl) {
+               setCoverPreview(poll.imagenUrl);
+               setCoverBlob(null);
+               setCoverSrc("");
+            } else {
+               setCoverPreview("");
+            }
 
-      if (!canSubmit) {
-         showToast("error", "Completa los campos obligatorios. (Mínimo 2 opciones).");
+            const optsRes = await optionsApi.listByEncuesta(id);
+            const opts = optsRes?.data;
+            if (!mounted) return;
+
+            if (Array.isArray(opts) && opts.length) {
+               setOptions(
+                  opts.map((o) => ({
+                     key: crypto.randomUUID(),
+                     id: o.id ?? null,
+                     nombre: o.nombre ?? "",
+                     descripcion: o.descripcion ?? "",
+                     imagenUrl: o.imagenUrl ?? "",
+                  }))
+               );
+            } else {
+               setOptions([emptyOption(), emptyOption()]);
+            }
+         } catch (e) {
+            console.error(e);
+         } finally {
+            if (mounted) setLoading(false);
+         }
+      })();
+
+      return () => {
+         mounted = false;
+      };
+   }, [id, isEdit]);
+
+   function onPickCoverClick() {
+      setCoverError("");
+      coverInputRef.current?.click();
+   }
+
+   function onCoverFileSelected(file) {
+      setCoverError("");
+
+      if (!file) return;
+      if (!file.type?.startsWith("image/")) {
+         setCoverError("El archivo debe ser una imagen.");
+         return;
+      }
+      if (!clampFileSizeMB(file, MAX_IMG_MB)) {
+         setCoverError(`La imagen excede ${MAX_IMG_MB}MB.`);
          return;
       }
 
-      setLoading(true);
+      if (coverSrc?.startsWith("blob:")) URL.revokeObjectURL(coverSrc);
 
+      const url = URL.createObjectURL(file);
+      setCoverSrc(url);
+      setCoverCrop({ x: 0, y: 0 });
+      setCoverZoom(1);
+      setCoverCroppedPixels(null);
+      setCropOpen(true);
+   }
+
+   async function confirmCoverCrop() {
       try {
-         const pollPayload = {
-            nombre: nombre.trim(),
-            descripcion: descripcion.trim(),
-            imagenUrl: imagenUrl?.trim() || null,
-
-            // si tu backend lo admite, persistimos:
-            coverPos: imagenUrl?.trim() ? coverPos : null,
-            coverCrop: imagenUrl?.trim() ? coverCrop : null,
-            coverZoom: imagenUrl?.trim() ? coverZoom : null,
-
-            fechaInicio: toIsoOrNull(inicio),
-            fechaCierre: toIsoOrNull(cierre),
-         };
-
-         const pollRes = await pollsApi.create(pollPayload);
-         const poll = pollRes.data;
-
-         for (let i = 0; i < options.length; i++) {
-            const o = options[i];
-            const payload = {
-               nombre: o.nombre.trim(),
-               descripcion: o.descripcion.trim(),
-               imagenUrl: o.imagenUrl?.trim() || null,
-               orden: i + 1,
-            };
-            await optionsApi.create(poll.id, payload);
+         if (!coverSrc || !coverCroppedPixels) {
+            setCropOpen(false);
+            return;
          }
 
-         showToast("success", "Encuesta creada correctamente.");
-         clearAll();
+         if (coverPreview?.startsWith("blob:")) URL.revokeObjectURL(coverPreview);
+
+         const { blob, previewUrl } = await getCroppedBlob(coverSrc, coverCroppedPixels);
+         setCoverBlob(blob);
+         setCoverPreview(previewUrl);
+         setCropOpen(false);
       } catch (e) {
-         const msg = e?.response?.data?.message || e.message || "Ocurrió un error al crear la encuesta.";
-         showToast("error", msg);
+         console.error(e);
+         setCoverError("No se pudo recortar la portada.");
+         setCropOpen(false);
+      }
+   }
+
+   function cancelCoverCrop() {
+      setCropOpen(false);
+   }
+
+   function clearCover() {
+      setCoverError("");
+      setCoverBlob(null);
+      if (coverSrc?.startsWith("blob:")) URL.revokeObjectURL(coverSrc);
+      if (coverPreview?.startsWith("blob:")) URL.revokeObjectURL(coverPreview);
+      setCoverSrc("");
+      setCoverPreview("");
+      setCropOpen(false);
+      setCoverCrop({ x: 0, y: 0 });
+      setCoverZoom(1);
+      setCoverCroppedPixels(null);
+   }
+
+   function updateOption(key, patch) {
+      setOptions((prev) => prev.map((o) => (o.key === key ? { ...o, ...patch } : o)));
+   }
+
+   function removeOption(key) {
+      setOptions((prev) => {
+         const next = prev.filter((o) => o.key !== key);
+         return next.length >= 2 ? next : prev;
+      });
+   }
+
+   function addOption() {
+      setOptions((prev) => [...prev, emptyOption()]);
+   }
+
+   const inicioISO = useMemo(() => buildISOFromDateTime(inicioDate, inicioTime), [inicioDate, inicioTime]);
+   const cierreISO = useMemo(() => buildISOFromDateTime(cierreDate, cierreTime), [cierreDate, cierreTime]);
+
+   const fieldErrors = useMemo(() => {
+      const e = {
+         nombre: "",
+         descripcion: "",
+         fechas: "",
+         timeOnly: "",
+         options: {},
+      };
+
+      if (!nombre.trim()) e.nombre = "El nombre es requerido.";
+      if (!descripcion.trim()) e.descripcion = "La descripción es requerida.";
+
+      if (!inicioDate && inicioTime) e.timeOnly = "Debes seleccionar una fecha de inicio si defines la hora.";
+      if (!cierreDate && cierreTime) e.timeOnly = "Debes seleccionar una fecha de cierre si defines la hora.";
+
+      const start = inicioISO ? new Date(inicioISO) : null;
+      const end = cierreISO ? new Date(cierreISO) : null;
+      if (start && end && start.getTime() > end.getTime()) {
+         e.fechas = "El inicio no puede ser posterior al cierre.";
+      }
+
+      for (const o of options) {
+         e.options[o.key] = {
+            nombre: o.nombre.trim() ? "" : "Nombre requerido.",
+            descripcion: o.descripcion.trim() ? "" : "Descripción requerida.",
+         };
+      }
+
+      return e;
+   }, [nombre, descripcion, inicioISO, cierreISO, inicioDate, inicioTime, cierreDate, cierreTime, options]);
+
+   const formErrors = useMemo(() => {
+      const errs = [];
+      if (fieldErrors.nombre) errs.push(fieldErrors.nombre);
+      if (fieldErrors.descripcion) errs.push(fieldErrors.descripcion);
+      if (fieldErrors.timeOnly) errs.push(fieldErrors.timeOnly);
+      if (fieldErrors.fechas) errs.push(fieldErrors.fechas);
+      if (options.length < 2) errs.push("Debe haber mínimo 2 opciones.");
+
+      options.forEach((o, idx) => {
+         const oe = fieldErrors.options?.[o.key];
+         if (oe?.nombre) errs.push(`Opción ${idx + 1}: ${oe.nombre}`);
+         if (oe?.descripcion) errs.push(`Opción ${idx + 1}: ${oe.descripcion}`);
+      });
+
+      Object.values(optImgErrors || {}).forEach((msg) => msg && errs.push(msg));
+      if (coverError) errs.push(coverError);
+
+      return errs;
+   }, [fieldErrors, options, optImgErrors, coverError]);
+
+   const canSubmit = !saving && formErrors.length === 0;
+
+   async function savePoll(pollPayload) {
+      if (!isEdit) {
+         const res = await pollsApi.create(pollPayload);
+         return res?.data;
+      }
+      const res = await api.patch(`/encuestas/${id}`, pollPayload);
+      return res?.data;
+   }
+
+   async function replaceOptions(encuestaId) {
+      const existing = options.filter((o) => o.id);
+      for (const o of existing) await optionsApi.delete(o.id);
+
+      for (const o of options) {
+         const payload = {
+            nombre: o.nombre.trim(),
+            descripcion: o.descripcion.trim(),
+            imagenUrl: o.imagenUrl || "",
+         };
+         await optionsApi.create(encuestaId, payload);
+      }
+   }
+
+   async function handleSubmit() {
+      setSubmitted(true);
+      setSuccessMsg("");
+      setErrorMsg("");
+      setLastPollId(null);
+
+      if (formErrors.length) return;
+
+      try {
+         setSaving(true);
+
+         let imagenUrlStr = "";
+         if (coverBlob) {
+            imagenUrlStr = await blobToDataUrl(coverBlob);
+         } else if (coverPreview && typeof coverPreview === "string") {
+            imagenUrlStr = coverPreview;
+         }
+
+         const payload = {
+            nombre: nombre.trim(),
+            descripcion: descripcion.trim(),
+            inicio: inicioISO,
+            cierre: cierreISO,
+            imagenUrl: imagenUrlStr,
+         };
+
+         const saved = await savePoll(payload);
+         const encuestaId = saved?.id ?? id;
+
+         await replaceOptions(encuestaId);
+
+         setLastPollId(encuestaId);
+         setSuccessMsg(
+            isEdit
+               ? "Cambios guardados correctamente."
+               : "Encuesta creada correctamente. Ya puedes compartirla o revisarla en detalle."
+         );
+
+         // Si era creación, limpiamos; si era edición, dejamos los datos como quedaron
+         if (!isEdit) {
+            handleClear();
+            // mantenemos submitted=false para que no muestre invalids tras limpiar
+            setSubmitted(false);
+         }
+      } catch (e) {
+         console.error("CREATE/EDIT POLL ERROR:", e?.response?.data ?? e);
+         const msg =
+            e?.response?.data?.message ||
+            e?.response?.data?.error ||
+            "No se pudo guardar la encuesta. Revisa los campos e inténtalo de nuevo.";
+         setErrorMsg(msg);
       } finally {
-         setLoading(false);
+         setSaving(false);
       }
-   };
+   }
 
-   const openCoverEditor = () => {
-      if (!imagenUrl?.trim()) return;
+   function handleClear() {
+      if (saving) return;
 
-      // ✅ guardamos estado actual, porque durante el modal se actualiza en vivo
-      prevCoverPosRef.current = coverPos;
-      prevCoverCropRef.current = coverCrop;
-      prevCoverZoomRef.current = coverZoom;
+      setNombre("");
+      setDescripcion("");
 
-      setCoverEditorOpen(true);
-   };
+      setInicioDate("");
+      setInicioTime("");
+      setCierreDate("");
+      setCierreTime("");
 
-   const cancelCoverEditor = () => {
-      // ✅ revertimos lo que se movió en vivo
-      setCoverPos(prevCoverPosRef.current);
-      setCoverCrop(prevCoverCropRef.current);
-      setCoverZoom(prevCoverZoomRef.current);
-      setCoverEditorOpen(false);
-   };
+      clearCover();
+      setOptImgErrors({});
+      setOptions([emptyOption(), emptyOption()]);
+   }
 
-   const saveCoverEditor = ({ crop, zoom, centerY }) => {
-      setCoverCrop(crop);
-      setCoverZoom(zoom);
-      setCoverPos(centerY);
-      setCoverEditorOpen(false);
-   };
+   async function onPickOptionImage(optKey, file) {
+      setOptImgErrors((prev) => ({ ...prev, [optKey]: "" }));
+      if (!file) return;
 
-   // Si cambian imagenUrl desde cero (portada nueva), reseteamos editor params
-   useEffect(() => {
-      if (!imagenUrl?.trim()) {
-         setCoverPos(50);
-         setCoverCrop({ x: 0, y: 0 });
-         setCoverZoom(1);
+      if (!file.type?.startsWith("image/")) {
+         setOptImgErrors((prev) => ({
+            ...prev,
+            [optKey]: "La imagen de la opción debe ser un archivo de imagen.",
+         }));
+         return;
       }
-   }, [imagenUrl]);
+      if (!clampFileSizeMB(file, MAX_IMG_MB)) {
+         setOptImgErrors((prev) => ({
+            ...prev,
+            [optKey]: `La imagen de la opción excede ${MAX_IMG_MB}MB.`,
+         }));
+         return;
+      }
+
+      const dataUrl = await fileToDataUrl(file);
+      updateOption(optKey, { imagenUrl: dataUrl });
+   }
+
+   if (loading) {
+      return (
+         <div className="uv-polls-scope">
+            <div className="uv-polls-page">
+               <div className="uv-card">Cargando...</div>
+            </div>
+         </div>
+      );
+   }
 
    return (
-      <div className="uv-polls-scope uv-create-wrap">
-         <div className="uv-create-card">
-            {/* Header centrado */}
-            <div className="uv-create-head uv-create-head-center">
-               <button className="uv-btn uv-create-back" type="button" onClick={() => navigate(-1)} disabled={loading}>
-                  <FiArrowLeft /> Volver
-               </button>
+      <div className="uv-polls-scope">
+         <div className="uv-polls-page">
+            <div className="uv-card uv-create-card">
+               {/* Back dentro de la tarjeta */}
+               <div className="uv-card-head">
+                  <button className="uv-btn uv-btn-ghost uv-card-back" onClick={() => navigate(-1)} disabled={saving}>
+                     <FiArrowLeft /> Volver
+                  </button>
 
-               <div className="uv-create-titleblock">
-                  <h1 className="uv-create-title">Crear encuesta</h1>
-                  <p className="uv-create-sub">Define la encuesta y agrega sus opciones. (Mínimo 2)</p>
-               </div>
-            </div>
-
-            {/* Portada (preview) */}
-            <div className="uv-create-cover">
-               <div className="uv-field">
-                  <label>Foto / portada (opcional)</label>
-
-                  <CoverBox
-                     value={imagenUrl}
-                     onChange={setImagenUrl}
-                     disabled={loading}
-                     coverPos={coverPos}
-                     onRequestReposition={openCoverEditor}
-                  />
-               </div>
-            </div>
-
-            {/* Grid balanceado */}
-            <div className="uv-create-grid uv-create-grid-balanced">
-               <div className="uv-field">
-                  <label>Nombre (requerido)</label>
-                  <input
-                     className="uv-input"
-                     value={nombre}
-                     onChange={(e) => setNombre(e.target.value)}
-                     maxLength={100}
-                     placeholder="Ej: Elección del logo"
-                     disabled={loading}
-                  />
+                  <h1 className="uv-polls-title">{isEdit ? "Editar encuesta" : "Crear encuesta"}</h1>
+                  <p className="uv-muted">Define la encuesta y agrega sus opciones. (Mínimo 2)</p>
                </div>
 
+               {/* Mensajes dentro del formulario */}
+               {successMsg ? (
+                  <div className="uv-alert uv-alert-success">
+                     <div className="uv-alert-title">Listo</div>
+                     <div className="uv-alert-text">{successMsg}</div>
+
+                     {lastPollId ? (
+                        <div className="uv-alert-actions">
+                           <button
+                              type="button"
+                              className="uv-btn uv-btn-ghost"
+                              onClick={() => navigate(`/polls/${lastPollId}`)}
+                           >
+                              Ver encuesta
+                           </button>
+                        </div>
+                     ) : null}
+                  </div>
+               ) : null}
+
+               {errorMsg ? (
+                  <div className="uv-alert uv-alert-error">
+                     <div className="uv-alert-title">No se pudo guardar</div>
+                     <div className="uv-alert-text">{errorMsg}</div>
+                  </div>
+               ) : null}
+
+               {/* Portada */}
                <div className="uv-field">
-                  <label>Inicio de la encuesta</label>
-                  <div className="uv-datetime">
-                     <FiCalendar className="uv-datetime-ico" />
+                  <Label>Foto / portada</Label>
+
+                  <div className={`uv-cover ${coverError && submitted ? "uv-invalid" : ""}`}>
+                     {coverPreview ? (
+                        <div className="uv-cover-preview">
+                           <img src={coverPreview} alt="Portada" />
+                           <div className="uv-cover-tools">
+                              <button type="button" className="uv-btn uv-btn-ghost" onClick={onPickCoverClick} disabled={saving}>
+                                 <FiUpload /> Cambiar
+                              </button>
+                              <button type="button" className="uv-btn uv-btn-ghost" onClick={clearCover} disabled={saving}>
+                                 <FiX /> Quitar
+                              </button>
+                           </div>
+                        </div>
+                     ) : (
+                        <button type="button" className="uv-cover-drop" onClick={onPickCoverClick} disabled={saving}>
+                           <FiUpload />
+                           <span className="uv-cover-title">Portada</span>
+                           <span className="uv-muted">Arrastra una imagen o haz click para seleccionar</span>
+                           <span className="uv-muted">Máx {MAX_IMG_MB}MB</span>
+                        </button>
+                     )}
+
                      <input
-                        className="uv-input uv-input-datetime"
-                        type="datetime-local"
-                        value={inicio}
-                        onChange={(e) => setInicio(e.target.value)}
-                        disabled={loading}
+                        ref={coverInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="uv-hidden"
+                        onChange={(e) => onCoverFileSelected(e.target.files?.[0])}
+                        disabled={saving}
                      />
+                  </div>
+
+                  {coverError ? <div className="uv-error">{coverError}</div> : null}
+               </div>
+
+               {/* Nombre + Inicio */}
+               <div className="uv-grid-2">
+                  <div className="uv-field">
+                     <Label required>Nombre</Label>
+                     <input
+                        className={`uv-input ${submitted && fieldErrors.nombre ? "uv-invalid" : ""}`}
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        placeholder="Ej: Elección del logo"
+                     />
+                     {submitted && fieldErrors.nombre ? <div className="uv-error">{fieldErrors.nombre}</div> : null}
+                  </div>
+
+                  <div className="uv-field">
+                     <Label>Inicio de la encuesta</Label>
+                     <div className="uv-dt-row">
+                        <input
+                           className={`uv-input ${submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""}`}
+                           type="date"
+                           value={inicioDate}
+                           onChange={(e) => setInicioDate(e.target.value)}
+                        />
+                        <input
+                           className={`uv-input ${submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""}`}
+                           type="time"
+                           value={inicioTime}
+                           onChange={(e) => setInicioTime(e.target.value)}
+                        />
+                     </div>
                   </div>
                </div>
 
-               <div className="uv-field uv-field-span">
-                  <label>Descripción (requerido)</label>
-                  <textarea
-                     className="uv-textarea uv-textarea-fixed"
-                     value={descripcion}
-                     onChange={(e) => setDescripcion(e.target.value)}
-                     maxLength={1000}
-                     placeholder="Describe el objetivo de la encuesta…"
-                     rows={4}
-                     disabled={loading}
-                  />
-               </div>
-
-               <div className="uv-field">
-                  <label>Cierre de la encuesta</label>
-                  <div className="uv-datetime">
-                     <FiCalendar className="uv-datetime-ico" />
-                     <input
-                        className="uv-input uv-input-datetime"
-                        type="datetime-local"
-                        value={cierre}
-                        onChange={(e) => setCierre(e.target.value)}
-                        disabled={loading}
+               {/* Descripción + Cierre */}
+               <div className="uv-grid-2">
+                  <div className="uv-field">
+                     <Label required>Descripción</Label>
+                     <textarea
+                        className={`uv-textarea uv-textarea--fixed ${submitted && fieldErrors.descripcion ? "uv-invalid" : ""}`}
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                        placeholder="Describe el objetivo de la encuesta..."
                      />
+                     {submitted && fieldErrors.descripcion ? <div className="uv-error">{fieldErrors.descripcion}</div> : null}
+                  </div>
+
+                  <div className="uv-field">
+                     <Label>Cierre de la encuesta</Label>
+                     <div className="uv-dt-row">
+                        <input
+                           className={`uv-input ${submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""}`}
+                           type="date"
+                           value={cierreDate}
+                           onChange={(e) => setCierreDate(e.target.value)}
+                        />
+                        <input
+                           className={`uv-input ${submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""}`}
+                           type="time"
+                           value={cierreTime}
+                           onChange={(e) => setCierreTime(e.target.value)}
+                        />
+                     </div>
+                     {submitted && fieldErrors.timeOnly ? <div className="uv-error">{fieldErrors.timeOnly}</div> : null}
+                     {submitted && fieldErrors.fechas ? <div className="uv-error">{fieldErrors.fechas}</div> : null}
                   </div>
                </div>
-            </div>
 
-            {rangeError && <div className="uv-inline-error">{rangeError}</div>}
+               <h2 className="uv-section-title">Opciones de la encuesta</h2>
 
-            {/* Opciones */}
-            <div className="uv-section">
-               <div className="uv-section-title">Opciones de la encuesta</div>
-
-               <div className="uv-options-list">
-                  {options.map((o, idx) => {
-                     const err = optionErrors[idx];
+               <div className="uv-options">
+                  {options.map((opt, idx) => {
+                     const oe = fieldErrors.options?.[opt.key] || {};
+                     const imgErr = optImgErrors?.[opt.key];
 
                      return (
-                        <div key={o.key} className="uv-option-row">
-                           {/* ✅ Imagen opción (más grande en CSS) */}
-                           <div className="uv-option-photo">
+                        <div key={opt.key} className="uv-option-card uv-flat">
+                           <div className="uv-option-image">
                               <ImageDropzone
-                                 value={o.imagenUrl}
-                                 onChange={(v) => setOptionField(idx, "imagenUrl", v)}
-                                 disabled={loading}
-                                 label="Imagen"
-                                 hint="Arrastra o selecciona"
+                                 value={opt.imagenUrl}
+                                 disabled={saving}
+                                 error={submitted && Boolean(imgErr)}
+                                 title="Imagen"
+                                 subtitle="Arrastra o selecciona"
+                                 onPickFile={(file) => onPickOptionImage(opt.key, file)}
+                                 onClear={() => updateOption(opt.key, { imagenUrl: "" })}
                               />
+                              {submitted && imgErr ? <div className="uv-error">{imgErr}</div> : null}
                            </div>
 
                            <div className="uv-option-fields">
-                              <div className="uv-field">
-                                 <label>Nombre (requerido)</label>
-                                 <input
-                                    className={`uv-input ${err?.nombre ? "uv-input-invalid" : ""}`}
-                                    value={o.nombre}
-                                    onChange={(e) => setOptionField(idx, "nombre", e.target.value)}
-                                    maxLength={100}
-                                    placeholder="Ej: Perros"
-                                    disabled={loading}
-                                 />
+                              <div className="uv-option-head">
+                                 <div className="uv-option-idx">#{idx + 1}</div>
+
+                                 <button
+                                    type="button"
+                                    className="uv-icon-btn"
+                                    title="Eliminar opción"
+                                    onClick={() => removeOption(opt.key)}
+                                    disabled={saving || options.length <= 2}
+                                 >
+                                    <FiTrash2 />
+                                 </button>
                               </div>
 
                               <div className="uv-field">
-                                 <label>Descripción (requerido)</label>
+                                 <Label required>Nombre</Label>
                                  <input
-                                    className={`uv-input ${err?.descripcion ? "uv-input-invalid" : ""}`}
-                                    value={o.descripcion}
-                                    onChange={(e) => setOptionField(idx, "descripcion", e.target.value)}
-                                    maxLength={500}
-                                    placeholder="Ej: Son más leales…"
-                                    disabled={loading}
+                                    className={`uv-input ${submitted && oe.nombre ? "uv-invalid" : ""}`}
+                                    value={opt.nombre}
+                                    onChange={(e) => updateOption(opt.key, { nombre: e.target.value })}
+                                    placeholder="Ej: Perros"
                                  />
+                                 {submitted && oe.nombre ? <div className="uv-error">{oe.nombre}</div> : null}
+                              </div>
+
+                              <div className="uv-field uv-option-desc-wrap">
+                                 <Label required>Descripción</Label>
+                                 <textarea
+                                    className={`uv-textarea uv-textarea--option ${submitted && oe.descripcion ? "uv-invalid" : ""}`}
+                                    value={opt.descripcion}
+                                    onChange={(e) => updateOption(opt.key, { descripcion: e.target.value })}
+                                    placeholder="Ej: Son más leales..."
+                                 />
+                                 {submitted && oe.descripcion ? <div className="uv-error">{oe.descripcion}</div> : null}
                               </div>
                            </div>
-
-                           <button
-                              className="uv-btn uv-btn-icon"
-                              type="button"
-                              onClick={() => removeOptionRow(idx)}
-                              title={options.length <= 2 ? "Debes mantener mínimo 2 opciones" : "Eliminar opción"}
-                              disabled={loading || options.length <= 2}
-                           >
-                              <FiTrash2 />
-                           </button>
                         </div>
                      );
                   })}
                </div>
 
-               <div className="uv-create-actions">
-                  <button className="uv-btn" type="button" onClick={addOptionRow} disabled={loading}>
+               {submitted && formErrors.length ? (
+                  <div className="uv-errors">
+                     {formErrors.slice(0, 10).map((e, i) => (
+                        <div key={i} className="uv-error">
+                           {e}
+                        </div>
+                     ))}
+                  </div>
+               ) : null}
+
+               <div className="uv-actions">
+                  <button type="button" className="uv-btn uv-btn-ghost" onClick={addOption} disabled={saving}>
                      <FiPlus /> Agregar opción a la encuesta
                   </button>
 
-                  <button className="uv-btn uv-btn-dark" type="button" onClick={handleFinish} disabled={!canSubmit || loading}>
-                     <FiCheck /> {loading ? "Guardando…" : "Terminar edición de encuesta"}
+                  <button type="button" className="uv-btn uv-btn-primary" onClick={handleSubmit} disabled={!canSubmit}>
+                     <FiCheck /> {saving ? "Guardando..." : isEdit ? "Guardar cambios" : "Crear encuesta"}
                   </button>
 
-                  <button className="uv-btn" type="button" onClick={clearAll} disabled={loading}>
-                     Limpiar campos
+                  <button
+                     type="button"
+                     className="uv-btn"
+                     onClick={() => {
+                        setSubmitted(false);
+                        setSuccessMsg("");
+                        setErrorMsg("");
+                        setLastPollId(null);
+                        handleClear();
+                     }}
+                     disabled={saving}
+                  >
+                     <FiX /> Limpiar campos
                   </button>
                </div>
             </div>
          </div>
 
-         {/* Modal editor (react-easy-crop) */}
-         <CoverCropModal
-            open={coverEditorOpen}
-            image={imagenUrl}
-            disabled={loading}
-            initialCrop={coverCrop}
-            initialZoom={coverZoom}
-            onCancel={cancelCoverEditor}
-            onSave={saveCoverEditor}
-            onPreviewCenterY={setCoverPos} // ✅ NUEVO: actualiza coverPos en vivo
-         />
+         {/* Modal Cropper */}
+         {cropOpen ? (
+            <div className="uv-modal-backdrop" role="dialog" aria-modal="true">
+               <div className="uv-modal">
+                  <div className="uv-modal-head">
+                     <h3 className="uv-modal-title">Reencuadrar portada</h3>
+                     <button className="uv-icon-btn" onClick={cancelCoverCrop} title="Cerrar">
+                        <FiX />
+                     </button>
+                  </div>
 
-         {toast.show && (
-            <div className={`uv-toast ${toast.type === "success" ? "ok" : "bad"}`}>
-               {toast.message}
+                  <div className="uv-cropper-wrap">
+                     <Cropper
+                        key={cropperKey}
+                        image={coverSrc}
+                        crop={coverCrop}
+                        zoom={coverZoom}
+                        aspect={16 / 6}
+                        onCropChange={setCoverCrop}
+                        onZoomChange={setCoverZoom}
+                        onCropComplete={(_, croppedAreaPixels) => setCoverCroppedPixels(croppedAreaPixels)}
+                     />
+                  </div>
+
+                  <div className="uv-modal-actions">
+                     <button className="uv-btn" onClick={cancelCoverCrop}>
+                        Cancelar
+                     </button>
+                     <button className="uv-btn uv-btn-primary" onClick={confirmCoverCrop}>
+                        Confirmar recorte
+                     </button>
+                  </div>
+               </div>
             </div>
-         )}
+         ) : null}
       </div>
    );
 }

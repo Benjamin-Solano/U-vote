@@ -64,14 +64,6 @@ export default function Navbar() {
                   <FiHome /> Inicio
                </NavLink>
 
-               <NavLink to="/about" className={linkClass}>
-                  <FiInfo /> About
-               </NavLink>
-
-
-               <NavLink to="/encuestas/buscar" className={linkClass}>
-                  <FiSearch /> Buscar Encuestas
-               </NavLink>
                <NavLink
                   to={isAuthenticated ? "/encuestas/crear" : "/login"}
                   className={linkClass}

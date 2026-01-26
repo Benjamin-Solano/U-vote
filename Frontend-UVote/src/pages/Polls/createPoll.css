@@ -1,0 +1,591 @@
+/* =========================================================
+   CreatePoll - styles scoped
+   Todo vive bajo .uv-polls-scope para evitar colisiones
+   ========================================================= */
+
+.uv-polls-scope {
+   width: 100%;
+   padding-top: 34px;
+}
+
+/* =========================================================
+   Layout base
+   ========================================================= */
+.uv-polls-scope .uv-polls-page {
+   max-width: 1050px;
+   margin: 0 auto;
+   padding: 24px 16px 40px;
+}
+
+.uv-polls-scope .uv-polls-title {
+   margin: 6px 0 6px;
+   font-size: 28px;
+   font-weight: 900;
+   color: #302f2c;
+   text-align: center;
+}
+
+.uv-polls-scope .uv-muted {
+   color: rgba(48, 47, 44, 0.7);
+   font-size: 13px;
+}
+
+.uv-polls-scope .uv-create-card .uv-muted {
+   text-align: center;
+   margin: 0 0 14px;
+}
+
+/* =========================================================
+   Card
+   ========================================================= */
+.uv-polls-scope .uv-card {
+   background: rgba(255, 255, 255, 0.55);
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   border-radius: 18px;
+   padding: 22px;
+   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.05);
+}
+
+/* =========================================================
+   Card head (volver dentro)
+   ========================================================= */
+.uv-polls-scope .uv-card-head {
+   position: relative;
+   padding-top: 6px;
+   margin-bottom: 10px;
+}
+
+/* botón volver dentro de la tarjeta */
+.uv-polls-scope .uv-card-back {
+   position: absolute;
+   top: 0;
+   left: 0;
+}
+
+/* para que el título quede centrado y no choque con "volver" */
+.uv-polls-scope .uv-card-head .uv-polls-title {
+   padding-left: 92px;
+   padding-right: 92px;
+}
+
+/* en móvil, lo ponemos en flujo normal para evitar solapes */
+@media (max-width: 600px) {
+   .uv-polls-scope .uv-card-back {
+      position: static;
+      margin-bottom: 10px;
+   }
+
+   .uv-polls-scope .uv-card-head .uv-polls-title {
+      padding-left: 0;
+      padding-right: 0;
+   }
+}
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+.uv-polls-scope .uv-btn {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   gap: 8px;
+   height: 40px;
+   padding: 0 14px;
+   border-radius: 999px;
+   border: 1px solid rgba(48, 47, 44, 0.16);
+   background: rgba(255, 255, 255, 0.70);
+   color: #302f2c;
+   cursor: pointer;
+   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease,
+      box-shadow 120ms ease;
+}
+
+.uv-polls-scope .uv-btn:hover {
+   transform: translateY(-1px);
+   background: rgba(255, 255, 255, 0.92);
+   border-color: rgba(48, 47, 44, 0.28);
+   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+}
+
+.uv-polls-scope .uv-btn:disabled {
+   opacity: 0.55;
+   cursor: not-allowed;
+   transform: none;
+   box-shadow: none;
+}
+
+.uv-polls-scope .uv-btn-ghost {
+   background: transparent;
+}
+
+.uv-polls-scope .uv-btn-primary {
+   background: rgba(48, 47, 44, 0.92);
+   border-color: rgba(48, 47, 44, 0.92);
+   color: #fff;
+}
+
+.uv-polls-scope .uv-btn-primary:hover {
+   background: rgba(36, 35, 33, 0.96);
+   border-color: rgba(36, 35, 33, 0.96);
+}
+
+.uv-polls-scope .uv-icon-btn {
+   width: 36px;
+   height: 36px;
+   border-radius: 999px;
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   background: rgba(255, 255, 255, 0.85);
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   cursor: pointer;
+   transition: background 120ms ease, transform 120ms ease, border-color 120ms ease;
+}
+
+.uv-polls-scope .uv-icon-btn:hover {
+   background: rgba(255, 255, 255, 0.95);
+   border-color: rgba(48, 47, 44, 0.22);
+   transform: translateY(-1px);
+}
+
+/* =========================================================
+   Inputs / Fields
+   ========================================================= */
+.uv-polls-scope .uv-field {
+   display: flex;
+   flex-direction: column;
+   gap: 6px;
+   margin-top: 5px;
+}
+
+.uv-polls-scope .uv-label {
+   font-size: 12px;
+   font-weight: 700;
+   color: rgba(48, 47, 44, 0.9);
+   line-height: 1.2;
+}
+
+.uv-polls-scope .uv-input,
+.uv-polls-scope .uv-textarea {
+   width: 100%;
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   background: rgba(255, 255, 255, 0.85);
+   border-radius: 14px;
+   padding: 12px;
+   outline: none;
+   color: #302f2c;
+   font-size: 14px;
+   box-sizing: border-box;
+}
+
+.uv-polls-scope .uv-input {
+   height: 40px;
+   padding: 0 12px;
+}
+
+.uv-polls-scope .uv-textarea {
+   min-height: 92px;
+   resize: vertical;
+}
+
+.uv-polls-scope .uv-input:focus,
+.uv-polls-scope .uv-textarea:focus {
+   border-color: rgba(48, 47, 44, 0.30);
+   box-shadow: 0 0 0 3px rgba(48, 47, 44, 0.08);
+}
+
+/* descripción de encuesta fija */
+.uv-polls-scope .uv-textarea--fixed {
+   resize: none;
+   height: 120px;
+   min-height: 120px;
+}
+
+.uv-polls-scope .uv-textarea--option {
+   resize: none;
+}
+
+/* invalid */
+.uv-polls-scope .uv-invalid {
+   border-color: rgba(180, 35, 24, 0.55) !important;
+   box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.10) !important;
+}
+
+/* =========================================================
+   Grid form
+   ========================================================= */
+.uv-polls-scope .uv-grid-2 {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 16px;
+   align-items: start;
+   margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+   .uv-polls-scope .uv-grid-2 {
+      grid-template-columns: 1fr;
+   }
+}
+
+/* fila fecha + hora */
+.uv-polls-scope .uv-dt-row {
+   display: grid;
+   grid-template-columns: 1fr 160px;
+   gap: 10px;
+}
+
+@media (max-width: 900px) {
+   .uv-polls-scope .uv-dt-row {
+      grid-template-columns: 1fr;
+   }
+}
+
+/* =========================================================
+   Alerts (éxito / error dentro del form)
+   ========================================================= */
+.uv-polls-scope .uv-alert {
+   margin-top: 10px;
+   border-radius: 16px;
+   padding: 12px 14px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.60);
+   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.05);
+}
+
+.uv-polls-scope .uv-alert-title {
+   font-weight: 900;
+   font-size: 13px;
+   margin-bottom: 4px;
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-alert-text {
+   font-size: 13px;
+   color: rgba(48, 47, 44, 0.82);
+   line-height: 1.35;
+}
+
+.uv-polls-scope .uv-alert-actions {
+   margin-top: 10px;
+   display: flex;
+   justify-content: flex-end;
+   gap: 10px;
+   flex-wrap: wrap;
+}
+
+/* variantes */
+.uv-polls-scope .uv-alert-success {
+   border-color: rgba(0, 135, 90, 0.22);
+   background: rgba(0, 135, 90, 0.06);
+}
+
+.uv-polls-scope .uv-alert-success .uv-alert-title {
+   color: #067647;
+}
+
+.uv-polls-scope .uv-alert-error {
+   border-color: rgba(180, 35, 24, 0.22);
+   background: rgba(180, 35, 24, 0.06);
+}
+
+.uv-polls-scope .uv-alert-error .uv-alert-title {
+   color: #b42318;
+}
+
+/* =========================================================
+   Portada / Cover
+   ========================================================= */
+.uv-polls-scope .uv-cover {
+   border-radius: 18px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(239, 237, 227, 0.30);
+   overflow: hidden;
+}
+
+.uv-polls-scope .uv-cover-preview {
+   position: relative;
+   width: 100%;
+   height: 260px;
+   overflow: hidden;
+}
+
+.uv-polls-scope .uv-cover-preview img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   display: block;
+}
+
+.uv-polls-scope .uv-cover-tools {
+   position: absolute;
+   top: 12px;
+   right: 12px;
+   display: flex;
+   gap: 8px;
+   z-index: 2;
+}
+
+.uv-polls-scope .uv-cover-drop {
+   width: 100%;
+   min-height: 260px;
+   border: 0;
+   background: transparent;
+   cursor: pointer;
+   display: flex;
+   flex-direction: column;
+   gap: 6px;
+   align-items: center;
+   justify-content: center;
+   padding: 18px;
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-cover-title {
+   font-weight: 900;
+   font-size: 13px;
+}
+
+/* =========================================================
+   Section title
+   ========================================================= */
+.uv-polls-scope .uv-section-title {
+   margin: 20px 0 10px;
+   text-align: center;
+   font-size: 18px;
+   font-weight: 900;
+   color: #302f2c;
+}
+
+/* =========================================================
+   Options list + clean cards
+   ========================================================= */
+.uv-polls-scope .uv-options {
+   display: flex;
+   flex-direction: column;
+   gap: 14px;
+   margin-top: 10px;
+}
+
+.uv-polls-scope .uv-option-card {
+   display: grid;
+   grid-template-columns: 360px 1fr;
+   gap: 14px;
+   padding: 14px;
+   border-radius: 18px;
+   border: 1px solid rgba(48, 47, 44, 0.10);
+   background: rgba(255, 255, 255, 0.55);
+   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+   box-sizing: border-box;
+}
+
+.uv-polls-scope .uv-option-card.uv-flat {
+   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.045);
+}
+
+@media (max-width: 900px) {
+   .uv-polls-scope .uv-option-card {
+      grid-template-columns: 1fr;
+   }
+}
+
+.uv-polls-scope .uv-option-image {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+}
+
+.uv-polls-scope .uv-option-fields {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+   min-height: 0;
+}
+
+.uv-polls-scope .uv-option-head {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+
+.uv-polls-scope .uv-option-idx {
+   font-size: 12px;
+   font-weight: 900;
+   color: rgba(48, 47, 44, 0.55);
+}
+
+.uv-polls-scope .uv-option-desc-wrap {
+   flex: 1;
+   min-height: 0;
+}
+
+/* =========================================================
+   Dropzone (opciones)
+   ========================================================= */
+.uv-polls-scope .uv-dropzone {
+   position: relative;
+   width: 100%;
+   height: 240px;
+   border-radius: 18px;
+   border: 1px dashed rgba(48, 47, 44, 0.22);
+   background: rgba(239, 237, 227, 0.25);
+   display: grid;
+   place-items: center;
+   cursor: pointer;
+   overflow: hidden;
+   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.uv-polls-scope .uv-dropzone:hover {
+   transform: translateY(-1px);
+   background: rgba(239, 237, 227, 0.34);
+   border-color: rgba(48, 47, 44, 0.32);
+}
+
+.uv-polls-scope .uv-dropzone.is-drag {
+   border-color: rgba(48, 47, 44, 0.55);
+   background: rgba(255, 255, 255, 0.55);
+}
+
+.uv-polls-scope .uv-dropzone-empty {
+   display: grid;
+   place-items: center;
+   gap: 6px;
+   color: rgba(48, 47, 44, 0.78);
+   text-align: center;
+   padding: 10px;
+}
+
+.uv-polls-scope .uv-dropzone-title {
+   font-weight: 900;
+   color: #302f2c;
+   font-size: 13px;
+}
+
+.uv-polls-scope .uv-dropzone-sub {
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.72);
+}
+
+.uv-polls-scope .uv-dropzone-sub2 {
+   font-size: 11px;
+   color: rgba(48, 47, 44, 0.62);
+   font-weight: 700;
+}
+
+.uv-polls-scope .uv-dropzone-preview {
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+   object-position: center;
+   background: rgba(239, 237, 227, 0.18);
+   display: block;
+}
+
+.uv-polls-scope .uv-dropzone-clear {
+   position: absolute;
+   top: 10px;
+   right: 10px;
+   width: 34px;
+   height: 34px;
+   border-radius: 12px;
+   border: 1px solid rgba(48, 47, 44, 0.22);
+   background: rgba(255, 255, 255, 0.92);
+   display: grid;
+   place-items: center;
+   cursor: pointer;
+   transition: transform 120ms ease, background 120ms ease;
+   z-index: 4;
+}
+
+.uv-polls-scope .uv-dropzone-clear:hover {
+   transform: translateY(-1px);
+   background: rgba(255, 255, 255, 0.98);
+}
+
+/* =========================================================
+   Actions footer
+   ========================================================= */
+.uv-polls-scope .uv-actions {
+   display: flex;
+   gap: 10px;
+   justify-content: center;
+   flex-wrap: wrap;
+   margin-top: 16px;
+   padding-top: 12px;
+   border-top: 1px solid rgba(48, 47, 44, 0.10);
+}
+
+/* =========================================================
+   Errors
+   ========================================================= */
+.uv-polls-scope .uv-errors {
+   margin-top: 12px;
+   padding-top: 8px;
+   border-top: 1px solid rgba(48, 47, 44, 0.10);
+}
+
+.uv-polls-scope .uv-error {
+   color: #b42318;
+   font-size: 12px;
+   margin-top: 6px;
+}
+
+/* =========================================================
+   Modal (Cropper)
+   ========================================================= */
+.uv-polls-scope .uv-modal-backdrop {
+   position: fixed;
+   inset: 0;
+   background: rgba(20, 18, 18, 0.55);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 18px;
+   z-index: 999;
+}
+
+.uv-polls-scope .uv-modal {
+   width: min(860px, 100%);
+   background: #fff;
+   border-radius: 18px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   overflow: hidden;
+   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.uv-polls-scope .uv-modal-head {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 12px 14px;
+   border-bottom: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.65);
+}
+
+.uv-polls-scope .uv-modal-title {
+   margin: 0;
+   font-size: 14px;
+   font-weight: 900;
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-cropper-wrap {
+   position: relative;
+   width: 100%;
+   height: 420px;
+   background: #111;
+}
+
+.uv-polls-scope .uv-modal-actions {
+   display: flex;
+   justify-content: flex-end;
+   gap: 10px;
+   padding: 12px 14px;
+   border-top: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.65);
+}
+
+.uv-hidden {
+   display: none;
+}

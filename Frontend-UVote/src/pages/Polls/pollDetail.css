@@ -1,0 +1,502 @@
+/* PollDetail.css
+   =========================================================
+   Estilos SOLO para la página PollDetail
+   Scope principal: .uv-polldetail-scope
+   ========================================================= */
+
+.uv-polldetail-scope {
+   padding-top: 34px;
+}
+
+/* Layout contenedor */
+.uv-polldetail-scope.uv-detail-wrap {
+   min-height: calc(100vh - 220px);
+   padding: 40px 16px 260px;
+   display: grid;
+   place-items: start center;
+}
+
+.uv-polldetail-scope .uv-detail-card {
+   width: 100%;
+   max-width: 1050px;
+   margin: 0 auto;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   border-radius: 18px;
+   background: rgba(255, 255, 255, 0.55);
+   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+   padding: 18px;
+}
+
+/* Head */
+.uv-polldetail-scope .uv-polls-head {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 16px;
+   margin-bottom: 8px;
+}
+
+.uv-polldetail-scope .uv-detail-actions {
+   display: inline-flex;
+   gap: 10px;
+   align-items: center;
+}
+
+/* Botones */
+.uv-polldetail-scope .uv-btn {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   padding: 10px 14px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.16);
+   background: rgba(255, 255, 255, 0.55);
+   color: #302f2c;
+   cursor: pointer;
+   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
+}
+
+.uv-polldetail-scope .uv-btn:hover {
+   transform: translateY(-1px);
+   background: rgba(255, 255, 255, 0.90);
+   border-color: rgba(48, 47, 44, 0.30);
+   color: #1f1e1c;
+   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+}
+
+.uv-polldetail-scope .uv-btn:disabled {
+   opacity: 0.6;
+   cursor: not-allowed;
+   transform: none;
+   box-shadow: none;
+}
+
+/* Botón oscuro */
+.uv-polldetail-scope .uv-btn-dark {
+   background: #302f2c;
+   color: #efede3;
+   border-color: #302f2c;
+}
+
+.uv-polldetail-scope .uv-btn-dark:hover {
+   background: #242321;
+   border-color: #242321;
+   color: #ffffff;
+   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
+}
+
+/* Botón compartir (ligeramente distinto) */
+.uv-polldetail-scope .uv-btn-share {
+   border-style: dashed;
+}
+
+/* Alertas (errores/éxito/info) */
+.uv-polldetail-scope .uv-alert {
+   margin-top: 12px;
+   padding: 12px 14px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.45);
+   color: #302f2c;
+   font-weight: 800;
+}
+
+.uv-polldetail-scope .uv-alert-error {
+   border-color: rgba(220, 60, 60, 0.35);
+   background: rgba(220, 60, 60, 0.08);
+   color: rgba(160, 35, 35, 0.95);
+}
+
+.uv-polldetail-scope .uv-alert-success {
+   border-color: rgba(60, 170, 120, 0.35);
+   background: rgba(60, 170, 120, 0.10);
+   color: rgba(25, 110, 70, 0.95);
+}
+
+.uv-polldetail-scope .uv-alert-info {
+   border-color: rgba(80, 120, 220, 0.30);
+   background: rgba(80, 120, 220, 0.08);
+   color: rgba(45, 75, 155, 0.95);
+}
+
+/* States */
+.uv-polldetail-scope .uv-polls-state,
+.uv-polldetail-scope .uv-polls-error {
+   margin-top: 12px;
+   padding: 14px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.45);
+   color: #302f2c;
+}
+
+.uv-polldetail-scope .uv-polls-error {
+   border-color: rgba(48, 47, 44, 0.18);
+   background: rgba(48, 47, 44, 0.06);
+}
+
+/* Tabs */
+.uv-polldetail-scope .uv-tabs {
+   display: flex;
+   gap: 8px;
+   margin-top: 12px;
+   padding-top: 2px;
+   border-bottom: 1px solid rgba(48, 47, 44, 0.12);
+}
+
+.uv-polldetail-scope .uv-tab {
+   padding: 10px 14px;
+   background: transparent;
+   border: none;
+   font-weight: 800;
+   color: rgba(48, 47, 44, 0.62);
+   cursor: pointer;
+   position: relative;
+   border-radius: 12px 12px 0 0;
+   transition: color 120ms ease, background 120ms ease;
+}
+
+.uv-polldetail-scope .uv-tab:hover {
+   background: rgba(255, 255, 255, 0.35);
+   color: rgba(48, 47, 44, 0.82);
+}
+
+.uv-polldetail-scope .uv-tab.active {
+   color: #302f2c;
+}
+
+.uv-polldetail-scope .uv-tab.active::after {
+   content: "";
+   position: absolute;
+   left: 10px;
+   right: 10px;
+   bottom: -1px;
+   height: 2px;
+   background: #302f2c;
+   border-radius: 2px;
+}
+
+/* Cover */
+.uv-polldetail-scope .uv-detail-cover {
+   margin-top: 14px;
+   width: 100%;
+   height: 320px;
+   border-radius: 16px;
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   background: rgba(255, 255, 255, 0.45);
+   overflow: hidden;
+   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.uv-polldetail-scope .uv-detail-cover-img {
+   width: 100%;
+   height: 100%;
+   display: block;
+   object-fit: cover;
+}
+
+/* Poll card base */
+.uv-polldetail-scope .uv-poll-card {
+   text-align: left;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   border-radius: 16px;
+   background: rgba(255, 255, 255, 0.55);
+   padding: 14px;
+   cursor: default;
+   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+}
+
+.uv-polldetail-scope .uv-poll-card-top {
+   display: flex;
+   align-items: flex-start;
+   justify-content: space-between;
+   gap: 10px;
+}
+
+.uv-polldetail-scope .uv-poll-name {
+   font-weight: 900;
+   color: #302f2c;
+   font-size: 16px;
+}
+
+.uv-polldetail-scope .uv-poll-desc {
+   margin-top: 8px;
+   color: rgba(48, 47, 44, 0.78);
+   font-size: 13px;
+   line-height: 1.35;
+}
+
+.uv-polldetail-scope .uv-poll-meta-row {
+   display: flex;
+   justify-content: space-between;
+   margin-top: 12px;
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.6);
+   gap: 12px;
+}
+
+/* Pills */
+.uv-polldetail-scope .uv-pills {
+   font-size: 12px;
+   padding: 6px 10px;
+   border-radius: 999px;
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   white-space: nowrap;
+}
+
+.uv-polldetail-scope .uv-pills.open {
+   background: rgba(255, 255, 255, 0.55);
+}
+
+.uv-polldetail-scope .uv-pills.closed {
+   background: rgba(48, 47, 44, 0.08);
+}
+
+/* Section title */
+.uv-polldetail-scope .uv-detail-h2 {
+   margin: 12px 0 10px;
+   color: #302f2c;
+   font-size: 18px;
+}
+
+/* Grid opciones */
+.uv-polldetail-scope .uv-detail-grid-2 {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   gap: 12px;
+   margin-top: 10px;
+}
+
+@media (max-width: 860px) {
+   .uv-polldetail-scope .uv-detail-grid-2 {
+      grid-template-columns: 1fr;
+   }
+}
+
+/* Imagen en opciones */
+.uv-polldetail-scope .uv-option-media {
+   margin-top: 10px;
+   display: grid;
+   gap: 10px;
+}
+
+.uv-polldetail-scope .uv-option-img {
+   width: 100%;
+   height: 210px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(239, 237, 227, 0.55);
+   object-fit: contain;
+   object-position: center;
+   display: block;
+}
+
+/* Link minimalista */
+.uv-polldetail-scope .uv-muted-link {
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.75);
+   text-decoration: none;
+   border-bottom: 1px solid rgba(48, 47, 44, 0.22);
+   width: fit-content;
+}
+
+.uv-polldetail-scope .uv-muted-link:hover {
+   border-bottom-color: rgba(48, 47, 44, 0.55);
+}
+
+/* Hint */
+.uv-polldetail-scope .uv-hint {
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.7);
+}
+
+/* ===== Stats / charts ===== */
+.uv-polldetail-scope .uv-stats-head {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   gap: 12px;
+}
+
+.uv-polldetail-scope .uv-stats-title {
+   font-weight: 900;
+   color: #302f2c;
+}
+
+.uv-polldetail-scope .uv-stats-total {
+   display: inline-flex;
+   align-items: baseline;
+   gap: 10px;
+   color: rgba(48, 47, 44, 0.75);
+   font-weight: 900;
+}
+
+.uv-polldetail-scope .uv-stats-total strong {
+   color: #302f2c;
+}
+
+.uv-polldetail-scope .uv-results-list {
+   margin-top: 12px;
+   display: grid;
+   gap: 10px;
+}
+
+.uv-polldetail-scope .uv-result-row {
+   display: grid;
+   gap: 6px;
+}
+
+.uv-polldetail-scope .uv-result-head {
+   display: flex;
+   justify-content: space-between;
+   gap: 12px;
+   align-items: baseline;
+}
+
+.uv-polldetail-scope .uv-result-name {
+   font-weight: 900;
+   color: #302f2c;
+}
+
+.uv-polldetail-scope .uv-result-val {
+   font-weight: 900;
+   color: rgba(48, 47, 44, 0.82);
+}
+
+.uv-polldetail-scope .uv-result-val span {
+   color: rgba(48, 47, 44, 0.62);
+}
+
+.uv-polldetail-scope .uv-bar {
+   height: 10px;
+   border-radius: 999px;
+   background: rgba(48, 47, 44, 0.10);
+   overflow: hidden;
+}
+
+.uv-polldetail-scope .uv-bar>div {
+   height: 100%;
+}
+
+/* Chips */
+.uv-polldetail-scope .uv-chart-toolbar {
+   display: inline-flex;
+   gap: 8px;
+   flex-wrap: wrap;
+   justify-content: flex-end;
+}
+
+.uv-polldetail-scope .uv-chip {
+   border: 1px solid rgba(48, 47, 44, 0.16);
+   background: rgba(255, 255, 255, 0.45);
+   color: rgba(48, 47, 44, 0.85);
+   font-weight: 900;
+   border-radius: 999px;
+   padding: 8px 10px;
+   cursor: pointer;
+   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+   font-size: 12px;
+}
+
+.uv-polldetail-scope .uv-chip:hover {
+   transform: translateY(-1px);
+   background: rgba(255, 255, 255, 0.62);
+   border-color: rgba(48, 47, 44, 0.22);
+}
+
+.uv-polldetail-scope .uv-chip.active {
+   background: rgba(48, 47, 44, 0.10);
+   border-color: rgba(48, 47, 44, 0.26);
+   color: #302f2c;
+}
+
+.uv-polldetail-scope .uv-chart-box {
+   margin-top: 12px;
+   border-radius: 16px;
+   border: 1px dashed rgba(48, 47, 44, 0.18);
+   background: rgba(239, 237, 227, 0.30);
+   padding: 14px;
+}
+
+.uv-polldetail-scope .uv-chart-empty {
+   min-height: 220px;
+   display: grid;
+   place-items: center;
+   color: rgba(48, 47, 44, 0.70);
+   font-weight: 800;
+   background: rgba(255, 255, 255, 0.40);
+   border: 1px solid rgba(48, 47, 44, 0.10);
+   border-radius: 14px;
+}
+
+.uv-polldetail-scope .uv-chart-tooltip {
+   background: rgba(255, 255, 255, 0.92);
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   border-radius: 12px;
+   padding: 10px 12px;
+   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
+}
+
+.uv-polldetail-scope .uv-tt-title {
+   font-weight: 900;
+   color: #302f2c;
+   margin-bottom: 4px;
+}
+
+.uv-polldetail-scope .uv-tt-val {
+   font-weight: 900;
+   color: rgba(48, 47, 44, 0.86);
+}
+
+.uv-polldetail-scope .uv-tt-sub {
+   margin-top: 4px;
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.65);
+   font-weight: 900;
+}
+
+/* Recharts tweaks */
+.uv-polldetail-scope .recharts-cartesian-grid-horizontal line,
+.uv-polldetail-scope .recharts-cartesian-grid-vertical line {
+   stroke: rgba(48, 47, 44, 0.12);
+}
+
+.uv-polldetail-scope .recharts-text {
+   fill: rgba(48, 47, 44, 0.82);
+   font-weight: 800;
+}
+
+/* Legend pie */
+.uv-polldetail-scope .uv-pie-legend {
+   margin-top: 10px;
+   display: grid;
+   gap: 8px;
+}
+
+.uv-polldetail-scope .uv-pie-item {
+   display: grid;
+   grid-template-columns: 14px 1fr auto;
+   gap: 10px;
+   align-items: center;
+   padding: 10px 12px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.10);
+   background: rgba(255, 255, 255, 0.40);
+}
+
+.uv-polldetail-scope .uv-dot {
+   width: 10px;
+   height: 10px;
+   border-radius: 999px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+}
+
+.uv-polldetail-scope .uv-pie-name {
+   font-weight: 900;
+   color: #302f2c;
+}
+
+.uv-polldetail-scope .uv-pie-val {
+   font-weight: 900;
+   color: rgba(48, 47, 44, 0.80);
+}

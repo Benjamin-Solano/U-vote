@@ -4,7 +4,7 @@ import Home from "../pages/Home/Home";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 
-import SearchPolls from "../pages/Polls/SearchPolls";
+
 import PollDetail from "../pages/Polls/PollDetail";
 import CreatePoll from "../pages/Polls/CreatePoll";
 
@@ -33,7 +33,6 @@ export default function AppRouter() {
 
          {/* Encuestas (público: solo búsqueda + detalle) */}
          <Route path="/encuestas" element={<Navigate to="/encuestas/buscar" replace />} />
-         <Route path="/encuestas/buscar" element={<SearchPolls />} />
          <Route path="/encuestas/:id" element={<PollDetail />} />
 
          {/* Compatibilidad */}
