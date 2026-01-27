@@ -4,7 +4,7 @@
    z-index: 20;
    background: rgba(239, 237, 227, 0.78);
    backdrop-filter: blur(10px);
-   border-bottom: 1px solid rgba(48, 47, 44, 0.10);
+   border-bottom: rgba(48, 47, 44, 0.10);
 }
 
 .uv-nav-inner {
