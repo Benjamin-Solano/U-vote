@@ -1,7 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { FiEdit3, FiSave, FiXCircle, FiUpload, FiImage, FiSearch } from "react-icons/fi";
+import {
+   FiEdit3,
+   FiSave,
+   FiXCircle,
+   FiUpload,
+   FiImage,
+   FiSearch,
+   FiUser,
+   FiLogOut,
+   FiFileText,
+   FiBarChart2,
+} from "react-icons/fi";
 
 import { useAuth } from "../../auth/useAuth";
 import { usersApi } from "../../api/users.api";
@@ -53,10 +64,7 @@ export default function Profile() {
    const normalizeError = (err, fallback = "Ocurrió un error.") => {
       const status = err?.response?.status;
 
-      // 👇 Tu requerimiento
       if (status === 403) return "Sesión Expirada, vuelva a iniciar sesión";
-
-      // (Opcional útil) muchos backends usan 401 para token expirado
       if (status === 401) return "Sesión Expirada, vuelva a iniciar sesión";
 
       return (
@@ -108,11 +116,8 @@ export default function Profile() {
                setProfile(usuario);
             }
          } catch (err) {
-            // ✅ Si el token expiró, mostramos mensaje claro
             const msg = normalizeError(err, "No se pudo cargar el perfil.");
             setError(msg);
-
-            // fallback conservador
             setProfile(usuario);
          } finally {
             setLoading(false);
@@ -328,12 +333,16 @@ export default function Profile() {
          >
             <div className="uv-profile-header">
                <div>
-                  <h1>Mi perfil</h1>
+                  <h1>
+                     <FiUser aria-hidden="true" />
+                     Mi perfil
+                  </h1>
                   <p>Gestiona tu foto, tu información y tus encuestas creadas.</p>
                </div>
 
                <div className="uv-logout-wrap">
                   <button className="uv-profile-logout" onClick={logout} type="button">
+                     <FiLogOut aria-hidden="true" />
                      Cerrar sesión
                   </button>
 
@@ -395,7 +404,10 @@ export default function Profile() {
 
                {/* Info */}
                <section className="uv-profile-box uv-info-box">
-                  <h2>Información</h2>
+                  <h2>
+                     <FiFileText aria-hidden="true" />
+                     Información
+                  </h2>
 
                   <div className="uv-profile-row">
                      <span className="uv-k">Correo</span>
@@ -537,7 +549,10 @@ export default function Profile() {
             <section className="uv-profile-box uv-polls-box">
                <div className="uv-polls-header">
                   <div>
-                     <h2>Mis encuestas</h2>
+                     <h2>
+                        <FiBarChart2 aria-hidden="true" />
+                        Mis encuestas
+                     </h2>
                      <p className="uv-muted">Haz click en una encuesta para ver sus detalles.</p>
                   </div>
 

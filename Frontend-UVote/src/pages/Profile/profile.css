@@ -35,6 +35,11 @@
    font-size: 26px;
    letter-spacing: 0.2px;
    color: #302f2c;
+
+   /* ✅ Icono + texto */
+   display: inline-flex;
+   align-items: center;
+   gap: 10px;
 }
 
 .uv-profile-header p {
@@ -53,6 +58,11 @@
    padding: 10px 14px;
    cursor: pointer;
    transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+
+   /* ✅ Icono + texto */
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
 }
 
 .uv-profile-logout:hover {
@@ -84,7 +94,6 @@
    font-weight: 750;
 }
 
-
 /* Texto muted */
 .uv-muted {
    color: rgba(48, 47, 44, 0.65);
@@ -106,6 +115,11 @@
    color: #302f2c;
    font-size: 16px;
    letter-spacing: 0.2px;
+
+   /* ✅ Icono + texto */
+   display: inline-flex;
+   align-items: center;
+   gap: 10px;
 }
 
 /* =========================================================

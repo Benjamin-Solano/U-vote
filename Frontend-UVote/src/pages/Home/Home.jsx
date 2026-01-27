@@ -3,9 +3,18 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiPlus, FiShare2, FiBarChart2 } from "react-icons/fi";
 
+const container = {
+   hidden: {},
+   show: {
+      transition: {
+         staggerChildren: 0.08,
+      },
+   },
+};
+
 const fadeUp = {
    hidden: { opacity: 0, y: 14 },
-   show: { opacity: 1, y: 0 },
+   show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
 };
 
 export default function Home() {
@@ -18,7 +27,6 @@ export default function Home() {
                initial="hidden"
                animate="show"
                variants={fadeUp}
-               transition={{ duration: 0.35, ease: "easeOut" }}
             >
                <h1 className="uv-hero-title">Crea encuestas de forma simple</h1>
                <p className="uv-hero-sub">
@@ -43,13 +51,20 @@ export default function Home() {
                   className="uv-section-title"
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                >
                   ¿Por qué usar U-Vote?
                </motion.h2>
 
-               <div className="uv-grid">
-                  <article className="uv-feature dark">
+               <motion.div
+                  className="uv-grid"
+                  variants={container}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={{ once: true, amount: 0.25 }}
+               >
+                  <motion.article className="uv-feature dark" variants={fadeUp} tabIndex={0}>
                      <div className="uv-feature-icon dark">
                         <FiPlus />
                      </div>
@@ -59,21 +74,21 @@ export default function Home() {
                            Publica encuestas en minutos con una interfaz clara.
                         </p>
                      </div>
-                  </article>
+                  </motion.article>
 
-                  <article className="uv-feature dark">
+                  <motion.article className="uv-feature dark" variants={fadeUp} tabIndex={0}>
                      <div className="uv-feature-icon dark">
                         <FiShare2 />
                      </div>
                      <div>
                         <h3 className="uv-feature-title">Comparte fácilmente</h3>
                         <p className="uv-feature-text">
-                           Un enlace y una cuenta es suficiente para comenzar a votar.
+                           Llega a mas personas compartiendo un link o QR.
                         </p>
                      </div>
-                  </article>
+                  </motion.article>
 
-                  <article className="uv-feature dark">
+                  <motion.article className="uv-feature dark" variants={fadeUp} tabIndex={0}>
                      <div className="uv-feature-icon dark">
                         <FiBarChart2 />
                      </div>
@@ -83,8 +98,9 @@ export default function Home() {
                            Visualiza estadísticas y tendencias de forma intuitiva.
                         </p>
                      </div>
-                  </article>
-               </div>
+                  </motion.article>
+               </motion.div>
+
             </section>
          </div>
       </main>

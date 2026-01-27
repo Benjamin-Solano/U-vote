@@ -46,7 +46,7 @@
 /* ================= FEATURES ================= */
 
 .uv-features {
-   padding: 38px 0 48px;
+   padding: 38px 0 56px;
 }
 
 .uv-section-title {
@@ -64,6 +64,7 @@
 /* ===== Dark cards ===== */
 
 .uv-feature.dark {
+   position: relative;
    background: #302f2c;
    color: #efede3;
    border-radius: 18px;
@@ -72,6 +73,35 @@
    gap: 14px;
    align-items: flex-start;
    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+
+   transform: translateY(0);
+   transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+   outline: none;
+}
+
+/* brillo sutil (solo en hover/focus) */
+.uv-feature.dark::after {
+   content: "";
+   position: absolute;
+   inset: 0;
+   border-radius: 18px;
+   pointer-events: none;
+   opacity: 0;
+   background: radial-gradient(90% 120% at 50% 0%,
+         rgba(255, 255, 255, 0.10),
+         rgba(255, 255, 255, 0) 55%);
+   transition: opacity 180ms ease;
+}
+
+.uv-feature.dark:hover,
+.uv-feature.dark:focus-visible {
+   transform: translateY(-4px);
+   box-shadow: 0 18px 38px rgba(0, 0, 0, 0.34);
+}
+
+.uv-feature.dark:hover::after,
+.uv-feature.dark:focus-visible::after {
+   opacity: 1;
 }
 
 .uv-feature-icon.dark {
@@ -101,10 +131,26 @@
    color: rgba(239, 237, 227, 0.85);
 }
 
+/* CTA secundario */
+.uv-features-cta {
+   display: flex;
+   justify-content: center;
+   margin-top: 18px;
+}
+
 /* ================= Responsive ================= */
 
 @media (max-width: 900px) {
    .uv-grid {
       grid-template-columns: 1fr;
+   }
+}
+
+/* Respeta preferencias del usuario */
+@media (prefers-reduced-motion: reduce) {
+
+   .uv-feature.dark,
+   .uv-feature.dark::after {
+      transition: none !important;
    }
 }
