@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FiHome, FiInfo, FiPlusCircle, FiLogIn, FiLogOut, FiSearch } from "react-icons/fi";
+import { FiHome, FiPlusCircle, FiLogIn, FiLogOut, FiUser } from "react-icons/fi";
 import "./navbar.css";
 
 import { useAuth } from "../../auth/useAuth";
 import logo from "../../assets/U-VoteLogo.png";
-
 
 export default function Navbar() {
    const { isAuthenticated, usuario, logout } = useAuth();
@@ -50,14 +49,9 @@ export default function Navbar() {
          <div className="container uv-nav-inner">
             {/* Brand */}
             <NavLink to="/" className="uv-brand" aria-label="Ir al inicio">
-               <img
-                  src={logo}
-                  alt="U-Vote"
-                  className="uv-brand-logo"
-               />
+               <img src={logo} alt="U-Vote" className="uv-brand-logo" />
                <span className="uv-brand-text">U-Vote</span>
             </NavLink>
-
 
             <nav className="uv-links" aria-label="Navegación principal">
                <NavLink to="/" className={linkClass}>
@@ -70,9 +64,12 @@ export default function Navbar() {
                >
                   <FiPlusCircle /> Crear Encuesta
                </NavLink>
-               {/* Derecha */}
+
                {!isAuthenticated ? (
-                  <NavLink to="/login" className={`${linkClass({ isActive: false })} uv-link-primary`}>
+                  <NavLink
+                     to="/login"
+                     className={`${linkClass({ isActive: false })} uv-link-primary`}
+                  >
                      <FiLogIn /> Iniciar Sesión
                   </NavLink>
                ) : (
@@ -108,7 +105,7 @@ export default function Navbar() {
                               }}
                               role="menuitem"
                            >
-                              Perfil
+                              <FiUser /> Perfil
                            </button>
 
                            <div className="uv-user-sep" />
@@ -130,3 +127,4 @@ export default function Navbar() {
       </header>
    );
 }
+

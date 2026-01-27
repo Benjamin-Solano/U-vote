@@ -517,10 +517,8 @@ export default function CreatePoll() {
                : "Encuesta creada correctamente. Ya puedes compartirla o revisarla en detalle."
          );
 
-         // Si era creación, limpiamos; si era edición, dejamos los datos como quedaron
          if (!isEdit) {
             handleClear();
-            // mantenemos submitted=false para que no muestre invalids tras limpiar
             setSubmitted(false);
          }
       } catch (e) {
@@ -606,11 +604,7 @@ export default function CreatePoll() {
 
                      {lastPollId ? (
                         <div className="uv-alert-actions">
-                           <button
-                              type="button"
-                              className="uv-btn uv-btn-ghost"
-                              onClick={() => navigate(`/polls/${lastPollId}`)}
-                           >
+                           <button type="button" className="uv-btn uv-btn-ghost" onClick={() => navigate(`/polls/${lastPollId}`)}>
                               Ver encuesta
                            </button>
                         </div>
@@ -669,7 +663,7 @@ export default function CreatePoll() {
                   <div className="uv-field">
                      <Label required>Nombre</Label>
                      <input
-                        className={`uv-input ${submitted && fieldErrors.nombre ? "uv-invalid" : ""}`}
+                        className={`uv-input ${!nombre.trim() ? "uv-invalid" : ""}`}
                         value={nombre}
                         onChange={(e) => setNombre(e.target.value)}
                         placeholder="Ej: Elección del logo"
@@ -701,7 +695,7 @@ export default function CreatePoll() {
                   <div className="uv-field">
                      <Label required>Descripción</Label>
                      <textarea
-                        className={`uv-textarea uv-textarea--fixed ${submitted && fieldErrors.descripcion ? "uv-invalid" : ""}`}
+                        className={`uv-textarea uv-textarea--fixed ${!descripcion.trim() ? "uv-invalid" : ""}`}
                         value={descripcion}
                         onChange={(e) => setDescripcion(e.target.value)}
                         placeholder="Describe el objetivo de la encuesta..."
@@ -758,7 +752,7 @@ export default function CreatePoll() {
 
                                  <button
                                     type="button"
-                                    className="uv-icon-btn"
+                                    className="uv-icon-btn uv-icon-btn-danger"
                                     title="Eliminar opción"
                                     onClick={() => removeOption(opt.key)}
                                     disabled={saving || options.length <= 2}
@@ -770,7 +764,7 @@ export default function CreatePoll() {
                               <div className="uv-field">
                                  <Label required>Nombre</Label>
                                  <input
-                                    className={`uv-input ${submitted && oe.nombre ? "uv-invalid" : ""}`}
+                                    className={`uv-input ${!opt.nombre.trim() ? "uv-invalid" : ""}`}
                                     value={opt.nombre}
                                     onChange={(e) => updateOption(opt.key, { nombre: e.target.value })}
                                     placeholder="Ej: Perros"
@@ -781,7 +775,7 @@ export default function CreatePoll() {
                               <div className="uv-field uv-option-desc-wrap">
                                  <Label required>Descripción</Label>
                                  <textarea
-                                    className={`uv-textarea uv-textarea--option ${submitted && oe.descripcion ? "uv-invalid" : ""}`}
+                                    className={`uv-textarea uv-textarea--option ${!opt.descripcion.trim() ? "uv-invalid" : ""}`}
                                     value={opt.descripcion}
                                     onChange={(e) => updateOption(opt.key, { descripcion: e.target.value })}
                                     placeholder="Ej: Son más leales..."

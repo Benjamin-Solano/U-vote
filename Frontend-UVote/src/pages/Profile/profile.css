@@ -43,32 +43,47 @@
    font-weight: 650;
 }
 
-/* Botón logout */
+/* ✅ Botón logout en rojo */
 .uv-profile-logout {
-   border: 1px solid rgba(48, 47, 44, 0.14);
-   background: rgba(255, 255, 255, 0.40);
-   color: #302f2c;
-   font-weight: 850;
+   border: 1px solid rgba(180, 35, 24, 0.35);
+   background: rgba(180, 35, 24, 0.12);
+   color: rgba(140, 20, 12, 0.95);
+   font-weight: 900;
    border-radius: 999px;
    padding: 10px 14px;
    cursor: pointer;
+   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
 }
 
 .uv-profile-logout:hover {
-   background: rgba(48, 47, 44, 0.06);
-   border-color: rgba(48, 47, 44, 0.18);
+   transform: translateY(-1px);
+   background: rgba(180, 35, 24, 0.18);
+   border-color: rgba(180, 35, 24, 0.45);
+   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
 }
 
 /* Alertas */
 .uv-profile-alert {
    margin-top: 12px;
-   border: 1px solid rgba(48, 47, 44, 0.14);
-   background: rgba(255, 255, 255, 0.55);
+   border: 1px solid rgba(180, 35, 24, 0.35);
+   background: rgba(180, 35, 24, 0.12);
+   color: rgba(140, 20, 12, 0.95);
    border-radius: 14px;
    padding: 12px 14px;
-   color: rgba(48, 47, 44, 0.90);
    font-weight: 750;
 }
+
+/* Alertas */
+.uv-profile-advice {
+   margin-top: 12px;
+   background: rgba(0, 135, 90, 0.14);
+   border: 1px solid rgba(0, 135, 90, 0.50);
+   color: rgba(48, 47, 44, 0.65);
+   border-radius: 14px;
+   padding: 12px 14px;
+   font-weight: 750;
+}
+
 
 /* Texto muted */
 .uv-muted {
@@ -382,6 +397,7 @@
    align-items: center;
    justify-content: space-between;
    gap: 12px;
+   cursor: pointer;
 }
 
 .uv-poll-title {
@@ -395,7 +411,7 @@
    gap: 10px;
 }
 
-/* Badge de estado */
+/* Badge de estado (base) */
 .uv-pill {
    border: 1px solid rgba(48, 47, 44, 0.14);
    background: rgba(48, 47, 44, 0.07);
@@ -404,6 +420,20 @@
    font-weight: 900;
    color: rgba(48, 47, 44, 0.90);
    font-size: 13px;
+}
+
+/* Activa = verde */
+.uv-pill.is-open {
+   border-color: rgba(0, 135, 90, 0.35);
+   background: rgba(0, 135, 90, 0.10);
+   color: rgba(5, 105, 70, 0.95);
+}
+
+/* Cerrada = rojo */
+.uv-pill.is-closed {
+   border-color: rgba(180, 35, 24, 0.40);
+   background: rgba(180, 35, 24, 0.10);
+   color: rgba(140, 20, 12, 0.95);
 }
 
 /* Responsive ajustes finos */
@@ -427,18 +457,14 @@
    }
 }
 
-
-
-/* Lista de encuestas con scroll interno (para mostrar ~4 a simple vista) */
+/* Lista de encuestas con scroll interno */
 .uv-polls-scroll {
    max-height: 280px;
-   /* ajusta fino si quieres 4 exactas */
    overflow-y: auto;
    padding-right: 6px;
-   /* evita que el scrollbar tape contenido */
 }
 
-/* Scrollbar sutil (Firefox/Chromium) */
+/* Scrollbar sutil */
 .uv-polls-scroll {
    scrollbar-width: thin;
    scrollbar-color: rgba(48, 47, 44, 0.28) rgba(48, 47, 44, 0.06);
@@ -516,8 +542,7 @@
    color: rgba(48, 47, 44, 0.82);
 }
 
-
-/* ✅ Descripción en columna (label arriba, bloque abajo) */
+/* Descripción en columna */
 .uv-profile-row-desc-vertical {
    display: flex;
    flex-direction: column;
@@ -526,11 +551,16 @@
    padding-top: 12px;
 }
 
+/* Centrar el subtítulo/label "Descripción" */
+.uv-profile-row-desc-vertical .uv-k {
+   width: 100%;
+   text-align: center;
+}
+
 /* Bloque de descripción */
 .uv-desc-box {
    width: 100%;
    height: 250px;
-   /* ajusta si quieres más/menos */
    border: 1px solid rgba(48, 47, 44, 0.16);
    background: rgba(255, 255, 255, 0.55);
    border-radius: 12px;
@@ -552,7 +582,6 @@
    height: 100%;
    overflow-y: auto;
    padding-right: 36px;
-   /* espacio para el botón */
    white-space: pre-wrap;
    color: rgba(48, 47, 44, 0.86);
    font-weight: 750;
@@ -573,20 +602,10 @@
    color: rgba(48, 47, 44, 0.90);
 }
 
-
-
-
-/* Textarea fija */
-.uv-edit-desc {
-   width: 100%;
-}
-
 .uv-edit-textarea {
    width: 100%;
    height: 170px;
-   /* ✅ fija */
    resize: none;
-   /* ✅ no redimensionable */
    border: 1px solid rgba(48, 47, 44, 0.16);
    background: rgba(255, 255, 255, 0.55);
    border-radius: 12px;
@@ -607,4 +626,34 @@
    display: flex;
    gap: 10px;
    justify-content: flex-end;
+}
+
+/* =========================================================
+   Micro-interacciones: badges (Activa/Cerrada)
+   ========================================================= */
+.uv-pill.is-open,
+.uv-pill.is-closed {
+   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, filter 120ms ease;
+}
+
+.uv-poll-item:hover .uv-pill.is-open,
+.uv-poll-item:focus-visible .uv-pill.is-open {
+   transform: translateY(-1px);
+   filter: brightness(1.05);
+   background: rgba(0, 135, 90, 0.14);
+   border-color: rgba(0, 135, 90, 0.50);
+}
+
+.uv-poll-item:hover .uv-pill.is-closed,
+.uv-poll-item:focus-visible .uv-pill.is-closed {
+   transform: translateY(-1px);
+   filter: brightness(1.05);
+   background: rgba(180, 35, 24, 0.14);
+   border-color: rgba(180, 35, 24, 0.52);
+}
+
+/* Accesibilidad: foco visible en el item clickeable */
+.uv-poll-item:focus-visible {
+   outline: none;
+   box-shadow: 0 0 0 3px rgba(48, 47, 44, 0.14);
 }

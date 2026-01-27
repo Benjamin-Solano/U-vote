@@ -139,13 +139,35 @@
    align-items: center;
    justify-content: center;
    cursor: pointer;
-   transition: background 120ms ease, transform 120ms ease, border-color 120ms ease;
+   transition: background 120ms ease, transform 120ms ease, border-color 120ms ease, color 120ms ease;
+   color: #302f2c;
 }
 
 .uv-polls-scope .uv-icon-btn:hover {
    background: rgba(255, 255, 255, 0.95);
    border-color: rgba(48, 47, 44, 0.22);
    transform: translateY(-1px);
+}
+
+/* 🔴 Icon button de eliminar (basurero) */
+.uv-polls-scope .uv-icon-btn-danger {
+   border-color: rgba(180, 35, 24, 0.42);
+   color: #b42318;
+}
+
+.uv-polls-scope .uv-icon-btn-danger:hover {
+   background: rgba(180, 35, 24, 0.08);
+   border-color: rgba(180, 35, 24, 0.70);
+   color: #8f1f15;
+   transform: translateY(-1px);
+}
+
+.uv-polls-scope .uv-icon-btn:disabled,
+.uv-polls-scope .uv-icon-btn-danger:disabled {
+   opacity: 0.55;
+   cursor: not-allowed;
+   transform: none;
+   box-shadow: none;
 }
 
 /* =========================================================
@@ -205,7 +227,7 @@
    resize: none;
 }
 
-/* invalid */
+/* invalid (requeridos vacíos) */
 .uv-polls-scope .uv-invalid {
    border-color: rgba(180, 35, 24, 0.55) !important;
    box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.10) !important;

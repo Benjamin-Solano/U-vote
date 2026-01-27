@@ -49,6 +49,24 @@ export default function Profile() {
 
    const DESC_MAX = 500;
 
+   // ✅ Normaliza errores y captura sesión expirada (403)
+   const normalizeError = (err, fallback = "Ocurrió un error.") => {
+      const status = err?.response?.status;
+
+      // 👇 Tu requerimiento
+      if (status === 403) return "Sesión Expirada, vuelva a iniciar sesión";
+
+      // (Opcional útil) muchos backends usan 401 para token expirado
+      if (status === 401) return "Sesión Expirada, vuelva a iniciar sesión";
+
+      return (
+         err?.response?.data?.message ||
+         err?.response?.data?.error ||
+         err?.message ||
+         fallback
+      );
+   };
+
    const syncLocalUser = (newUser) => {
       try {
          localStorage.setItem("usuario", JSON.stringify(newUser));
@@ -60,6 +78,15 @@ export default function Profile() {
       if (p?.estado) return p.estado;
       if (p?.fechaCierre) return "Cerrada";
       return "Activa";
+   };
+
+   // ✅ Para colorear badge
+   const isPollClosed = (p) => {
+      if (p?.cerrada === true) return true;
+      if (p?.fechaCierre) return true;
+      const s = String(p?.estado ?? "").toLowerCase();
+      if (s.includes("cerrad") || s.includes("closed") || s.includes("finaliz")) return true;
+      return false;
    };
 
    useEffect(() => {
@@ -80,7 +107,12 @@ export default function Profile() {
             } else {
                setProfile(usuario);
             }
-         } catch (_) {
+         } catch (err) {
+            // ✅ Si el token expiró, mostramos mensaje claro
+            const msg = normalizeError(err, "No se pudo cargar el perfil.");
+            setError(msg);
+
+            // fallback conservador
             setProfile(usuario);
          } finally {
             setLoading(false);
@@ -99,7 +131,9 @@ export default function Profile() {
          try {
             const res = await pollsApi.listByCreadorId(userId);
             setPolls(res?.data ?? []);
-         } catch (_) {
+         } catch (err) {
+            const msg = normalizeError(err, "No se pudieron cargar tus encuestas.");
+            setError(msg);
             setPolls([]);
          } finally {
             setPollsLoading(false);
@@ -185,12 +219,7 @@ export default function Profile() {
          setEditMode(false);
          setOkMsg("Nombre de usuario actualizado.");
       } catch (err) {
-         const msg =
-            err?.response?.data?.message ||
-            err?.response?.data?.error ||
-            err?.message ||
-            "No se pudo actualizar el nombre de usuario.";
-         setError(msg);
+         setError(normalizeError(err, "No se pudo actualizar el nombre de usuario."));
       } finally {
          setSavingName(false);
       }
@@ -214,12 +243,7 @@ export default function Profile() {
          setEditDescMode(false);
          setOkMsg("Descripción actualizada.");
       } catch (err) {
-         const msg =
-            err?.response?.data?.message ||
-            err?.response?.data?.error ||
-            err?.message ||
-            "No se pudo actualizar la descripción.";
-         setError(msg);
+         setError(normalizeError(err, "No se pudo actualizar la descripción."));
       } finally {
          setSavingDesc(false);
       }
@@ -273,12 +297,7 @@ export default function Profile() {
          setOkMsg("Foto de perfil actualizada.");
          setPhotoVersion((v) => v + 1);
       } catch (err) {
-         const msg =
-            err?.response?.data?.message ||
-            err?.response?.data?.error ||
-            err?.message ||
-            "No se pudo subir la imagen.";
-         setError(msg);
+         setError(normalizeError(err, "No se pudo subir la imagen."));
       } finally {
          setUploadingPhoto(false);
       }
@@ -297,8 +316,7 @@ export default function Profile() {
       );
    }
 
-   const descText =
-      profile?.descripcion?.trim() ? profile.descripcion : "Sin descripción.";
+   const descText = profile?.descripcion?.trim() ? profile.descripcion : "Sin descripción.";
 
    return (
       <div className="container uv-profile">
@@ -321,15 +339,13 @@ export default function Profile() {
 
                   <div className="uv-created-at">
                      Cuenta creada:{" "}
-                     <strong>
-                        {profile?.creadoEn ? new Date(profile.creadoEn).toLocaleString() : "—"}
-                     </strong>
+                     <strong>{profile?.creadoEn ? new Date(profile.creadoEn).toLocaleString() : "—"}</strong>
                   </div>
                </div>
             </div>
 
             {error && <div className="uv-profile-alert">{error}</div>}
-            {okMsg && <div className="uv-profile-alert">{okMsg}</div>}
+            {okMsg && <div className="uv-profile-advice">{okMsg}</div>}
 
             <div className="uv-profile-top">
                {/* Foto */}
@@ -372,9 +388,7 @@ export default function Profile() {
                            </button>
                         )}
 
-                        <p className="uv-muted uv-photo-hint">
-                           Recomendado: imagen cuadrada. Máx. 2MB.
-                        </p>
+                        <p className="uv-muted uv-photo-hint">Recomendado: imagen cuadrada. Máx. 2MB.</p>
                      </div>
                   </div>
                </section>
@@ -440,8 +454,7 @@ export default function Profile() {
                      )}
                   </div>
 
-
-                  {/* ✅ Descripción (label arriba, bloque debajo) */}
+                  {/* Descripción (label arriba, bloque debajo) */}
                   <div className="uv-profile-row uv-profile-row-desc-vertical">
                      <span className="uv-k">Descripción</span>
 
@@ -461,11 +474,7 @@ export default function Profile() {
                               <FiEdit3 />
                            </button>
 
-                           <div className="uv-desc-text">
-                              {profile?.descripcion?.trim()
-                                 ? profile.descripcion
-                                 : "Sin descripción."}
-                           </div>
+                           <div className="uv-desc-text">{descText}</div>
                         </div>
                      ) : (
                         <>
@@ -521,8 +530,6 @@ export default function Profile() {
                         </>
                      )}
                   </div>
-
-
                </section>
             </div>
 
@@ -543,12 +550,7 @@ export default function Profile() {
                         className="uv-search-input"
                      />
                      {query && (
-                        <button
-                           className="uv-search-clear"
-                           onClick={() => setQuery("")}
-                           title="Limpiar"
-                           type="button"
-                        >
+                        <button className="uv-search-clear" onClick={() => setQuery("")} title="Limpiar" type="button">
                            <FiXCircle />
                         </button>
                      )}
@@ -558,26 +560,31 @@ export default function Profile() {
                {pollsLoading ? (
                   <p className="uv-muted">Cargando encuestas...</p>
                ) : filteredPolls.length === 0 ? (
-                  <p className="uv-muted">
-                     {polls.length === 0 ? "Aún no has creado encuestas." : "No hay resultados."}
-                  </p>
+                  <p className="uv-muted">{polls.length === 0 ? "Aún no has creado encuestas." : "No hay resultados."}</p>
                ) : (
                   <>
                      <div className="uv-polls-list uv-polls-scroll">
-                        {pageItems.map((p) => (
-                           <button
-                              key={p.id}
-                              className="uv-poll-item"
-                              type="button"
-                              onClick={() => goToPoll(p.id)}
-                              title="Ver detalles de la encuesta"
-                           >
-                              <div className="uv-poll-title">{p.titulo ?? p.nombre ?? "Encuesta"}</div>
-                              <div className="uv-poll-meta">
-                                 <span className="uv-pill">{estadoLabel(p)}</span>
-                              </div>
-                           </button>
-                        ))}
+                        {pageItems.map((p) => {
+                           const closed = isPollClosed(p);
+
+                           return (
+                              <button
+                                 key={p.id}
+                                 className="uv-poll-item"
+                                 type="button"
+                                 onClick={() => goToPoll(p.id)}
+                                 title="Ver detalles de la encuesta"
+                              >
+                                 <div className="uv-poll-title">{p.titulo ?? p.nombre ?? "Encuesta"}</div>
+
+                                 <div className="uv-poll-meta">
+                                    <span className={`uv-pill ${closed ? "is-closed" : "is-open"}`}>
+                                       {estadoLabel(p)}
+                                    </span>
+                                 </div>
+                              </button>
+                           );
+                        })}
                      </div>
 
                      {filteredPolls.length > PAGE_SIZE && (
