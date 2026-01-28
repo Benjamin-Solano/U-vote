@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { FiArrowLeft, FiCheck, FiPlus, FiTrash2, FiUpload, FiX } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 import Cropper from "react-easy-crop";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { api } from "../../api/axios";
 import { pollsApi } from "../../api/polls.api";
@@ -210,6 +211,56 @@ export default function CreatePoll() {
    const navigate = useNavigate();
    const { id } = useParams();
    const isEdit = Boolean(id);
+
+   // Animaciones (sutiles)
+   const pageVariants = useMemo(
+      () => ({
+         hidden: { opacity: 0, y: 10 },
+         show: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.35, ease: "easeOut" },
+         },
+      }),
+      []
+   );
+
+   const listVariants = useMemo(
+      () => ({
+         hidden: { opacity: 1 },
+         show: {
+            opacity: 1,
+            transition: { staggerChildren: 0.05, delayChildren: 0.05 },
+         },
+      }),
+      []
+   );
+
+   const itemVariants = useMemo(
+      () => ({
+         hidden: { opacity: 0, y: 8 },
+         show: { opacity: 1, y: 0, transition: { duration: 0.25, ease: "easeOut" } },
+      }),
+      []
+   );
+
+   const modalBackdrop = useMemo(
+      () => ({
+         hidden: { opacity: 0 },
+         show: { opacity: 1, transition: { duration: 0.18 } },
+         exit: { opacity: 0, transition: { duration: 0.14 } },
+      }),
+      []
+   );
+
+   const modalPanel = useMemo(
+      () => ({
+         hidden: { opacity: 0, y: 10, scale: 0.98 },
+         show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.22, ease: "easeOut" } },
+         exit: { opacity: 0, y: 8, scale: 0.985, transition: { duration: 0.16, ease: "easeIn" } },
+      }),
+      []
+   );
 
    // Encuesta
    const [nombre, setNombre] = useState("");
@@ -576,7 +627,14 @@ export default function CreatePoll() {
       return (
          <div className="uv-polls-scope">
             <div className="uv-polls-page">
-               <div className="uv-card">Cargando...</div>
+               <motion.div
+                  className="uv-card"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+               >
+                  Cargando...
+               </motion.div>
             </div>
          </div>
       );
@@ -585,7 +643,7 @@ export default function CreatePoll() {
    return (
       <div className="uv-polls-scope">
          <div className="uv-polls-page">
-            <div className="uv-card uv-create-card">
+            <motion.div className="uv-card uv-create-card" variants={pageVariants} initial="hidden" animate="show">
                {/* Back dentro de la tarjeta */}
                <div className="uv-card-head">
                   <button className="uv-btn uv-btn-ghost uv-card-back" onClick={() => navigate(-1)} disabled={saving}>
@@ -604,7 +662,11 @@ export default function CreatePoll() {
 
                      {lastPollId ? (
                         <div className="uv-alert-actions">
-                           <button type="button" className="uv-btn uv-btn-ghost" onClick={() => navigate(`/polls/${lastPollId}`)}>
+                           <button
+                              type="button"
+                              className="uv-btn uv-btn-ghost"
+                              onClick={() => navigate(`/polls/${lastPollId}`)}
+                           >
                               Ver encuesta
                            </button>
                         </div>
@@ -726,13 +788,13 @@ export default function CreatePoll() {
 
                <h2 className="uv-section-title">Opciones de la encuesta</h2>
 
-               <div className="uv-options">
+               <motion.div className="uv-options" variants={listVariants} initial="hidden" animate="show">
                   {options.map((opt, idx) => {
                      const oe = fieldErrors.options?.[opt.key] || {};
                      const imgErr = optImgErrors?.[opt.key];
 
                      return (
-                        <div key={opt.key} className="uv-option-card uv-flat">
+                        <motion.div key={opt.key} variants={itemVariants} layout className="uv-option-card uv-flat">
                            <div className="uv-option-image">
                               <ImageDropzone
                                  value={opt.imagenUrl}
@@ -783,10 +845,10 @@ export default function CreatePoll() {
                                  {submitted && oe.descripcion ? <div className="uv-error">{oe.descripcion}</div> : null}
                               </div>
                            </div>
-                        </div>
+                        </motion.div>
                      );
                   })}
-               </div>
+               </motion.div>
 
                {submitted && formErrors.length ? (
                   <div className="uv-errors">
@@ -822,44 +884,65 @@ export default function CreatePoll() {
                      <FiX /> Limpiar campos
                   </button>
                </div>
-            </div>
+            </motion.div>
          </div>
 
          {/* Modal Cropper */}
-         {cropOpen ? (
-            <div className="uv-modal-backdrop" role="dialog" aria-modal="true">
-               <div className="uv-modal">
-                  <div className="uv-modal-head">
-                     <h3 className="uv-modal-title">Reencuadrar portada</h3>
-                     <button className="uv-icon-btn" onClick={cancelCoverCrop} title="Cerrar">
-                        <FiX />
-                     </button>
-                  </div>
+         <AnimatePresence>
+            {cropOpen ? (
+               <motion.div
+                  className="uv-modal-backdrop"
+                  role="dialog"
+                  aria-modal="true"
+                  variants={modalBackdrop}
+                  initial="hidden"
+                  animate="show"
+                  exit="exit"
+                  onMouseDown={(e) => {
+                     // click afuera cierra (sutil UX). Evita cerrar si el click es dentro del panel.
+                     if (e.target === e.currentTarget) cancelCoverCrop();
+                  }}
+               >
+                  <motion.div
+                     className="uv-modal"
+                     variants={modalPanel}
+                     initial="hidden"
+                     animate="show"
+                     exit="exit"
+                     onMouseDown={(e) => e.stopPropagation()}
+                  >
+                     <div className="uv-modal-head">
+                        <h3 className="uv-modal-title">Reencuadrar portada</h3>
+                        <button className="uv-icon-btn" onClick={cancelCoverCrop} title="Cerrar">
+                           <FiX />
+                        </button>
+                     </div>
 
-                  <div className="uv-cropper-wrap">
-                     <Cropper
-                        key={cropperKey}
-                        image={coverSrc}
-                        crop={coverCrop}
-                        zoom={coverZoom}
-                        aspect={16 / 6}
-                        onCropChange={setCoverCrop}
-                        onZoomChange={setCoverZoom}
-                        onCropComplete={(_, croppedAreaPixels) => setCoverCroppedPixels(croppedAreaPixels)}
-                     />
-                  </div>
+                     <div className="uv-cropper-wrap">
+                        <Cropper
+                           key={cropperKey}
+                           image={coverSrc}
+                           crop={coverCrop}
+                           zoom={coverZoom}
+                           aspect={16 / 6}
+                           onCropChange={setCoverCrop}
+                           onZoomChange={setCoverZoom}
+                           onCropComplete={(_, croppedAreaPixels) => setCoverCroppedPixels(croppedAreaPixels)}
+                        />
+                     </div>
 
-                  <div className="uv-modal-actions">
-                     <button className="uv-btn" onClick={cancelCoverCrop}>
-                        Cancelar
-                     </button>
-                     <button className="uv-btn uv-btn-primary" onClick={confirmCoverCrop}>
-                        Confirmar recorte
-                     </button>
-                  </div>
-               </div>
-            </div>
-         ) : null}
+                     <div className="uv-modal-actions">
+                        <button className="uv-btn" onClick={cancelCoverCrop}>
+                           Cancelar
+                        </button>
+                        <button className="uv-btn uv-btn-primary" onClick={confirmCoverCrop}>
+                           Confirmar recorte
+                        </button>
+                     </div>
+                  </motion.div>
+               </motion.div>
+            ) : null}
+         </AnimatePresence>
       </div>
    );
 }
