@@ -728,7 +728,7 @@ export default function CreatePoll() {
                         className={`uv-input ${!nombre.trim() ? "uv-invalid" : ""}`}
                         value={nombre}
                         onChange={(e) => setNombre(e.target.value)}
-                        placeholder="Ej: Elección del logo"
+                        placeholder="Ej: Votaciones electorales"
                      />
                      {submitted && fieldErrors.nombre ? <div className="uv-error">{fieldErrors.nombre}</div> : null}
                   </div>
@@ -829,7 +829,7 @@ export default function CreatePoll() {
                                     className={`uv-input ${!opt.nombre.trim() ? "uv-invalid" : ""}`}
                                     value={opt.nombre}
                                     onChange={(e) => updateOption(opt.key, { nombre: e.target.value })}
-                                    placeholder="Ej: Perros"
+                                    placeholder="Ej: Partido A"
                                  />
                                  {submitted && oe.nombre ? <div className="uv-error">{oe.nombre}</div> : null}
                               </div>
@@ -840,7 +840,7 @@ export default function CreatePoll() {
                                     className={`uv-textarea uv-textarea--option ${!opt.descripcion.trim() ? "uv-invalid" : ""}`}
                                     value={opt.descripcion}
                                     onChange={(e) => updateOption(opt.key, { descripcion: e.target.value })}
-                                    placeholder="Ej: Son más leales..."
+                                    placeholder="Ej: Descripción del Partido A..."
                                  />
                                  {submitted && oe.descripcion ? <div className="uv-error">{oe.descripcion}</div> : null}
                               </div>
