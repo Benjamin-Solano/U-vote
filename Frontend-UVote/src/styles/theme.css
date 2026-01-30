@@ -24,21 +24,6 @@ body,
    font-family: var(--font-base);
    color: var(--ink);
    background-color: var(--bg);
-
-   /* Ruido sutil */
-   background-image:
-      repeating-linear-gradient(0deg,
-         rgba(0, 0, 0, 0.02),
-         rgba(0, 0, 0, 0.02) 1px,
-         transparent 1px,
-         transparent 2px),
-      repeating-linear-gradient(90deg,
-         rgba(0, 0, 0, 0.02),
-         rgba(0, 0, 0, 0.02) 1px,
-         transparent 1px,
-         transparent 2px);
-
-   background-blend-mode: overlay;
 }
 
 /* =========================================================
@@ -155,39 +140,4 @@ a {
 
 .muted {
    color: var(--muted);
-}
-
-/* =========================================================
-   Noise overlay (orgánico y siempre visible)
-   ========================================================= */
-
-/* Asegura capa base */
-html,
-body {
-   position: relative;
-}
-
-/* El contenido encima del grano */
-#root {
-   position: relative;
-   z-index: 1;
-}
-
-/* Overlay de grano */
-body::before {
-   content: "";
-   position: fixed;
-   inset: 0;
-   pointer-events: none;
-   z-index: 0;
-
-   /* Subí opacidad para que se note */
-   opacity: 0.12;
-
-   /* Noise orgánico (SVG) */
-   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-   background-repeat: repeat;
-
-   /* Se integra mejor con el fondo */
-   mix-blend-mode: multiply;
 }
