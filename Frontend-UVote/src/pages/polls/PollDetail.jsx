@@ -31,6 +31,37 @@ function formatMaybeDate(v) {
    return d.toLocaleString();
 }
 
+function safeDate(v) {
+   if (!v) return null;
+   const d = new Date(v);
+   return Number.isFinite(d.getTime()) ? d : null;
+}
+
+// Estado visual de la encuesta (frontend)
+// Nota: en tu backend, `cerrada` también puede venir `true` cuando aún no inicia.
+// Por eso, damos prioridad a "Pendiente" si la fecha de inicio está en el futuro.
+function getPollStatus(poll) {
+   const now = new Date();
+
+   const inicio = safeDate(poll?.fechaInicio ?? poll?.fechaApertura ?? poll?.inicio);
+   const cierre = safeDate(poll?.fechaCierre ?? poll?.cierre);
+
+   // 1) Pendiente: aún no abre (prioridad máxima)
+   const isPending = inicio ? now.getTime() < inicio.getTime() : false;
+   if (isPending) return { key: "pending", label: "Pendiente" };
+
+   // 2) Cerrada por bandera del backend (cierre manual o lógica del backend)
+   //    Como ya filtramos "Pendiente" arriba, aquí 'cerrada=true' lo tratamos como cerrada real.
+   if (poll?.cerrada === true) return { key: "closed", label: "Cerrada" };
+
+   // 3) Cerrada por tiempo (si existe cierre)
+   const isClosedByTime = cierre ? now.getTime() >= cierre.getTime() : false;
+   if (isClosedByTime) return { key: "closed", label: "Cerrada" };
+
+   return { key: "open", label: "Activa" };
+}
+
+
 function clampLabel(s, max = 14) {
    const t = String(s ?? "");
    if (t.length <= max) return t;
@@ -113,12 +144,7 @@ function VerticalBars({ data }) {
          <ResponsiveContainer width="100%" height={320}>
             <BarChart data={data} margin={{ top: 10, right: 18, bottom: 12, left: 6 }}>
                <CartesianGrid strokeDasharray="3 3" />
-               <XAxis
-                  dataKey="name"
-                  tick={{ fontSize: 12 }}
-                  interval={0}
-                  tickFormatter={(v) => clampLabel(v, 12)}
-               />
+               <XAxis dataKey="name" tick={{ fontSize: 12 }} interval={0} tickFormatter={(v) => clampLabel(v, 12)} />
                <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />
                <Tooltip content={<TooltipBox />} />
                <Bar dataKey="votos" radius={[8, 8, 0, 0]}>
@@ -272,6 +298,9 @@ export default function PollDetail() {
       }));
    }, [results, totalVotes, PASTELS]);
 
+   // ✅ Hook SIEMPRE se ejecuta (no condicional): evita error de reglas de hooks
+   const status = useMemo(() => getPollStatus(poll), [poll]);
+
    async function loadPollAndOptions() {
       setLoading(true);
       setNotice(null);
@@ -324,8 +353,14 @@ export default function PollDetail() {
 
    async function handleVote(opcionId) {
       if (!isAuthenticated) return navigate("/login");
-      if (poll?.cerrada) {
+
+      if (status.key === "closed") {
          setNotice({ kind: "error", text: "Esta encuesta está cerrada. No es posible votar." });
+         return;
+      }
+
+      if (status.key === "pending") {
+         setNotice({ kind: "info", text: "Esta encuesta aún no ha iniciado. Vuelve cuando llegue la fecha de apertura." });
          return;
       }
 
@@ -430,10 +465,10 @@ export default function PollDetail() {
                   <motion.div
                      key={`${notice.kind}:${notice.text}`}
                      className={`uv-alert ${notice.kind === "error"
-                           ? "uv-alert-error"
-                           : notice.kind === "success"
-                              ? "uv-alert-success"
-                              : "uv-alert-info"
+                        ? "uv-alert-error"
+                        : notice.kind === "success"
+                           ? "uv-alert-success"
+                           : "uv-alert-info"
                         }`}
                      {...fadeMotion}
                   >
@@ -490,9 +525,8 @@ export default function PollDetail() {
                               {poll.nombre}
                            </div>
 
-                           <span className={`uv-pills ${poll.cerrada ? "closed" : "open"}`}>
-                              {poll.cerrada ? "Cerrada" : "Activa"}
-                           </span>
+                           {/* Badge corregido */}
+                           <span className={`uv-pills ${status.key}`}>{status.label}</span>
                         </div>
 
                         <div className="uv-poll-desc" style={{ marginTop: 10 }}>
@@ -513,7 +547,7 @@ export default function PollDetail() {
                         ) : (
                            <div className="uv-detail-grid-2">
                               {options.map((o) => {
-                                 const voteDisabled = submittingVote || poll.cerrada;
+                                 const voteDisabled = submittingVote || status.key !== "open";
 
                                  return (
                                     <motion.div
@@ -528,9 +562,7 @@ export default function PollDetail() {
                                           {typeof o.orden === "number" && <span className="uv-pills">#{o.orden}</span>}
                                        </div>
 
-                                       <div className="uv-poll-desc">
-                                          {o.descripcion?.trim() ? o.descripcion : "Sin descripción."}
-                                       </div>
+                                       <div className="uv-poll-desc">{o.descripcion?.trim() ? o.descripcion : "Sin descripción."}</div>
 
                                        {o.imagenUrl?.trim() && (
                                           <div className="uv-option-media">
@@ -559,18 +591,26 @@ export default function PollDetail() {
                                           disabled={voteDisabled}
                                           onClick={() => handleVote(o.id)}
                                           title={
-                                             poll.cerrada
+                                             status.key === "closed"
                                                 ? "La encuesta está cerrada"
-                                                : !isAuthenticated
-                                                   ? "Inicia sesión para votar"
-                                                   : "Votar"
+                                                : status.key === "pending"
+                                                   ? "La encuesta aún no ha iniciado"
+                                                   : !isAuthenticated
+                                                      ? "Inicia sesión para votar"
+                                                      : "Votar"
                                           }
                                        >
                                           <FiCheckCircle />
-                                          {poll.cerrada ? "Encuesta cerrada" : submittingVote ? "Votando…" : "Votar"}
+                                          {status.key === "closed"
+                                             ? "Encuesta cerrada"
+                                             : status.key === "pending"
+                                                ? "Aún no inicia"
+                                                : submittingVote
+                                                   ? "Votando…"
+                                                   : "Votar"}
                                        </button>
 
-                                       {!isAuthenticated && !poll.cerrada && (
+                                       {!isAuthenticated && status.key === "open" && (
                                           <div className="uv-hint" style={{ marginTop: 10 }}>
                                              Debes iniciar sesión para votar.
                                           </div>

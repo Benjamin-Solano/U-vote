@@ -25,6 +25,23 @@ function clampFileSizeMB(file, maxMB) {
 
 const pad2 = (n) => String(n).padStart(2, "0");
 
+function formatLocalFromISO(iso) {
+   if (!iso) return "";
+   const d = new Date(iso);
+   if (Number.isNaN(d.getTime())) return "";
+   try {
+      return new Intl.DateTimeFormat(undefined, {
+         year: "numeric",
+         month: "2-digit",
+         day: "2-digit",
+         hour: "2-digit",
+         minute: "2-digit",
+      }).format(d);
+   } catch {
+      return d.toLocaleString();
+   }
+}
+
 function isoToLocalParts(iso) {
    if (!iso) return { date: "", time: "" };
    const d = new Date(iso);
@@ -288,6 +305,9 @@ export default function CreatePoll() {
    const [options, setOptions] = useState([emptyOption(), emptyOption()]);
    const [optImgErrors, setOptImgErrors] = useState({});
 
+   // 🔁 Key para re-montar la lista cuando se limpian opciones (evita que queden en opacity:0 por variants)
+   const [optionsListKey, setOptionsListKey] = useState(0);
+
    // Estado
    const [loading, setLoading] = useState(isEdit);
    const [saving, setSaving] = useState(false);
@@ -359,6 +379,9 @@ export default function CreatePoll() {
             } else {
                setOptions([emptyOption(), emptyOption()]);
             }
+
+            // refresca animación al cargar opciones
+            setOptionsListKey((k) => k + 1);
          } catch (e) {
             console.error(e);
          } finally {
@@ -453,6 +476,32 @@ export default function CreatePoll() {
 
    const inicioISO = useMemo(() => buildISOFromDateTime(inicioDate, inicioTime), [inicioDate, inicioTime]);
    const cierreISO = useMemo(() => buildISOFromDateTime(cierreDate, cierreTime), [cierreDate, cierreTime]);
+
+   // Ayuda visual: estado + hints de fechas
+   const estadoBadge = useMemo(() => {
+      const now = new Date();
+      const start = inicioISO ? new Date(inicioISO) : null;
+      const end = cierreISO ? new Date(cierreISO) : null;
+
+      const validStart = start && !Number.isNaN(start.getTime());
+      const validEnd = end && !Number.isNaN(end.getTime());
+
+      if (validEnd && now.getTime() >= end.getTime()) return { key: "closed", label: "Cerrada" };
+      if (validStart && now.getTime() < start.getTime()) return { key: "pending", label: "Pendiente" };
+      return { key: "active", label: "Activa" };
+   }, [inicioISO, cierreISO]);
+
+   const inicioHint = useMemo(() => {
+      if (!inicioDate && !inicioTime) return "Si lo dejas vacío, inicia inmediatamente al crearse.";
+      const f = formatLocalFromISO(inicioISO);
+      return f ? `Inicio programado: ${f}.` : "";
+   }, [inicioDate, inicioTime, inicioISO]);
+
+   const cierreHint = useMemo(() => {
+      if (!cierreDate && !cierreTime) return "Si lo dejas vacío, no tendrá cierre automático (se cierra manualmente).";
+      const f = formatLocalFromISO(cierreISO);
+      return f ? `Cierre programado: ${f}.` : "";
+   }, [cierreDate, cierreTime, cierreISO]);
 
    const fieldErrors = useMemo(() => {
       const e = {
@@ -598,6 +647,9 @@ export default function CreatePoll() {
       clearCover();
       setOptImgErrors({});
       setOptions([emptyOption(), emptyOption()]);
+
+      // fuerza remount de la lista (para que no se quede invisible por variants)
+      setOptionsListKey((k) => k + 1);
    }
 
    async function onPickOptionImage(optKey, file) {
@@ -749,6 +801,11 @@ export default function CreatePoll() {
                            onChange={(e) => setInicioTime(e.target.value)}
                         />
                      </div>
+
+                     <div className="uv-date-help">
+                        <span className={`uv-badge uv-badge--${estadoBadge.key}`}>{estadoBadge.label}</span>
+                        <span className="uv-date-hint">{inicioHint}</span>
+                     </div>
                   </div>
                </div>
 
@@ -783,12 +840,22 @@ export default function CreatePoll() {
                      </div>
                      {submitted && fieldErrors.timeOnly ? <div className="uv-error">{fieldErrors.timeOnly}</div> : null}
                      {submitted && fieldErrors.fechas ? <div className="uv-error">{fieldErrors.fechas}</div> : null}
+
+                     <div className="uv-date-help">
+                        <span className="uv-date-hint">{cierreHint}</span>
+                     </div>
                   </div>
                </div>
 
                <h2 className="uv-section-title">Opciones de la encuesta</h2>
 
-               <motion.div className="uv-options" variants={listVariants} initial="hidden" animate="show">
+               <motion.div
+                  key={optionsListKey}
+                  className="uv-options"
+                  variants={listVariants}
+                  initial="hidden"
+                  animate="show"
+               >
                   {options.map((opt, idx) => {
                      const oe = fieldErrors.options?.[opt.key] || {};
                      const imgErr = optImgErrors?.[opt.key];

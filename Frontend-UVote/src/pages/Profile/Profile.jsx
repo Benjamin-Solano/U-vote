@@ -60,7 +60,7 @@ export default function Profile() {
 
    const DESC_MAX = 500;
 
-   // ✅ Normaliza errores y captura sesión expirada (403)
+   // ✅ Normaliza errores y captura sesión expirada (403/401)
    const normalizeError = (err, fallback = "Ocurrió un error.") => {
       const status = err?.response?.status;
 
@@ -81,7 +81,21 @@ export default function Profile() {
       } catch (_) { }
    };
 
+   // ✅ Pendiente: estado explícito o por fecha de apertura en el futuro
+   const isPollPending = (p) => {
+      const s = String(p?.estado ?? p?.estadoEncuesta ?? "").toLowerCase();
+      if (s.includes("pend")) return true;
+      if (p?.pendiente === true) return true;
+
+      const startRaw = p?.fechaApertura ?? p?.fechaInicio ?? p?.inicio;
+      if (!startRaw) return false;
+      const start = new Date(startRaw).getTime();
+      if (!Number.isFinite(start)) return false;
+      return start > Date.now();
+   };
+
    const estadoLabel = (p) => {
+      if (isPollPending(p)) return "Pendiente";
       if (p?.cerrada === true) return "Cerrada";
       if (p?.estado) return p.estado;
       if (p?.fechaCierre) return "Cerrada";
@@ -92,7 +106,7 @@ export default function Profile() {
    const isPollClosed = (p) => {
       if (p?.cerrada === true) return true;
       if (p?.fechaCierre) return true;
-      const s = String(p?.estado ?? "").toLowerCase();
+      const s = String(p?.estado ?? p?.estadoEncuesta ?? "").toLowerCase();
       if (s.includes("cerrad") || s.includes("closed") || s.includes("finaliz")) return true;
       return false;
    };
@@ -580,7 +594,10 @@ export default function Profile() {
                   <>
                      <div className="uv-polls-list uv-polls-scroll">
                         {pageItems.map((p) => {
+                           const pending = isPollPending(p);
                            const closed = isPollClosed(p);
+
+                           const pillClass = pending ? "is-pending" : closed ? "is-closed" : "is-open";
 
                            return (
                               <button
@@ -593,9 +610,7 @@ export default function Profile() {
                                  <div className="uv-poll-title">{p.titulo ?? p.nombre ?? "Encuesta"}</div>
 
                                  <div className="uv-poll-meta">
-                                    <span className={`uv-pill ${closed ? "is-closed" : "is-open"}`}>
-                                       {estadoLabel(p)}
-                                    </span>
+                                    <span className={`uv-pill ${pillClass}`}>{estadoLabel(p)}</span>
                                  </div>
                               </button>
                            );

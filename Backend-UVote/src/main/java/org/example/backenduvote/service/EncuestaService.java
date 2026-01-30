@@ -31,8 +31,8 @@ public class EncuestaService {
         Usuario usuarioActual = obtenerUsuarioAutenticado();
 
         // Validación de rango si vienen ambas
-        if (request.getFechaInicio() != null && request.getFechaCierre() != null) {
-            if (!request.getFechaCierre().isAfter(request.getFechaInicio())) {
+        if (request.getInicio() != null && request.getCierre() != null) {
+            if (!request.getCierre().isAfter(request.getInicio())) {
                 throw new IllegalArgumentException("La fecha de cierre debe ser posterior a la fecha de inicio");
             }
         }
@@ -43,8 +43,8 @@ public class EncuestaService {
         encuesta.setDescripcion(request.getDescripcion());
 
         encuesta.setImagenUrl(request.getImagenUrl());
-        encuesta.setFechaInicio(request.getFechaInicio());   // si null -> @PrePersist la pone
-        encuesta.setFechaCierre(request.getFechaCierre());   // puede ser null (sin cierre)
+        encuesta.setFechaInicio(request.getInicio());   // si null -> @PrePersist la pone
+        encuesta.setFechaCierre(request.getCierre());   // puede ser null (sin cierre)
 
         Encuesta guardada = encuestaRepository.save(encuesta);
         return mapToResponse(guardada);

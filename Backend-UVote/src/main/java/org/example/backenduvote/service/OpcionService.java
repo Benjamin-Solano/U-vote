@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -37,7 +38,7 @@ public class OpcionService {
         Encuesta encuesta = encuestaRepository.findById(encuestaId)
                 .orElseThrow(() -> new IllegalArgumentException("La encuesta no existe"));
 
-        if (encuesta.getFechaCierre() != null) {
+        if (encuesta.estaCerrada()) {
             throw new IllegalArgumentException("La encuesta ya está cerrada");
         }
 
@@ -93,9 +94,11 @@ public class OpcionService {
             throw new IllegalArgumentException("No tienes permisos para eliminar opciones de esta encuesta");
         }
 
-        if (encuesta.getFechaCierre() != null) {
+        if (encuesta.getFechaCierre() != null && !OffsetDateTime.now().isBefore(encuesta.getFechaCierre())) {
             throw new IllegalArgumentException("No se pueden eliminar opciones de una encuesta cerrada");
         }
+
+
 
         opcionRepository.delete(opcion);
     }

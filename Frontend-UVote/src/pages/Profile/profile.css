@@ -83,7 +83,7 @@
    font-weight: 750;
 }
 
-/* Alertas */
+/* Mensaje OK */
 .uv-profile-advice {
    margin-top: 12px;
    background: rgba(0, 135, 90, 0.14);
@@ -317,12 +317,6 @@
    color: rgba(48, 47, 44, 0.55);
 }
 
-.uv-info-footer {
-   margin-top: 12px;
-   padding-top: 12px;
-   border-top: 1px solid rgba(48, 47, 44, 0.08);
-}
-
 /* =========================================================
    Encuestas - Buscador + Lista
    ========================================================= */
@@ -448,6 +442,13 @@
    border-color: rgba(180, 35, 24, 0.40);
    background: rgba(180, 35, 24, 0.10);
    color: rgba(140, 20, 12, 0.95);
+}
+
+/* Pendiente = amarillo */
+.uv-pill.is-pending {
+   border-color: rgba(245, 180, 60, 0.45);
+   background: rgba(245, 180, 60, 0.14);
+   color: rgba(140, 95, 15, 0.98);
 }
 
 /* Responsive ajustes finos */
@@ -643,10 +644,11 @@
 }
 
 /* =========================================================
-   Micro-interacciones: badges (Activa/Cerrada)
+   Micro-interacciones: badges (Activa/Cerrada/Pendiente)
    ========================================================= */
 .uv-pill.is-open,
-.uv-pill.is-closed {
+.uv-pill.is-closed,
+.uv-pill.is-pending {
    transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, filter 120ms ease;
 }
 
@@ -664,6 +666,14 @@
    filter: brightness(1.05);
    background: rgba(180, 35, 24, 0.14);
    border-color: rgba(180, 35, 24, 0.52);
+}
+
+.uv-poll-item:hover .uv-pill.is-pending,
+.uv-poll-item:focus-visible .uv-pill.is-pending {
+   transform: translateY(-1px);
+   filter: brightness(1.05);
+   background: rgba(245, 180, 60, 0.18);
+   border-color: rgba(245, 180, 60, 0.62);
 }
 
 /* Accesibilidad: foco visible en el item clickeable */

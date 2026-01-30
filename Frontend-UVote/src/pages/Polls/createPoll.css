@@ -257,6 +257,55 @@
    gap: 10px;
 }
 
+/* =========================================================
+   Ayuda visual: fechas + badge de estado
+   ========================================================= */
+.uv-polls-scope .uv-date-help {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin-top: 6px;
+   flex-wrap: wrap;
+}
+
+.uv-polls-scope .uv-date-hint {
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.72);
+}
+
+.uv-polls-scope .uv-badge {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   padding: 4px 10px;
+   border-radius: 999px;
+   font-size: 11px;
+   font-weight: 900;
+   letter-spacing: 0.2px;
+   border: 1px solid rgba(48, 47, 44, 0.18);
+   background: rgba(255, 255, 255, 0.65);
+   color: #302f2c;
+   line-height: 1;
+}
+
+.uv-polls-scope .uv-badge--active {
+   border-color: rgba(0, 135, 90, 0.28);
+   background: rgba(0, 135, 90, 0.08);
+   color: #067647;
+}
+
+.uv-polls-scope .uv-badge--pending {
+   border-color: rgba(245, 158, 11, 0.34);
+   background: rgba(245, 158, 11, 0.10);
+   color: #92400e;
+}
+
+.uv-polls-scope .uv-badge--closed {
+   border-color: rgba(180, 35, 24, 0.30);
+   background: rgba(180, 35, 24, 0.08);
+   color: #b42318;
+}
+
 @media (max-width: 900px) {
    .uv-polls-scope .uv-dt-row {
       grid-template-columns: 1fr;

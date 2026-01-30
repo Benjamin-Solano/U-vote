@@ -242,14 +242,29 @@
    border-radius: 999px;
    border: 1px solid rgba(48, 47, 44, 0.14);
    white-space: nowrap;
+   font-weight: 900;
+   line-height: 1;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
 }
 
 .uv-polldetail-scope .uv-pills.open {
-   background: rgba(255, 255, 255, 0.55);
+   background: rgba(60, 170, 120, 0.12);
+   border-color: rgba(60, 170, 120, 0.40);
+   color: rgba(25, 110, 70, 0.95);
+}
+
+.uv-polldetail-scope .uv-pills.pending {
+   background: rgba(255, 214, 102, 0.20);
+   border-color: rgba(255, 214, 102, 0.42);
+   color: rgba(130, 92, 0, 0.95);
 }
 
 .uv-polldetail-scope .uv-pills.closed {
-   background: rgba(48, 47, 44, 0.08);
+   background: rgba(48, 47, 44, 0.10);
+   border-color: rgba(48, 47, 44, 0.22);
+   color: rgba(48, 47, 44, 0.85);
 }
 
 /* Section title */

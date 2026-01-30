@@ -32,10 +32,10 @@ public class EncuestaCreateRequest {
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
 
 
-    public OffsetDateTime getFechaInicio() { return inicio; }
-    public void setFechaInicio(OffsetDateTime fechaInicio) { this.inicio = fechaInicio; }
+    public OffsetDateTime getInicio() { return inicio; }
+    public void setInicio(OffsetDateTime fechaInicio) { this.inicio = fechaInicio; }
 
-    public OffsetDateTime getFechaCierre() { return cierre; }
+    public OffsetDateTime getCierre() { return cierre; }
     public void setFechaCierre(OffsetDateTime fechaCierre) { this.cierre = fechaCierre; }
 }
 

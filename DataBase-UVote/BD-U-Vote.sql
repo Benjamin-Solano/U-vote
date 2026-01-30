@@ -29,7 +29,8 @@ CREATE TABLE encuestas (
     descripcion   VARCHAR(1000),
     imagen_url    TEXT, -- foto / portada de la encuesta
     creada_en     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    fecha_cierre  TIMESTAMPTZ
+    fecha_cierre  TIMESTAMPTZ,
+	fecha_inicio  TIMESTAMPTZ
 );
 
 

@@ -49,14 +49,22 @@ public class Encuesta {
 
     public boolean estaCerradaEn(OffsetDateTime ahora) {
         if (ahora == null) ahora = OffsetDateTime.now();
+        return fechaCierre != null && !ahora.isBefore(fechaCierre);
+    }
 
-        // Aún no abre
-        if (fechaInicio != null && ahora.isBefore(fechaInicio)) return true;
 
-        // Ya cerró (si tiene cierre)
-        if (fechaCierre != null && !ahora.isBefore(fechaCierre)) return true;
+    public boolean noHaIniciadoAun(OffsetDateTime ahora) {
+        if (ahora == null) ahora = OffsetDateTime.now();
+        return fechaInicio != null && ahora.isBefore(fechaInicio);
+    }
 
-        return false;
+    public boolean estaActivaEn(OffsetDateTime ahora) {
+        if (ahora == null) ahora = OffsetDateTime.now();
+
+        if (fechaInicio != null && ahora.isBefore(fechaInicio)) return false;
+        if (fechaCierre != null && !ahora.isBefore(fechaCierre)) return false;
+
+        return true;
     }
     // Getters y setters
 
