@@ -573,15 +573,7 @@ export default function PollDetail() {
                                                 loading="lazy"
                                                 decoding="async"
                                              />
-                                             <a
-                                                href={o.imagenUrl}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="uv-muted-link uv-option-open"
-                                                title="Abrir en nueva pestaña"
-                                             >
-                                                Abrir imagen
-                                             </a>
+
                                           </div>
                                        )}
 

@@ -318,3 +318,105 @@
    border-color: rgba(160, 0, 0, 0.75);
    box-shadow: 0 0 0 4px rgba(160, 0, 0, 0.10);
 }
+
+
+/* =========================
+   VerifyCode (OTP)
+   ========================= */
+.uv-login-alert--ok {
+   border-color: rgba(40, 120, 60, 0.25);
+   background: rgba(40, 120, 60, 0.06);
+}
+
+.uv-otp-block {
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   background: rgba(255, 255, 255, 0.45);
+   border-radius: 14px;
+   padding: 12px 12px 10px;
+}
+
+.uv-otp-head {
+   display: grid;
+   gap: 6px;
+   margin-bottom: 10px;
+}
+
+.uv-otp-label {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   font-weight: 700;
+   color: #302f2c;
+   font-size: 0.92rem;
+}
+
+.uv-otp-hint {
+   color: rgba(48, 47, 44, 0.72);
+   font-size: 0.86rem;
+}
+
+.uv-otp-inputs {
+   display: grid;
+   grid-template-columns: repeat(6, 1fr);
+   gap: 10px;
+}
+
+.uv-otp-input {
+   height: 46px;
+   border-radius: 12px;
+   border: 1px solid rgba(48, 47, 44, 0.18);
+   background: rgba(255, 255, 255, 0.65);
+   text-align: center;
+   font-size: 1.12rem;
+   font-weight: 800;
+   letter-spacing: 0.02em;
+   color: #302f2c;
+   outline: none;
+   transition: box-shadow 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.uv-otp-input:focus {
+   border-color: rgba(48, 47, 44, 0.36);
+   box-shadow: 0 0 0 4px rgba(48, 47, 44, 0.10);
+   background: rgba(255, 255, 255, 0.78);
+}
+
+.uv-otp-input.uv-otp-filled {
+   background: rgba(255, 255, 255, 0.78);
+}
+
+.uv-otp-actions {
+   margin-top: 10px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 10px;
+}
+
+.uv-otp-timer {
+   color: rgba(48, 47, 44, 0.72);
+   font-size: 0.9rem;
+}
+
+.uv-verify-footer {
+   margin-top: 2px;
+   display: flex;
+   justify-content: space-between;
+   gap: 10px;
+}
+
+@media (max-width: 520px) {
+   .uv-otp-inputs {
+      gap: 8px;
+   }
+
+   .uv-otp-input {
+      height: 44px;
+      font-size: 1.05rem;
+   }
+
+   .uv-verify-footer {
+      flex-direction: column;
+      align-items: flex-start;
+   }
+}

@@ -7,22 +7,24 @@
 --   Tabla: usuarios
 -- =======================================
 CREATE TABLE usuarios (
-    id               BIGSERIAL PRIMARY KEY,
-    nombre_usuario   VARCHAR(100) NOT NULL UNIQUE,
-    correo           VARCHAR(100) NOT NULL UNIQUE,
-    contrasena_hash  VARCHAR(255) NOT NULL,
-    foto_perfil      TEXT,
-    descripcion      VARCHAR(500),
-    creado_en        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    id                   BIGSERIAL PRIMARY KEY,
+    nombre_usuario       VARCHAR(100) NOT NULL UNIQUE,
+    correo               VARCHAR(100) NOT NULL UNIQUE,
+    contrasena_hash      VARCHAR(255) NOT NULL,
+
+    foto_perfil          TEXT,
+    descripcion          VARCHAR(500),
+
+    -- Verificación de correo
+    email_verificado     BOOLEAN NOT NULL DEFAULT FALSE,
+    verif_codigo_hash    VARCHAR(255),
+    verif_expira_en      TIMESTAMPTZ,
+    verif_intentos       INT NOT NULL DEFAULT 0,
+    verif_ultimo_envio   TIMESTAMPTZ,
+
+    creado_en            TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-
-ALTER TABLE usuarios
-ADD COLUMN email_verificado BOOLEAN NOT NULL DEFAULT FALSE,
-ADD COLUMN verif_codigo_hash VARCHAR(255),
-ADD COLUMN verif_expira_en TIMESTAMPTZ,
-ADD COLUMN verif_intentos INT NOT NULL DEFAULT 0,
-ADD COLUMN verif_ultimo_envio TIMESTAMPTZ;
 
 
 
@@ -181,8 +183,12 @@ INSERT INTO votos (usuario_id, encuesta_id, opcion_id) VALUES
 
 
 SELECT * FROM usuarios;
+SELECT * FROM votos;
+SELECT * FROM encuestas;
+SELECT * FROM opciones;
 
 
+TRUNCATE TABLE usuarios CASCADE;
 
 
 
