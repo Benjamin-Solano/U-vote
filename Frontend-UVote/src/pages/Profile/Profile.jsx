@@ -81,34 +81,51 @@ export default function Profile() {
       } catch (_) { }
    };
 
+   // =========================================================
+   // ✅ FIX: Estados consistentes (Pendiente / Activa / Cerrada)
+   // =========================================================
+
+   // Parse robusto: devuelve timestamp o NaN
+   const parseTime = (raw) => {
+      if (!raw) return NaN;
+      const t = new Date(raw).getTime();
+      return Number.isFinite(t) ? t : NaN;
+   };
+
+   const normalizeEstado = (p) => String(p?.estado ?? p?.estadoEncuesta ?? "").toLowerCase();
+
    // ✅ Pendiente: estado explícito o por fecha de apertura en el futuro
    const isPollPending = (p) => {
-      const s = String(p?.estado ?? p?.estadoEncuesta ?? "").toLowerCase();
+      const s = normalizeEstado(p);
       if (s.includes("pend")) return true;
       if (p?.pendiente === true) return true;
 
       const startRaw = p?.fechaApertura ?? p?.fechaInicio ?? p?.inicio;
-      if (!startRaw) return false;
-      const start = new Date(startRaw).getTime();
+      const start = parseTime(startRaw);
       if (!Number.isFinite(start)) return false;
+
       return start > Date.now();
    };
 
-   const estadoLabel = (p) => {
-      if (isPollPending(p)) return "Pendiente";
-      if (p?.cerrada === true) return "Cerrada";
-      if (p?.estado) return p.estado;
-      if (p?.fechaCierre) return "Cerrada";
-      return "Activa";
+   // ✅ Cerrada: estado explícito / boolean / o fecha de cierre <= ahora
+   const isPollClosed = (p) => {
+      const s = normalizeEstado(p);
+      if (s.includes("cerrad") || s.includes("closed") || s.includes("finaliz")) return true;
+
+      if (p?.cerrada === true) return true;
+
+      const closeRaw = p?.fechaCierre ?? p?.fechaFin ?? p?.cierre ?? p?.fin;
+      const close = parseTime(closeRaw);
+      if (!Number.isFinite(close)) return false;
+
+      return close <= Date.now();
    };
 
-   // ✅ Para colorear badge
-   const isPollClosed = (p) => {
-      if (p?.cerrada === true) return true;
-      if (p?.fechaCierre) return true;
-      const s = String(p?.estado ?? p?.estadoEncuesta ?? "").toLowerCase();
-      if (s.includes("cerrad") || s.includes("closed") || s.includes("finaliz")) return true;
-      return false;
+   // ✅ Estado final (string)
+   const pollStateLabel = (p) => {
+      if (isPollPending(p)) return "Pendiente";
+      if (isPollClosed(p)) return "Cerrada";
+      return "Activa";
    };
 
    useEffect(() => {
@@ -610,7 +627,7 @@ export default function Profile() {
                                  <div className="uv-poll-title">{p.titulo ?? p.nombre ?? "Encuesta"}</div>
 
                                  <div className="uv-poll-meta">
-                                    <span className={`uv-pill ${pillClass}`}>{estadoLabel(p)}</span>
+                                    <span className={`uv-pill ${pillClass}`}>{pollStateLabel(p)}</span>
                                  </div>
                               </button>
                            );
