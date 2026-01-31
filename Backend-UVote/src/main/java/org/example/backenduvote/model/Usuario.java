@@ -36,6 +36,26 @@ public class Usuario {
     private String descripcion;
 
 
+    //Verificaci[on de usuarios en registro
+    @Column(name = "email_verificado", nullable = false)
+    private boolean emailVerificado = false;
+
+    @Column(name = "verif_codigo_hash", length = 255)
+    private String verifCodigoHash;
+
+    @Column(name = "verif_expira_en", columnDefinition = "TIMESTAMPTZ")
+    private OffsetDateTime verifExpiraEn;
+
+    @Column(name = "verif_intentos", nullable = false)
+    private int verifIntentos = 0;
+
+    @Column(name = "verif_ultimo_envio", columnDefinition = "TIMESTAMPTZ")
+    private OffsetDateTime verifUltimoEnvio;
+
+
+
+
+
     // Validacion de OffsetDateTime
     @PrePersist
     protected void onCreate() {
@@ -74,4 +94,44 @@ public class Usuario {
     public void setCreadoEn(OffsetDateTime creadoEn) { this.creadoEn = creadoEn;}
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
+
+    public boolean isEmailVerificado() {
+        return emailVerificado;
+    }
+
+    public void setEmailVerificado(boolean emailVerificado) {
+        this.emailVerificado = emailVerificado;
+    }
+
+    public String getVerifCodigoHash() {
+        return verifCodigoHash;
+    }
+
+    public void setVerifCodigoHash(String verifCodigoHash) {
+        this.verifCodigoHash = verifCodigoHash;
+    }
+
+    public OffsetDateTime getVerifExpiraEn() {
+        return verifExpiraEn;
+    }
+
+    public void setVerifExpiraEn(OffsetDateTime verifExpiraEn) {
+        this.verifExpiraEn = verifExpiraEn;
+    }
+
+    public int getVerifIntentos() {
+        return verifIntentos;
+    }
+
+    public void setVerifIntentos(int verifIntentos) {
+        this.verifIntentos = verifIntentos;
+    }
+
+    public OffsetDateTime getVerifUltimoEnvio() {
+        return verifUltimoEnvio;
+    }
+
+    public void setVerifUltimoEnvio(OffsetDateTime verifUltimoEnvio) {
+        this.verifUltimoEnvio = verifUltimoEnvio;
+    }
 }

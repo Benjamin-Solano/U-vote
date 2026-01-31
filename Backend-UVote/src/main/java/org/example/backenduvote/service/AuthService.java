@@ -6,6 +6,7 @@ import org.example.backenduvote.dtos.AuthResponse;
 import org.example.backenduvote.dtos.UsuarioResponse;
 import org.example.backenduvote.model.Usuario;
 import org.example.backenduvote.repository.UsuarioRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class AuthService {
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtTokenService jwtTokenService;
-    private final UsuarioService usuarioService;
+    private final UsuarioService usuarioService; // lo dejas porque ya lo tenías inyectado
 
     public AuthService(UsuarioRepository usuarioRepository,
                        BCryptPasswordEncoder passwordEncoder,
@@ -33,6 +34,11 @@ public class AuthService {
 
         if (!passwordEncoder.matches(request.getContrasena(), usuario.getContrasenaHash())) {
             throw new IllegalArgumentException("Credenciales inválidas");
+        }
+
+        // ✅ Bloqueo por correo no verificado
+        if (!usuario.isEmailVerificado()) {
+            throw new AccessDeniedException("Cuenta no verificada. Revisa tu correo e ingresa el código.");
         }
 
         String token = jwtTokenService.generarToken(usuario.getCorreo());

@@ -6,19 +6,40 @@ import { useNavigate } from "react-router-dom";
 import "./login.css";
 import logo from "../../assets/U-VoteLogo.png";
 
-// Ajusta esta importación a tu archivo real
-import { authApi } from "../../api/auth.api";
 import { useAuth } from "../../auth/useAuth";
+import { usersApi } from "../../api/users.api";
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+
+const normalizeNombre = (s) => (s || "").trim().replace(/\s+/g, " ");
+const normalizeEmail = (s) => (s || "").trim().toLowerCase();
+
+const getRegisterErrorMessage = (err) => {
+   const status = err?.response?.status;
+   const msg = err?.response?.data?.message || err?.message || "";
+
+   if (status === 409) return msg || "El correo o usuario ya está registrado.";
+   if (status === 400) return msg || "Revisa los datos del formulario e inténtalo de nuevo.";
+   if (!err?.response) return "No se pudo conectar con el servidor. Intenta de nuevo.";
+   return msg || "No se pudo crear la cuenta. Verifica los datos e inténtalo de nuevo.";
+};
 
 export default function Register() {
    const { isAuthenticated } = useAuth();
    const navigate = useNavigate();
 
    const [form, setForm] = useState({
-      nombre: "",
+      nombreUsuario: "",
       correo: "",
       contrasena: "",
       confirmarContrasena: "",
+   });
+
+   const [touched, setTouched] = useState({
+      nombreUsuario: false,
+      correo: false,
+      contrasena: false,
+      confirmarContrasena: false,
    });
 
    const [loading, setLoading] = useState(false);
@@ -31,18 +52,34 @@ export default function Register() {
       }
    }, [isAuthenticated, navigate]);
 
-   const passwordsMatch = useMemo(() => {
-      return form.contrasena.length > 0 && form.contrasena === form.confirmarContrasena;
-   }, [form.contrasena, form.confirmarContrasena]);
+   const nombreNorm = useMemo(() => normalizeNombre(form.nombreUsuario), [form.nombreUsuario]);
+   const correoNorm = useMemo(() => normalizeEmail(form.correo), [form.correo]);
+
+   const fieldErrors = useMemo(() => {
+      const errs = {};
+
+      if (!nombreNorm) errs.nombreUsuario = "El nombre de usuario es requerido.";
+      else if (nombreNorm.length < 2) errs.nombreUsuario = "Debe tener al menos 2 caracteres.";
+      else if (nombreNorm.length > 100) errs.nombreUsuario = "Máximo 100 caracteres.";
+
+      if (!correoNorm) errs.correo = "El correo es requerido.";
+      else if (!emailRegex.test(correoNorm)) errs.correo = "Formato de correo inválido.";
+      else if (correoNorm.length > 100) errs.correo = "Máximo 100 caracteres.";
+
+      if (!form.contrasena) errs.contrasena = "La contraseña es requerida.";
+      else if (form.contrasena.length < 8) errs.contrasena = "Mínimo 8 caracteres.";
+      else if (form.contrasena.length > 72) errs.contrasena = "Máximo 72 caracteres.";
+
+      if (!form.confirmarContrasena) errs.confirmarContrasena = "Confirma tu contraseña.";
+      else if (form.contrasena !== form.confirmarContrasena)
+         errs.confirmarContrasena = "Las contraseñas no coinciden.";
+
+      return errs;
+   }, [nombreNorm, correoNorm, form.contrasena, form.confirmarContrasena]);
 
    const canSubmit = useMemo(() => {
-      return (
-         form.nombre.trim().length >= 2 &&
-         form.correo.trim().length > 0 &&
-         form.contrasena.trim().length >= 8 &&
-         passwordsMatch
-      );
-   }, [form.nombre, form.correo, form.contrasena, passwordsMatch]);
+      return Object.keys(fieldErrors).length === 0 && !loading;
+   }, [fieldErrors, loading]);
 
    const onChange = (e) => {
       const { name, value } = e.target;
@@ -51,34 +88,40 @@ export default function Register() {
       setOkMsg("");
    };
 
+   const onBlur = (e) => {
+      const { name } = e.target;
+      setTouched((prev) => ({ ...prev, [name]: true }));
+   };
+
    const onSubmit = async (e) => {
       e.preventDefault();
-      if (!canSubmit || loading) return;
+
+      setTouched({
+         nombreUsuario: true,
+         correo: true,
+         contrasena: true,
+         confirmarContrasena: true,
+      });
+
+      if (!canSubmit) return;
 
       setLoading(true);
       setError("");
       setOkMsg("");
 
       try {
-         // ✅ Ajusta el payload a lo que tu backend espera
-         // (te lo dejo con nombres comunes; si tu backend usa otros, lo adaptamos)
-         await authApi.register({
-            nombreUsuario: form.nombre,
-            correo: form.correo,
+         await usersApi.create({
+            nombreUsuario: nombreNorm,
+            correo: correoNorm,
             contrasena: form.contrasena,
          });
 
-
-
-         setOkMsg("Cuenta creada con éxito. Ahora puedes iniciar sesión.");
-         // Redirigir luego de un pequeño instante (sin tool async extra)
-         setTimeout(() => navigate("/login", { replace: true }), 700);
+         setOkMsg("Cuenta creada. Te enviamos un código para verificar tu correo.");
+         setTimeout(() => {
+            navigate(`/verify?correo=${encodeURIComponent(correoNorm)}`, { replace: true });
+         }, 650);
       } catch (err) {
-         const msg =
-            err?.response?.data?.message ||
-            err?.message ||
-            "No se pudo crear la cuenta. Verifica los datos e inténtalo de nuevo.";
-         setError(msg);
+         setError(getRegisterErrorMessage(err));
       } finally {
          setLoading(false);
       }
@@ -107,7 +150,6 @@ export default function Register() {
                      draggable={false}
                   />
                   <p className="uv-login-left-sub">Registrate y haz que tu voto cuente.</p>
-
                </div>
             </div>
 
@@ -119,13 +161,13 @@ export default function Register() {
                </div>
 
                {error && (
-                  <div className="uv-login-alert" role="alert">
+                  <div className="uv-login-alert" role="alert" aria-live="polite">
                      {error}
                   </div>
                )}
 
                {okMsg && (
-                  <div className="uv-login-alert" role="status">
+                  <div className="uv-login-alert uv-login-alert--ok" role="status" aria-live="polite">
                      <FiCheckCircle style={{ marginRight: 8 }} />
                      {okMsg}
                   </div>
@@ -133,24 +175,34 @@ export default function Register() {
 
                <form className="uv-login-form" onSubmit={onSubmit}>
                   <label className="uv-field">
-                     <span>Nombre</span>
-                     <div className="uv-input-wrap">
+                     <span>Nombre de usuario</span>
+                     <div
+                        className={`uv-input-wrap ${touched.nombreUsuario && fieldErrors.nombreUsuario ? "uv-input-error" : ""
+                           }`}
+                     >
                         <FiUser className="uv-input-icon" />
                         <input
                            type="text"
-                           name="nombre"
+                           name="nombreUsuario"
                            placeholder="Tu nombre"
-                           value={form.nombre}
+                           value={form.nombreUsuario}
                            onChange={onChange}
-                           autoComplete="name"
+                           onBlur={onBlur}
+                           autoComplete="username"
                            required
                         />
                      </div>
+                     {touched.nombreUsuario && fieldErrors.nombreUsuario && (
+                        <small className="uv-field-error">{fieldErrors.nombreUsuario}</small>
+                     )}
                   </label>
 
                   <label className="uv-field">
                      <span>Correo electrónico</span>
-                     <div className="uv-input-wrap">
+                     <div
+                        className={`uv-input-wrap ${touched.correo && fieldErrors.correo ? "uv-input-error" : ""
+                           }`}
+                     >
                         <FiMail className="uv-input-icon" />
                         <input
                            type="email"
@@ -158,15 +210,22 @@ export default function Register() {
                            placeholder="ejemplo@correo.com"
                            value={form.correo}
                            onChange={onChange}
+                           onBlur={onBlur}
                            autoComplete="email"
                            required
                         />
                      </div>
+                     {touched.correo && fieldErrors.correo && (
+                        <small className="uv-field-error">{fieldErrors.correo}</small>
+                     )}
                   </label>
 
                   <label className="uv-field">
                      <span>Contraseña</span>
-                     <div className="uv-input-wrap">
+                     <div
+                        className={`uv-input-wrap ${touched.contrasena && fieldErrors.contrasena ? "uv-input-error" : ""
+                           }`}
+                     >
                         <FiLock className="uv-input-icon" />
                         <input
                            type="password"
@@ -174,15 +233,24 @@ export default function Register() {
                            placeholder="Mínimo 8 caracteres"
                            value={form.contrasena}
                            onChange={onChange}
+                           onBlur={onBlur}
                            autoComplete="new-password"
                            required
                         />
                      </div>
+                     {touched.contrasena && fieldErrors.contrasena && (
+                        <small className="uv-field-error">{fieldErrors.contrasena}</small>
+                     )}
                   </label>
 
                   <label className="uv-field">
                      <span>Confirmar contraseña</span>
-                     <div className="uv-input-wrap">
+                     <div
+                        className={`uv-input-wrap ${touched.confirmarContrasena && fieldErrors.confirmarContrasena
+                              ? "uv-input-error"
+                              : ""
+                           }`}
+                     >
                         <FiLock className="uv-input-icon" />
                         <input
                            type="password"
@@ -190,20 +258,17 @@ export default function Register() {
                            placeholder="Repite la contraseña"
                            value={form.confirmarContrasena}
                            onChange={onChange}
+                           onBlur={onBlur}
                            autoComplete="new-password"
                            required
                         />
                      </div>
+                     {touched.confirmarContrasena && fieldErrors.confirmarContrasena && (
+                        <small className="uv-field-error">{fieldErrors.confirmarContrasena}</small>
+                     )}
                   </label>
 
-                  {/* Feedback sutil de coincidencia */}
-                  {!passwordsMatch && form.confirmarContrasena.length > 0 && (
-                     <div className="uv-login-alert" role="alert">
-                        Las contraseñas no coinciden.
-                     </div>
-                  )}
-
-                  <button className="uv-primary-btn" type="submit" disabled={!canSubmit || loading}>
+                  <button className="uv-primary-btn" type="submit" disabled={!canSubmit}>
                      {loading ? "Creando cuenta..." : "Registrarme"}
                   </button>
 

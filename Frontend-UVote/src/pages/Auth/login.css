@@ -290,3 +290,31 @@
    font-size: 0.92rem;
    opacity: 0.85;
 }
+
+/* =========================
+   Field errors (Login/Register)
+   ========================= */
+.uv-field-error {
+   margin-top: 6px;
+   display: inline-block;
+   font-size: 0.86rem;
+   color: rgba(160, 0, 0, 0.85);
+}
+
+/* =========================
+   Input error state (toque final)
+   ========================= */
+.uv-input-wrap.uv-input-error {
+   border-color: rgba(160, 0, 0, 0.55);
+   background-color: rgba(160, 0, 0, 0.04);
+}
+
+.uv-input-wrap.uv-input-error .uv-input-icon {
+   color: rgba(160, 0, 0, 0.7);
+   opacity: 1;
+}
+
+.uv-input-wrap.uv-input-error:focus-within {
+   border-color: rgba(160, 0, 0, 0.75);
+   box-shadow: 0 0 0 4px rgba(160, 0, 0, 0.10);
+}

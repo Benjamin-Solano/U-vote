@@ -3,6 +3,9 @@ import { api } from "./axios";
 export const usersApi = {
    create: (payload) => api.post("/usuarios", payload),
    list: () => api.get("/usuarios"),
+
+   // ⚠️ Tu backend actual no expone GET /api/usuarios/{id} (solo /nombre/{...})
+   // Déjalo si lo usarás más adelante, pero hoy te dará 404.
    getById: (id) => api.get(`/usuarios/${id}`),
 
    getByNombreUsuario: (nombreUsuario) =>
@@ -21,5 +24,4 @@ export const usersApi = {
    },
 
    updateUsuario: (id, payload) => api.put(`/usuarios/id/${id}`, payload),
-
 };

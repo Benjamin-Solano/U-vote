@@ -83,7 +83,7 @@ export default function Home() {
                      <div>
                         <h3 className="uv-feature-title">Comparte fácilmente</h3>
                         <p className="uv-feature-text">
-                           Llega a mas personas compartiendo un link o QR.
+                           Llega a mas personas compartiendo un solo link.
                         </p>
                      </div>
                   </motion.article>

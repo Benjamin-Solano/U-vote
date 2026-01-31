@@ -6,16 +6,13 @@ import org.example.backenduvote.dtos.UsuarioUpdateRequest;
 import org.example.backenduvote.model.Usuario;
 import org.example.backenduvote.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -28,13 +25,18 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    // ✅ Nuevo: OTP
+    private final VerificationCodeService verificationCodeService;
+
     @Value("${app.upload-dir:uploads}")
     private String uploadDir;
 
     public UsuarioService(UsuarioRepository usuarioRepository,
-                          BCryptPasswordEncoder passwordEncoder) {
+                          BCryptPasswordEncoder passwordEncoder,
+                          VerificationCodeService verificationCodeService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.verificationCodeService = verificationCodeService;
     }
 
     // -------------------------
@@ -58,7 +60,15 @@ public class UsuarioService {
         // fotoPerfil: normalmente null en registro
         usuario.setFotoPerfil(null);
 
-        return mapToResponse(usuarioRepository.save(usuario));
+        // ✅ Estado inicial: no verificado
+        usuario.setEmailVerificado(false);
+
+        Usuario saved = usuarioRepository.save(usuario);
+
+        // ✅ Enviar OTP (primer envío)
+        verificationCodeService.generarYEnviarCodigo(saved, false);
+
+        return mapToResponse(saved);
     }
 
     // -------------------------
@@ -114,7 +124,6 @@ public class UsuarioService {
         return mapToResponse(usuarioRepository.save(usuario));
     }
 
-
     // -------------------------
     // Subir foto de perfil (Multipart) - Opción 1
     // -------------------------
@@ -168,7 +177,9 @@ public class UsuarioService {
         return mapToResponse(usuario);
     }
 
-
+    // -------------------------
+    // Seguridad: solo el dueño puede actualizarse
+    // -------------------------
     @Transactional
     public UsuarioResponse actualizarUsuarioSeguro(Long id, UsuarioUpdateRequest request, Authentication auth) {
         String correoAuth = auth.getName();
@@ -197,7 +208,6 @@ public class UsuarioService {
         return actualizarFotoPerfil(id, file);
     }
 
-
     // -------------------------
     // Mapper
     // -------------------------
@@ -211,5 +221,4 @@ public class UsuarioService {
                 usuario.getDescripcion()
         );
     }
-
 }

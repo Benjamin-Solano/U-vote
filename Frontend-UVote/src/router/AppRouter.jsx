@@ -3,11 +3,10 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
-
+import VerifyCode from "../pages/Auth/VerifyCode";
 
 import PollDetail from "../pages/Polls/PollDetail";
 import CreatePoll from "../pages/Polls/CreatePoll";
-
 
 import ProtectedRoute from "../auth/ProtectedRoute";
 import Profile from "../pages/Profile/Profile";
@@ -28,8 +27,10 @@ export default function AppRouter() {
             path="/about"
             element={<div className="container" style={{ padding: 24 }}>About (pendiente)</div>}
          />
+
          <Route path="/login" element={<Login />} />
          <Route path="/register" element={<Register />} />
+         <Route path="/verify" element={<VerifyCode />} />
 
          {/* Encuestas (público: solo búsqueda + detalle) */}
          <Route path="/encuestas" element={<Navigate to="/encuestas/buscar" replace />} />
@@ -43,7 +44,6 @@ export default function AppRouter() {
          <Route element={<ProtectedRoute />}>
             <Route path="/encuestas/crear" element={<CreatePoll />} />
             <Route path="/perfil" element={<Profile />} />
-
          </Route>
 
          {/* 404 */}

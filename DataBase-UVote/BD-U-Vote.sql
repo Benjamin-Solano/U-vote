@@ -17,6 +17,14 @@ CREATE TABLE usuarios (
 );
 
 
+ALTER TABLE usuarios
+ADD COLUMN email_verificado BOOLEAN NOT NULL DEFAULT FALSE,
+ADD COLUMN verif_codigo_hash VARCHAR(255),
+ADD COLUMN verif_expira_en TIMESTAMPTZ,
+ADD COLUMN verif_intentos INT NOT NULL DEFAULT 0,
+ADD COLUMN verif_ultimo_envio TIMESTAMPTZ;
+
+
 
 
 -- =======================================
@@ -172,7 +180,7 @@ INSERT INTO votos (usuario_id, encuesta_id, opcion_id) VALUES
 
 
 
-SELECT * FROM encuestas;
+SELECT * FROM usuarios;
 
 
 
