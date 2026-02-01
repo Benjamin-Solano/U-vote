@@ -21,7 +21,7 @@ export default function Home() {
    return (
       <main className="uv-home">
          <div className="container">
-            {/* ================= HERO ================= */}
+
             <motion.section
                className="uv-hero"
                initial="hidden"
@@ -45,7 +45,7 @@ export default function Home() {
                </div>
             </motion.section>
 
-            {/* ================= FEATURES ================= */}
+
             <section className="uv-features">
                <motion.h2
                   className="uv-section-title"

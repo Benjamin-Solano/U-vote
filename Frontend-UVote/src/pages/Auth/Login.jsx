@@ -116,7 +116,7 @@ export default function Login() {
    const onSubmit = async (e) => {
       e.preventDefault();
 
-      // Forzar mostrar errores al intentar enviar
+
       setTouched({ correo: true, contrasena: true });
 
       if (!canSubmit) return;
@@ -151,7 +151,6 @@ export default function Login() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35 }}
          >
-            {/* Panel izquierdo */}
             <div className="uv-login-left" aria-hidden="true">
                <div className="uv-login-left-inner">
                   <motion.img
@@ -170,7 +169,7 @@ export default function Login() {
                </div>
             </div>
 
-            {/* Panel derecho */}
+
             <div className="uv-login-right">
                <div className="uv-login-header">
                   <h1>Iniciar sesión</h1>

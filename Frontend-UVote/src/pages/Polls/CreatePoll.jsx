@@ -305,7 +305,7 @@ export default function CreatePoll() {
    const [options, setOptions] = useState([emptyOption(), emptyOption()]);
    const [optImgErrors, setOptImgErrors] = useState({});
 
-   // 🔁 Key para re-montar la lista cuando se limpian opciones (evita que queden en opacity:0 por variants)
+
    const [optionsListKey, setOptionsListKey] = useState(0);
 
    // Estado
@@ -648,7 +648,7 @@ export default function CreatePoll() {
       setOptImgErrors({});
       setOptions([emptyOption(), emptyOption()]);
 
-      // fuerza remount de la lista (para que no se quede invisible por variants)
+
       setOptionsListKey((k) => k + 1);
    }
 
@@ -696,7 +696,7 @@ export default function CreatePoll() {
       <div className="uv-polls-scope">
          <div className="uv-polls-page">
             <motion.div className="uv-card uv-create-card" variants={pageVariants} initial="hidden" animate="show">
-               {/* Back dentro de la tarjeta */}
+
                <div className="uv-card-head">
                   <button className="uv-btn uv-btn-ghost uv-card-back" onClick={() => navigate(-1)} disabled={saving}>
                      <FiArrowLeft /> Volver
@@ -706,7 +706,7 @@ export default function CreatePoll() {
                   <p className="uv-muted">Define la encuesta y agrega sus opciones. (Mínimo 2)</p>
                </div>
 
-               {/* Mensajes dentro del formulario */}
+
                {successMsg ? (
                   <div className="uv-alert uv-alert-success">
                      <div className="uv-alert-title">Listo</div>
@@ -733,7 +733,7 @@ export default function CreatePoll() {
                   </div>
                ) : null}
 
-               {/* Portada */}
+
                <div className="uv-field">
                   <Label>Foto / portada</Label>
 
@@ -772,7 +772,7 @@ export default function CreatePoll() {
                   {coverError ? <div className="uv-error">{coverError}</div> : null}
                </div>
 
-               {/* Nombre + Inicio */}
+
                <div className="uv-grid-2">
                   <div className="uv-field">
                      <Label required>Nombre</Label>
@@ -809,7 +809,7 @@ export default function CreatePoll() {
                   </div>
                </div>
 
-               {/* Descripción + Cierre */}
+
                <div className="uv-grid-2">
                   <div className="uv-field">
                      <Label required>Descripción</Label>
@@ -954,7 +954,7 @@ export default function CreatePoll() {
             </motion.div>
          </div>
 
-         {/* Modal Cropper */}
+
          <AnimatePresence>
             {cropOpen ? (
                <motion.div
@@ -966,7 +966,7 @@ export default function CreatePoll() {
                   animate="show"
                   exit="exit"
                   onMouseDown={(e) => {
-                     // click afuera cierra (sutil UX). Evita cerrar si el click es dentro del panel.
+
                      if (e.target === e.currentTarget) cancelCoverCrop();
                   }}
                >

@@ -70,9 +70,9 @@ export default function VerifyCode() {
       return () => clearTimeout(t);
    }, []);
 
-   // Iniciar contador (se asume que al llegar aquí ya se envió un OTP, o el user puede reenviar)
+
    useEffect(() => {
-      // si no hay cooldown, no corre
+
       if (cooldown <= 0) return;
 
       const id = setInterval(() => {
@@ -82,7 +82,7 @@ export default function VerifyCode() {
       return () => clearInterval(id);
    }, [cooldown]);
 
-   // Si te llega correo por query y cambia, sincroniza
+
    useEffect(() => {
       setCorreo(correoInicial);
    }, [correoInicial]);
@@ -130,7 +130,7 @@ export default function VerifyCode() {
 
       const v = onlyDigits(raw);
 
-      // Si pega / escribe más de 1 dígito, distribuimos
+
       if (v.length > 1) {
          const arr = v.slice(0, 6).split("");
          setDigits((prev) => {
@@ -145,20 +145,19 @@ export default function VerifyCode() {
 
       setDigitAt(i, v);
 
-      // Avanza foco si escribió un dígito
       if (v && i < 5) inputsRef.current?.[i + 1]?.focus?.();
    };
 
    const onDigitKeyDown = (i, e) => {
       if (e.key === "Backspace") {
-         // Si el campo está vacío, vuelve al anterior
+
          if (!digits[i] && i > 0) {
             inputsRef.current?.[i - 1]?.focus?.();
             setDigitAt(i - 1, "");
             e.preventDefault();
             return;
          }
-         // Si hay algo, permite borrar normal, pero limpiamos el valor
+
          setDigitAt(i, "");
          return;
       }
@@ -215,9 +214,9 @@ export default function VerifyCode() {
          await authApi.verifyCode({ correo: correoNorm, codigo: code });
          setVerified(true);
          setOkMsg("Correo verificado correctamente. Ya puedes iniciar sesión.");
-         // Limpia código por UX
+
          resetCode();
-         // Redirige a login con correo prellenado (si quieres)
+
          setTimeout(() => {
             navigate(`/login?correo=${encodeURIComponent(correoNorm)}`, { replace: true });
          }, 1100);
@@ -276,14 +275,13 @@ export default function VerifyCode() {
                </div>
             </div>
 
-            {/* Panel derecho */}
+
             <div className="uv-login-right">
                <div className="uv-login-header">
                   <h1>Verificar correo</h1>
                   <p>Ingresa el código de 6 dígitos que enviamos a tu correo.</p>
                </div>
 
-               {/* Mensajes */}
                {error && (
                   <div className="uv-login-alert" role="alert" aria-live="polite">
                      {error}
@@ -298,7 +296,7 @@ export default function VerifyCode() {
                )}
 
                <form className="uv-login-form" onSubmit={handleVerify}>
-                  {/* Email */}
+
                   <label className="uv-field">
                      <span>Correo</span>
                      <div
@@ -322,7 +320,6 @@ export default function VerifyCode() {
                      )}
                   </label>
 
-                  {/* Código OTP */}
                   <div className="uv-otp-block">
                      <div className="uv-otp-head">
                         <span className="uv-otp-label">
@@ -372,7 +369,7 @@ export default function VerifyCode() {
                      </div>
                   </div>
 
-                  {/* Botones */}
+
                   <button className="uv-primary-btn" type="submit" disabled={!canVerify}>
                      {loadingVerify ? "Verificando..." : "Verificar"}
                   </button>

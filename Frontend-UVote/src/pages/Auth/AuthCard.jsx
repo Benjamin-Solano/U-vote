@@ -2,11 +2,6 @@ import { motion } from "framer-motion";
 
 import "./login.css";
 
-/**
- * AuthCard
- * - Reutiliza el mismo layout/estilo para Login y Register.
- * - Mantiene el mismo diseño actual (mismas clases CSS).
- */
 export default function AuthCard({ logo, leftSubtitle, title, subtitle, children }) {
    return (
       <div className="uv-login-page">
@@ -16,10 +11,10 @@ export default function AuthCard({ logo, leftSubtitle, title, subtitle, children
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35 }}
          >
-            {/* Panel izquierdo */}
+
             <div className="uv-login-left" aria-hidden="true">
                <div className="uv-login-left-inner">
-                  {/* Logo con animación sutil */}
+
                   <motion.img
                      className="uv-login-logo"
                      src={logo}
@@ -36,7 +31,7 @@ export default function AuthCard({ logo, leftSubtitle, title, subtitle, children
                </div>
             </div>
 
-            {/* Panel derecho */}
+
             <div className="uv-login-right">
                <div className="uv-login-header">
                   <h1>{title}</h1>

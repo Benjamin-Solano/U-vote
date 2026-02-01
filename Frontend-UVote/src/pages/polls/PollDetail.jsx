@@ -1,4 +1,3 @@
-// PollDetail.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiArrowLeft, FiCheckCircle, FiShare2 } from "react-icons/fi";
@@ -37,9 +36,6 @@ function safeDate(v) {
    return Number.isFinite(d.getTime()) ? d : null;
 }
 
-// Estado visual de la encuesta (frontend)
-// Nota: en tu backend, `cerrada` también puede venir `true` cuando aún no inicia.
-// Por eso, damos prioridad a "Pendiente" si la fecha de inicio está en el futuro.
 function getPollStatus(poll) {
    const now = new Date();
 
@@ -298,7 +294,7 @@ export default function PollDetail() {
       }));
    }, [results, totalVotes, PASTELS]);
 
-   // ✅ Hook SIEMPRE se ejecuta (no condicional): evita error de reglas de hooks
+
    const status = useMemo(() => getPollStatus(poll), [poll]);
 
    async function loadPollAndOptions() {
@@ -370,7 +366,7 @@ export default function PollDetail() {
       try {
          await votesApi.vote(encuestaId, opcionId);
 
-         // ✅ Mensaje simple solicitado
+
          setNotice({ kind: "success", text: "Voto exitoso" });
 
          if (activeTab === "stats" && canViewStats) {
@@ -398,7 +394,7 @@ export default function PollDetail() {
       }
    }
 
-   // Animaciones sutiles
+
    const pageMotion = {
       initial: { opacity: 0, y: 8 },
       animate: { opacity: 1, y: 0, transition: { duration: 0.22, ease: "easeOut" } },
@@ -459,7 +455,7 @@ export default function PollDetail() {
                </div>
             </div>
 
-            {/* Notices con animación */}
+
             <AnimatePresence mode="wait">
                {notice && (
                   <motion.div
@@ -477,7 +473,6 @@ export default function PollDetail() {
                )}
             </AnimatePresence>
 
-            {/* Tabs */}
             <div className="uv-tabs" role="tablist" aria-label="Secciones de la encuesta">
                <button
                   type="button"
@@ -502,7 +497,7 @@ export default function PollDetail() {
                )}
             </div>
 
-            {/* Contenido por tab con transición */}
+
             <AnimatePresence mode="wait">
                {activeTab === "info" && (
                   <motion.div key="tab-info" {...fadeMotion}>

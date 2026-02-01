@@ -60,7 +60,6 @@ export default function Profile() {
 
    const DESC_MAX = 500;
 
-   // ✅ Normaliza errores y captura sesión expirada (403/401)
    const normalizeError = (err, fallback = "Ocurrió un error.") => {
       const status = err?.response?.status;
 
@@ -81,9 +80,6 @@ export default function Profile() {
       } catch (_) { }
    };
 
-   // =========================================================
-   // ✅ FIX: Estados consistentes (Pendiente / Activa / Cerrada)
-   // =========================================================
 
    // Parse robusto: devuelve timestamp o NaN
    const parseTime = (raw) => {
@@ -94,7 +90,7 @@ export default function Profile() {
 
    const normalizeEstado = (p) => String(p?.estado ?? p?.estadoEncuesta ?? "").toLowerCase();
 
-   // ✅ Pendiente: estado explícito o por fecha de apertura en el futuro
+
    const isPollPending = (p) => {
       const s = normalizeEstado(p);
       if (s.includes("pend")) return true;
@@ -107,7 +103,6 @@ export default function Profile() {
       return start > Date.now();
    };
 
-   // ✅ Cerrada: estado explícito / boolean / o fecha de cierre <= ahora
    const isPollClosed = (p) => {
       const s = normalizeEstado(p);
       if (s.includes("cerrad") || s.includes("closed") || s.includes("finaliz")) return true;
@@ -121,7 +116,7 @@ export default function Profile() {
       return close <= Date.now();
    };
 
-   // ✅ Estado final (string)
+
    const pollStateLabel = (p) => {
       if (isPollPending(p)) return "Pendiente";
       if (isPollClosed(p)) return "Cerrada";
@@ -497,7 +492,7 @@ export default function Profile() {
                      )}
                   </div>
 
-                  {/* Descripción (label arriba, bloque debajo) */}
+
                   <div className="uv-profile-row uv-profile-row-desc-vertical">
                      <span className="uv-k">Descripción</span>
 
@@ -576,7 +571,6 @@ export default function Profile() {
                </section>
             </div>
 
-            {/* Encuestas */}
             <section className="uv-profile-box uv-polls-box">
                <div className="uv-polls-header">
                   <div>

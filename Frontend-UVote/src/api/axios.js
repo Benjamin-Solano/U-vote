@@ -8,12 +8,12 @@ export const api = axios.create({
    },
 });
 
-// 🔐 Interceptor JWT (VERSIÓN SEGURA)
+
 api.interceptors.request.use(
    (config) => {
       const token = localStorage.getItem("token");
 
-      // ⛑️ Garantiza que headers exista
+
       config.headers = config.headers ?? {};
 
       if (token) {

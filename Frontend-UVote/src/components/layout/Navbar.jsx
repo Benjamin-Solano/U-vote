@@ -47,7 +47,7 @@ export default function Navbar() {
    return (
       <header className="uv-nav">
          <div className="container uv-nav-inner">
-            {/* Brand */}
+
             <NavLink to="/" className="uv-brand" aria-label="Ir al inicio">
                <img src={logo} alt="U-Vote" className="uv-brand-logo" />
                <span className="uv-brand-text">U-Vote</span>

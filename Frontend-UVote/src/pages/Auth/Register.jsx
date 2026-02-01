@@ -137,7 +137,7 @@ export default function Register() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35 }}
          >
-            {/* Panel izquierdo */}
+
             <div className="uv-login-left" aria-hidden="true">
                <div className="uv-login-left-inner">
                   <motion.img
@@ -153,7 +153,7 @@ export default function Register() {
                </div>
             </div>
 
-            {/* Panel derecho */}
+
             <div className="uv-login-right">
                <div className="uv-login-header">
                   <h1>Crear cuenta</h1>
@@ -247,8 +247,8 @@ export default function Register() {
                      <span>Confirmar contraseña</span>
                      <div
                         className={`uv-input-wrap ${touched.confirmarContrasena && fieldErrors.confirmarContrasena
-                              ? "uv-input-error"
-                              : ""
+                           ? "uv-input-error"
+                           : ""
                            }`}
                      >
                         <FiLock className="uv-input-icon" />

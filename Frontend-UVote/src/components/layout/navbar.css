@@ -14,7 +14,7 @@
    padding: 14px 0;
 }
 
-/* Brand */
+
 .uv-brand {
    display: inline-flex;
    align-items: center;
@@ -36,7 +36,7 @@
    color: #302f2c;
 }
 
-/* Links */
+
 .uv-links {
    display: flex;
    align-items: center;
@@ -72,7 +72,7 @@
    color: rgba(48, 47, 44, 0.92);
 }
 
-/* User */
+
 .uv-user {
    position: relative;
 }
@@ -120,7 +120,7 @@
    color: #302f2c;
 }
 
-/* Dropdown */
+
 .uv-user-menu {
    position: absolute;
    right: 0;
@@ -153,7 +153,7 @@
    background: rgba(48, 47, 44, 0.06);
 }
 
-/* 🔴 Danger claro y visible */
+
 .uv-user-item.danger {
    color: #b23b3b;
 }
@@ -169,7 +169,7 @@
    background: rgba(48, 47, 44, 0.10);
 }
 
-/* Responsive */
+
 @media (max-width: 760px) {
    .uv-user-name {
       display: none;

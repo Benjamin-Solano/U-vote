@@ -13,7 +13,7 @@ import Profile from "../pages/Profile/Profile";
 
 function PollsIdRedirect() {
    const location = useLocation();
-   // /polls/123 -> /encuestas/123
+
    const next = location.pathname.replace("/polls/", "/encuestas/");
    return <Navigate to={next} replace />;
 }
