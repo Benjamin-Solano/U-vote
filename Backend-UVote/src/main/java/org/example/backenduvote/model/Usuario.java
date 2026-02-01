@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 
-// Nota: Las entidades o modelos sirven para
-//       mapear o hacer la primer relacion entre el backend y las tablas en la
-//       Base de Datos...
+
 
 @Entity
 @Table(name = "usuarios")

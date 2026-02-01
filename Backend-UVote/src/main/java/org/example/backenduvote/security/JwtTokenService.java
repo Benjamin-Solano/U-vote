@@ -54,7 +54,6 @@ public class JwtTokenService {
                     .parseSignedClaims(token);
             return true;
         } catch (Exception e) {
-            // Aquí podrías loguear el motivo, si quieres
             return false;
         }
     }

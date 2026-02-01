@@ -85,9 +85,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
-    // =========================
-    // Error genérico (fallback)
-    // =========================
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(
             Exception ex,
@@ -100,7 +98,7 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
 
-        // 👉 aquí podrías loguear ex
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 

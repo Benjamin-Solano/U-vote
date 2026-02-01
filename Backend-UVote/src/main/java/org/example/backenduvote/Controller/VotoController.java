@@ -21,7 +21,7 @@ public class VotoController {
         this.votoService = votoService;
     }
 
-    // Votar en una encuesta (requiere JWT)
+
     @PostMapping("/{encuestaId}/votos")
     public ResponseEntity<VotoResponse> votar(
             @PathVariable Long encuestaId,
@@ -31,7 +31,7 @@ public class VotoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(voto);
     }
 
-    // Ver resultados (público)
+
     @GetMapping("/{encuestaId}/resultados")
     public List<ResultadoOpcionDetalleResponse> resultados(@PathVariable Long encuestaId) {
         return votoService.resultados(encuestaId);

@@ -66,7 +66,7 @@ public class Encuesta {
 
         return true;
     }
-    // Getters y setters
+
 
     public Long getId() { return id; }
 

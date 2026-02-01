@@ -29,7 +29,7 @@ public class FileController {
                     .resolve(filename)
                     .normalize();
 
-            // Evita path traversal: /../
+
             Path baseDir = Paths.get(uploadDir, "profile").toAbsolutePath().normalize();
             if (!filePath.startsWith(baseDir)) {
                 return ResponseEntity.badRequest().build();
@@ -45,7 +45,7 @@ public class FileController {
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, contentType)
-                    // Cache opcional para no pedir siempre la imagen
+
                     .cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS).cachePublic())
                     .body(resource);
 

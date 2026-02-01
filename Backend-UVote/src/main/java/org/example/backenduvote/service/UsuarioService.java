@@ -39,9 +39,7 @@ public class UsuarioService {
         this.verificationCodeService = verificationCodeService;
     }
 
-    // -------------------------
-    // Registro
-    // -------------------------
+
     public UsuarioResponse registrarUsuario(UsuarioRegistroRequest request) {
 
         if (usuarioRepository.existsByNombreUsuario(request.getNombreUsuario())) {
@@ -57,23 +55,18 @@ public class UsuarioService {
         usuario.setCorreo(request.getCorreo());
         usuario.setContrasenaHash(passwordEncoder.encode(request.getContrasena()));
 
-        // fotoPerfil: normalmente null en registro
         usuario.setFotoPerfil(null);
 
-        // ✅ Estado inicial: no verificado
         usuario.setEmailVerificado(false);
 
         Usuario saved = usuarioRepository.save(usuario);
 
-        // ✅ Enviar OTP (primer envío)
         verificationCodeService.generarYEnviarCodigo(saved, false);
 
         return mapToResponse(saved);
     }
 
-    // -------------------------
-    // Listar / Obtener
-    // -------------------------
+
     public List<UsuarioResponse> listarUsuarios() {
         return usuarioRepository.findAll().stream().map(this::mapToResponse).toList();
     }
@@ -88,9 +81,7 @@ public class UsuarioService {
         return usuarioRepository.count();
     }
 
-    // -------------------------
-    // Eliminar
-    // -------------------------
+
     @Transactional
     public void eliminarPorId(Long id) {
         if (!usuarioRepository.existsById(id)) {
@@ -99,9 +90,7 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    // -------------------------
-    // Actualizar nombre de usuario / datos
-    // -------------------------
+
     @Transactional
     public UsuarioResponse actualizarUsuario(Long id, UsuarioUpdateRequest request) {
         Usuario usuario = usuarioRepository.findById(id)
@@ -124,9 +113,7 @@ public class UsuarioService {
         return mapToResponse(usuarioRepository.save(usuario));
     }
 
-    // -------------------------
-    // Subir foto de perfil (Multipart) - Opción 1
-    // -------------------------
+
     @Transactional
     public UsuarioResponse actualizarFotoPerfil(Long id, MultipartFile file) {
         Usuario usuario = usuarioRepository.findById(id)
@@ -155,7 +142,7 @@ public class UsuarioService {
 
         String filename = "u_" + id + "_" + UUID.randomUUID() + ext;
 
-        // Directorio real donde se guarda: <app.upload-dir>/profile
+
         Path dir = Paths.get(uploadDir, "profile").toAbsolutePath().normalize();
 
         try {
@@ -168,7 +155,7 @@ public class UsuarioService {
             throw new RuntimeException("No se pudo guardar la imagen", e);
         }
 
-        // ✅ URL pública servida por FileController
+
         String publicUrl = "/api/files/profile/" + filename;
 
         usuario.setFotoPerfil(publicUrl);
@@ -177,9 +164,7 @@ public class UsuarioService {
         return mapToResponse(usuario);
     }
 
-    // -------------------------
-    // Seguridad: solo el dueño puede actualizarse
-    // -------------------------
+
     @Transactional
     public UsuarioResponse actualizarUsuarioSeguro(Long id, UsuarioUpdateRequest request, Authentication auth) {
         String correoAuth = auth.getName();
@@ -208,9 +193,6 @@ public class UsuarioService {
         return actualizarFotoPerfil(id, file);
     }
 
-    // -------------------------
-    // Mapper
-    // -------------------------
     private UsuarioResponse mapToResponse(Usuario usuario) {
         return new UsuarioResponse(
                 usuario.getId(),

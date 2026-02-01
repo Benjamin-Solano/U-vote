@@ -5,9 +5,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-// Nota: Aqui estoy tomando unicamente el nombre, correo y contrase;a,
-//       No necesito que ninguna API o el resto de la aplicacion sepa
-//       algo mas del usuario...
 
 public class UsuarioRegistroRequest {
 
@@ -25,7 +22,7 @@ public class UsuarioRegistroRequest {
     private String contrasena;
 
 
-    // ✅ NUEVO (opcional): URL o ruta
+
     @Size(max = 500)
     private String fotoPerfil;
 

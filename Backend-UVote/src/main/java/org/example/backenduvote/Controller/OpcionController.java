@@ -19,7 +19,7 @@ public class OpcionController {
         this.opcionService = opcionService;
     }
 
-    // Crear opción dentro de una encuesta (requiere JWT y ser dueño de la encuesta)
+
     @PostMapping("/api/encuestas/{encuestaId}/opciones")
     public ResponseEntity<OpcionResponse> crear(
             @PathVariable Long encuestaId,
@@ -29,13 +29,13 @@ public class OpcionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(creada);
     }
 
-    // Listar opciones de una encuesta (público)
+
     @GetMapping("/api/encuestas/{encuestaId}/opciones")
     public List<OpcionResponse> listar(@PathVariable Long encuestaId) {
         return opcionService.listarPorEncuesta(encuestaId);
     }
 
-    // Eliminar opción (requiere JWT y ser dueño de la encuesta)
+
     @DeleteMapping("/api/opciones/{opcionId}")
     public ResponseEntity<Void> eliminar(@PathVariable Long opcionId) {
         opcionService.eliminarOpcion(opcionId);

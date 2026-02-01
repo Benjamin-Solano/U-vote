@@ -16,7 +16,7 @@ public class AuthService {
     private final UsuarioRepository usuarioRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtTokenService jwtTokenService;
-    private final UsuarioService usuarioService; // lo dejas porque ya lo tenías inyectado
+    private final UsuarioService usuarioService;
 
     public AuthService(UsuarioRepository usuarioRepository,
                        BCryptPasswordEncoder passwordEncoder,
@@ -36,7 +36,7 @@ public class AuthService {
             throw new IllegalArgumentException("Credenciales inválidas");
         }
 
-        // ✅ Bloqueo por correo no verificado
+
         if (!usuario.isEmailVerificado()) {
             throw new AccessDeniedException("Cuenta no verificada. Revisa tu correo e ingresa el código.");
         }

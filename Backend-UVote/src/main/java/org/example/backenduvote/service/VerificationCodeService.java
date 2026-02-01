@@ -57,7 +57,7 @@ public class VerificationCodeService {
 
         String code = generarCodigo6();
 
-        // Guardamos el hash + expiración sí o sí
+
         usuario.setVerifCodigoHash(passwordEncoder.encode(code));
         usuario.setVerifExpiraEn(ahora.plusMinutes(otpMinutes));
         usuario.setVerifUltimoEnvio(ahora);
@@ -65,7 +65,7 @@ public class VerificationCodeService {
 
         usuarioRepository.save(usuario);
 
-        // Intentamos enviar el correo, pero si falla NO bloqueamos el flujo
+
         try {
             emailService.enviarCodigoVerificacion(usuario.getCorreo(), code, otpMinutes);
         } catch (Exception ex) {
@@ -100,7 +100,6 @@ public class VerificationCodeService {
             throw new IllegalArgumentException("Código incorrecto");
         }
 
-        // ✅ activar
         usuario.setEmailVerificado(true);
         usuario.setVerifCodigoHash(null);
         usuario.setVerifExpiraEn(null);

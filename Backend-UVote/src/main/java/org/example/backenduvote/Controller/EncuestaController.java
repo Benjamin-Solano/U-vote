@@ -20,20 +20,20 @@ public class EncuestaController {
         this.encuestaService = encuestaService;
     }
 
-    // Crear encuesta (requiere JWT por SecurityConfig)
+
     @PostMapping
     public ResponseEntity<EncuestaResponse> crear(@Valid @RequestBody EncuestaCreateRequest request) {
         EncuestaResponse creada = encuestaService.crearEncuesta(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(creada);
     }
 
-    // Listar encuestas (público si lo permites en SecurityConfig)
+
     @GetMapping
     public List<EncuestaResponse> listar() {
         return encuestaService.listarEncuestas();
     }
 
-    // Obtener encuesta por id
+
     @GetMapping("/{id}")
     public ResponseEntity<EncuestaResponse> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(encuestaService.obtenerPorId(id));

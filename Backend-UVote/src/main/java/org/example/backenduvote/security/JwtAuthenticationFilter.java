@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 1. Si ya hay autenticación, no hacemos nada extra
+
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
             filterChain.doFilter(request, response);
             return;
@@ -67,19 +67,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 5. Buscar usuario en BD
         Optional<Usuario> optionalUsuario = usuarioRepository.findByCorreo(correo);
         if (optionalUsuario.isEmpty()) {
-            // Token válido pero usuario borrado de BD -> no autenticamos
+
             filterChain.doFilter(request, response);
             return;
         }
 
         Usuario usuario = optionalUsuario.get();
 
-        // 6. Crear Authentication y poner en el contexto
+
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(
-                        usuario.getCorreo(),   // principal (puede ser objeto Usuario si quieres)
-                        null,                  // credenciales no se exponen
-                        Collections.emptyList() // aquí roles/permisos en el futuro
+                        usuario.getCorreo(),
+                        null,
+                        Collections.emptyList()
                 );
 
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
