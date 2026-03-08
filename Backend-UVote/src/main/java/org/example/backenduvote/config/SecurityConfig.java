@@ -30,20 +30,16 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOriginPatterns(List.of("http://localhost:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
-
-
         config.setAllowCredentials(true);
-
         config.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
 
     @Bean
     @Order(1)
@@ -76,23 +72,21 @@ public class SecurityConfig {
                         // Files públicos
                         .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
 
+                        // Campus y carreras públicos
+                        .requestMatchers(HttpMethod.GET, "/api/campus", "/api/campus/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/carreras", "/api/carreras/**").permitAll()
+
                         // Usuarios
                         .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/usuarios", "/api/usuarios/**").permitAll()
 
-                        // PUT usuario (nombre/descripcion) -> requiere token
-                        //  Cambiado de "/**" a "/*" para evitar PatternParseException y ser más preciso
+                        // Usuario protegido
                         .requestMatchers(HttpMethod.PUT, "/api/usuarios/id/*").authenticated()
-
-                        // Subir foto -> requiere token
-                        // Cambiado de "/**/foto" a "/*/foto" (tu ruta real es /id/{id}/foto)
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/id/*/foto").authenticated()
 
-                        // Encuestas (lectura pública)
+                        // Encuestas públicas en lectura
                         .requestMatchers(HttpMethod.GET, "/api/encuestas", "/api/encuestas/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/encuestas/*/opciones").permitAll()
-
-                        // Cambiado de "/**/resultados" a "/*/resultados" (tu ruta real es /{id}/resultados)
                         .requestMatchers(HttpMethod.GET, "/api/encuestas/*/resultados").permitAll()
 
                         .anyRequest().authenticated()

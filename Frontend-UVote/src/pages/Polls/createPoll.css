@@ -42,7 +42,7 @@
 }
 
 /* =========================================================
-   Card head (volver dentro)
+   Card head
    ========================================================= */
 .uv-polls-scope .uv-card-head {
    position: relative;
@@ -50,20 +50,17 @@
    margin-bottom: 10px;
 }
 
-/* botón volver dentro de la tarjeta */
 .uv-polls-scope .uv-card-back {
    position: absolute;
    top: 0;
    left: 0;
 }
 
-/* para que el título quede centrado y no choque con "volver" */
 .uv-polls-scope .uv-card-head .uv-polls-title {
    padding-left: 92px;
    padding-right: 92px;
 }
 
-/* en móvil, lo ponemos en flujo normal para evitar solapes */
 @media (max-width: 600px) {
    .uv-polls-scope .uv-card-back {
       position: static;
@@ -144,7 +141,6 @@
    transform: translateY(-1px);
 }
 
-
 .uv-polls-scope .uv-icon-btn-danger {
    border-color: rgba(180, 35, 24, 0.42);
    color: #b42318;
@@ -183,7 +179,8 @@
 }
 
 .uv-polls-scope .uv-input,
-.uv-polls-scope .uv-textarea {
+.uv-polls-scope .uv-textarea,
+.uv-polls-scope .uv-select {
    width: 100%;
    border: 1px solid rgba(48, 47, 44, 0.14);
    background: rgba(255, 255, 255, 0.85);
@@ -195,7 +192,8 @@
    box-sizing: border-box;
 }
 
-.uv-polls-scope .uv-input {
+.uv-polls-scope .uv-input,
+.uv-polls-scope .uv-select {
    height: 40px;
    padding: 0 12px;
 }
@@ -206,12 +204,12 @@
 }
 
 .uv-polls-scope .uv-input:focus,
-.uv-polls-scope .uv-textarea:focus {
+.uv-polls-scope .uv-textarea:focus,
+.uv-polls-scope .uv-select:focus {
    border-color: rgba(48, 47, 44, 0.30);
    box-shadow: 0 0 0 3px rgba(48, 47, 44, 0.08);
 }
 
-/* descripción de encuesta fija */
 .uv-polls-scope .uv-textarea--fixed {
    resize: none;
    height: 120px;
@@ -222,7 +220,6 @@
    resize: none;
 }
 
-/* invalid (requeridos vacíos) */
 .uv-polls-scope .uv-invalid {
    border-color: rgba(180, 35, 24, 0.55) !important;
    box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.10) !important;
@@ -239,21 +236,116 @@
    margin-top: 10px;
 }
 
+.uv-polls-scope .uv-grid-2-academic {
+   margin-top: 14px;
+}
+
 @media (max-width: 900px) {
    .uv-polls-scope .uv-grid-2 {
       grid-template-columns: 1fr;
    }
 }
 
-/* fila fecha + hora */
 .uv-polls-scope .uv-dt-row {
    display: grid;
-   grid-template-columns: 1fr 160px;
+   grid-template-columns: 1fr 180px;
    gap: 10px;
 }
 
+.uv-polls-scope .uv-dt-col {
+   display: flex;
+   flex-direction: column;
+   gap: 6px;
+}
+
+.uv-polls-scope .uv-mini-label {
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   font-size: 11px;
+   font-weight: 800;
+   color: rgba(48, 47, 44, 0.72);
+   padding-left: 2px;
+}
+
+.uv-polls-scope .uv-mini-label-time {
+   color: rgba(48, 47, 44, 0.88);
+}
+
+@media (max-width: 900px) {
+   .uv-polls-scope .uv-dt-row {
+      grid-template-columns: 1fr;
+   }
+}
+
 /* =========================================================
-   Ayuda visual: fechas + badge de estado
+   Selects campus / carrera
+   ========================================================= */
+.uv-polls-scope .uv-select-wrap {
+   position: relative;
+   display: flex;
+   align-items: center;
+   border-radius: 14px;
+}
+
+.uv-polls-scope .uv-select-icon {
+   position: absolute;
+   left: 12px;
+   font-size: 15px;
+   color: rgba(48, 47, 44, 0.65);
+   pointer-events: none;
+   z-index: 2;
+}
+
+.uv-polls-scope .uv-select {
+   appearance: none;
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   padding-left: 38px;
+   padding-right: 38px;
+   cursor: pointer;
+}
+
+.uv-polls-scope .uv-select:disabled {
+   opacity: 0.68;
+   cursor: not-allowed;
+}
+
+/* =========================================================
+   Nota académica
+   ========================================================= */
+.uv-polls-scope .uv-academic-note {
+   margin-top: 12px;
+   display: flex;
+   align-items: flex-start;
+   gap: 10px;
+   padding: 12px 14px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(48, 47, 44, 0.045);
+}
+
+.uv-polls-scope .uv-academic-note-icon {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 28px;
+   height: 28px;
+   min-width: 28px;
+   border-radius: 999px;
+   background: rgba(48, 47, 44, 0.10);
+   color: #302f2c;
+   margin-top: 1px;
+}
+
+.uv-polls-scope .uv-academic-note-content {
+   font-size: 13px;
+   line-height: 1.45;
+   color: rgba(48, 47, 44, 0.82);
+}
+
+/* =========================================================
+   Ayuda visual
    ========================================================= */
 .uv-polls-scope .uv-date-help {
    display: flex;
@@ -301,14 +393,8 @@
    color: #b42318;
 }
 
-@media (max-width: 900px) {
-   .uv-polls-scope .uv-dt-row {
-      grid-template-columns: 1fr;
-   }
-}
-
 /* =========================================================
-   Alerts (éxito / error dentro del form)
+   Alerts
    ========================================================= */
 .uv-polls-scope .uv-alert {
    margin-top: 10px;
@@ -340,7 +426,6 @@
    flex-wrap: wrap;
 }
 
-/* variantes */
 .uv-polls-scope .uv-alert-success {
    border-color: rgba(0, 135, 90, 0.22);
    background: rgba(0, 135, 90, 0.06);
@@ -359,6 +444,9 @@
    color: #b42318;
 }
 
+/* =========================================================
+   Cover
+   ========================================================= */
 .uv-polls-scope .uv-cover {
    border-radius: 18px;
    border: 1px solid rgba(48, 47, 44, 0.12);
@@ -409,7 +497,6 @@
    font-size: 13px;
 }
 
-
 .uv-polls-scope .uv-section-title {
    margin: 20px 0 10px;
    text-align: center;
@@ -419,7 +506,7 @@
 }
 
 /* =========================================================
-   Options list + clean cards
+   Options list
    ========================================================= */
 .uv-polls-scope .uv-options {
    display: flex;
@@ -481,7 +568,7 @@
 }
 
 /* =========================================================
-   Dropzone (opciones)
+   Dropzone
    ========================================================= */
 .uv-polls-scope .uv-dropzone {
    position: relative;
@@ -593,7 +680,7 @@
 }
 
 /* =========================================================
-   Modal (Cropper)
+   Modal
    ========================================================= */
 .uv-polls-scope .uv-modal-backdrop {
    position: fixed;
@@ -651,8 +738,7 @@
    display: none;
 }
 
-
 .uv-polls-scope .uv-option-card {
-  opacity: 1 !important;
-  transform: none !important;
+   opacity: 1 !important;
+   transform: none !important;
 }

@@ -445,21 +445,24 @@ export default function Profile() {
                      <span className="uv-k">Nombre de usuario</span>
 
                      {!editMode ? (
-                        <span className="uv-v uv-inline">
-                           {profile?.nombreUsuario ?? "-"}
-                           <button
-                              className="uv-inline-btn"
-                              onClick={() => {
-                                 setEditMode(true);
-                                 setOkMsg("");
-                                 setError("");
-                              }}
-                              title="Editar"
-                              type="button"
-                           >
-                              <FiEdit3 />
-                           </button>
-                        </span>
+                        <div className="uv-user-meta">
+                           <div className="uv-user-meta-main">
+                              <span className="uv-v">{profile?.nombreUsuario ?? "-"}</span>
+                              <button
+                                 className="uv-inline-btn"
+                                 onClick={() => {
+                                    setEditMode(true);
+                                    setOkMsg("");
+                                    setError("");
+                                 }}
+                                 title="Editar"
+                                 type="button"
+                              >
+                                 <FiEdit3 />
+                              </button>
+                           </div>
+
+                        </div>
                      ) : (
                         <div className="uv-edit">
                            <input
@@ -468,7 +471,6 @@ export default function Profile() {
                               className="uv-edit-input"
                               placeholder="Nuevo nombre de usuario"
                            />
-
                            <button
                               className="uv-edit-btn"
                               disabled={!canSaveName || savingName}
@@ -491,7 +493,10 @@ export default function Profile() {
                         </div>
                      )}
                   </div>
-
+                  
+                  <div className="uv-user-meta-sub">
+                     {[profile?.campusNombre, profile?.carreraNombre].filter(Boolean).join(" · ") || "-"}
+                  </div>
 
                   <div className="uv-profile-row uv-profile-row-desc-vertical">
                      <span className="uv-k">Descripción</span>

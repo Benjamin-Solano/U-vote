@@ -149,3 +149,125 @@ SELECT * FROM votos;
 
 TRUNCATE TABLE votos, opciones, encuestas, usuarios, campus_carreras, carreras, campus CASCADE;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- INSERTS:
+-- =======================================
+-- INSERTS: campus
+-- =======================================
+INSERT INTO campus (nombre) VALUES
+('Benjamín Nuñez'),
+('Omar Dengo');
+
+-- =======================================
+-- INSERTS: carreras
+-- =======================================
+INSERT INTO carreras (nombre) VALUES
+('Ingeniería en Sistemas'),
+('Ciencias del Movimiento Humano'),
+('Arte y Comunicación Visual'),
+('Biología'),
+('Relaciones Internacionales'),
+('Veterinaria'),
+('Historia'),
+('Administración de Empresas'),
+('Economía'),
+('Psicología'),
+('Filosofía'),
+('Inteligencia Global');
+
+-- =======================================
+-- INSERTS: campus_carreras
+-- Benjamín Nuñez:
+-- - Ingeniería en Sistemas
+-- - Ciencias del Movimiento Humano
+-- - Veterinaria
+-- - Inteligencia Global
+-- =======================================
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Ingeniería en Sistemas'
+WHERE c.nombre = 'Benjamín Nuñez';
+
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Ciencias del Movimiento Humano'
+WHERE c.nombre = 'Benjamín Nuñez';
+
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Veterinaria'
+WHERE c.nombre = 'Benjamín Nuñez';
+
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Inteligencia Global'
+WHERE c.nombre = 'Benjamín Nuñez';
+
+-- =======================================
+-- INSERTS: campus_carreras
+-- Omar Dengo:
+-- Todas las demás
+-- =======================================
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Arte y Comunicación Visual'
+WHERE c.nombre = 'Omar Dengo';
+
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Biología'
+WHERE c.nombre = 'Omar Dengo';
+
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Relaciones Internacionales'
+WHERE c.nombre = 'Omar Dengo';
+
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Historia'
+WHERE c.nombre = 'Omar Dengo';
+
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Administración de Empresas'
+WHERE c.nombre = 'Omar Dengo';
+
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Economía'
+WHERE c.nombre = 'Omar Dengo';
+
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Psicología'
+WHERE c.nombre = 'Omar Dengo';
+
+INSERT INTO campus_carreras (campus_id, carrera_id)
+SELECT c.id, ca.id
+FROM campus c
+JOIN carreras ca ON ca.nombre = 'Filosofía'
+WHERE c.nombre = 'Omar Dengo';
