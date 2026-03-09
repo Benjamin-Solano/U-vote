@@ -20,6 +20,9 @@ public class EncuestaResponse {
     private Long carreraId;
     private String carreraNombre;
 
+    private String usuarioNombre;
+    private boolean yaVoto;
+
     public EncuestaResponse() {}
 
     public EncuestaResponse(Long id,
@@ -81,4 +84,20 @@ public class EncuestaResponse {
     public void setCampusNombre(String campusNombre) { this.campusNombre = campusNombre; }
     public void setCarreraId(Long carreraId) { this.carreraId = carreraId; }
     public void setCarreraNombre(String carreraNombre) { this.carreraNombre = carreraNombre; }
+
+    public String getUsuarioNombre() {
+        return usuarioNombre;
+    }
+
+    public void setUsuarioNombre(String usuarioNombre) {
+        this.usuarioNombre = usuarioNombre;
+    }
+
+    public boolean isYaVoto() {
+        return yaVoto;
+    }
+
+    public void setYaVoto(boolean yaVoto) {
+        this.yaVoto = yaVoto;
+    }
 }

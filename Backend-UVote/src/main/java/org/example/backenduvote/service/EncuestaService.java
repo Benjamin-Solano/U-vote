@@ -8,6 +8,7 @@ import org.example.backenduvote.model.Usuario;
 import org.example.backenduvote.repository.CampusCarreraRepository;
 import org.example.backenduvote.repository.EncuestaRepository;
 import org.example.backenduvote.repository.UsuarioRepository;
+import org.example.backenduvote.repository.VotoRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,13 +23,16 @@ public class EncuestaService {
     private final EncuestaRepository encuestaRepository;
     private final UsuarioRepository usuarioRepository;
     private final CampusCarreraRepository campusCarreraRepository;
+    private final VotoRepository votoRepository;
 
     public EncuestaService(EncuestaRepository encuestaRepository,
                            UsuarioRepository usuarioRepository,
-                           CampusCarreraRepository campusCarreraRepository) {
+                           CampusCarreraRepository campusCarreraRepository,
+                           VotoRepository votoRepository) {
         this.encuestaRepository = encuestaRepository;
         this.usuarioRepository = usuarioRepository;
         this.campusCarreraRepository = campusCarreraRepository;
+        this.votoRepository = votoRepository;
     }
 
     @Transactional
@@ -106,18 +110,6 @@ public class EncuestaService {
                 .toList();
     }
 
-    private Usuario obtenerUsuarioAutenticado() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || auth.getPrincipal() == null) {
-            throw new IllegalArgumentException("No autenticado");
-        }
-
-        String correo = (String) auth.getPrincipal();
-        return usuarioRepository.findByCorreo(correo)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario autenticado no encontrado"));
-    }
-
-
     public List<EncuestaResponse> listarPorCampusYCarrera(Long campusId, Long carreraId) {
         boolean tieneCampus = campusId != null;
         boolean tieneCarrera = carreraId != null;
@@ -140,10 +132,37 @@ public class EncuestaService {
                 .toList();
     }
 
+    private Usuario obtenerUsuarioAutenticado() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getPrincipal() == null) {
+            throw new IllegalArgumentException("No autenticado");
+        }
+
+        String correo = (String) auth.getPrincipal();
+        return usuarioRepository.findByCorreo(correo)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario autenticado no encontrado"));
+    }
+
+    private Long obtenerUsuarioAutenticadoIdNullable() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getPrincipal() == null) {
+            return null;
+        }
+
+        try {
+            String correo = (String) auth.getPrincipal();
+            return usuarioRepository.findByCorreo(correo)
+                    .map(Usuario::getId)
+                    .orElse(null);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private EncuestaResponse mapToResponse(Encuesta e) {
         CampusCarrera cc = e.getCampusCarrera();
 
-        return new EncuestaResponse(
+        EncuestaResponse response = new EncuestaResponse(
                 e.getId(),
                 e.getUsuarioId(),
                 e.getNombre(),
@@ -159,6 +178,16 @@ public class EncuestaService {
                 cc != null ? cc.getCarrera().getId() : null,
                 cc != null ? cc.getCarrera().getNombre() : null
         );
-    }
 
+        usuarioRepository.findById(e.getUsuarioId())
+                .ifPresent(usuario -> response.setUsuarioNombre(usuario.getNombreUsuario()));
+
+        Long usuarioActualId = obtenerUsuarioAutenticadoIdNullable();
+        response.setYaVoto(
+                usuarioActualId != null &&
+                        votoRepository.existsByUsuarioIdAndEncuestaId(usuarioActualId, e.getId())
+        );
+
+        return response;
+    }
 }

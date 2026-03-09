@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FiHome, FiPlusCircle, FiLogIn, FiLogOut, FiUser } from "react-icons/fi";
+import { FiCompass, FiHome, FiLogIn, FiLogOut, FiPlusCircle, FiUser } from "react-icons/fi";
 import "./navbar.css";
 
 import { useAuth } from "../../auth/useAuth";
@@ -56,6 +56,11 @@ export default function Navbar() {
                <NavLink to="/" className={linkClass}>
                   <FiHome />
                   <span className="uv-link-label">Inicio</span>
+               </NavLink>
+
+               <NavLink to="/encuestas/buscar" className={linkClass}>
+                  <FiCompass />
+                  <span className="uv-link-label">Explorar</span>
                </NavLink>
 
                <NavLink

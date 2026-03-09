@@ -47,6 +47,10 @@ public class VotoService {
 
         var ahora = OffsetDateTime.now();
 
+        if (encuesta.getUsuarioId() != null && encuesta.getUsuarioId().equals(usuarioActual.getId())) {
+            throw new IllegalArgumentException("No puedes votar en una encuesta creada por ti");
+        }
+
         if (encuesta.getFechaInicio() != null && ahora.isBefore(encuesta.getFechaInicio())) {
             throw new IllegalArgumentException("La encuesta aún no ha iniciado");
         }
