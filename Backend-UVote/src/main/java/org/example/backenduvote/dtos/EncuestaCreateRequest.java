@@ -20,22 +20,64 @@ public class EncuestaCreateRequest {
     private OffsetDateTime inicio;
     private OffsetDateTime cierre;
 
+    private Long campusId;
+    private Long carreraId;
+
     public EncuestaCreateRequest() {}
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getNombre() {
+        return nombre;
+    }
 
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-    public String getImagenUrl() { return imagenUrl; }
-    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
+    public String getDescripcion() {
+        return descripcion;
+    }
 
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-    public OffsetDateTime getInicio() { return inicio; }
-    public void setInicio(OffsetDateTime fechaInicio) { this.inicio = fechaInicio; }
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
 
-    public OffsetDateTime getCierre() { return cierre; }
-    public void setFechaCierre(OffsetDateTime fechaCierre) { this.cierre = fechaCierre; }
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
+
+    public OffsetDateTime getInicio() {
+        return inicio;
+    }
+
+    public void setInicio(OffsetDateTime inicio) {
+        this.inicio = inicio;
+    }
+
+    public OffsetDateTime getCierre() {
+        return cierre;
+    }
+
+    public void setCierre(OffsetDateTime cierre) {
+        this.cierre = cierre;
+    }
+
+    public Long getCampusId() {
+        return campusId;
+    }
+
+    public void setCampusId(Long campusId) {
+        this.campusId = campusId;
+    }
+
+    public Long getCarreraId() {
+        return carreraId;
+    }
+
+    public void setCarreraId(Long carreraId) {
+        this.carreraId = carreraId;
+    }
 }
-

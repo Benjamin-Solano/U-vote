@@ -11,7 +11,6 @@ public class Encuesta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // FK directa: usuario_id
     @Column(name = "usuario_id", nullable = false)
     private Long usuarioId;
 
@@ -27,20 +26,22 @@ public class Encuesta {
     @Column(name = "fecha_cierre", columnDefinition = "TIMESTAMPTZ")
     private OffsetDateTime fechaCierre;
 
-    // Foto/portada de la encuesta
     @Column(name = "imagen_url")
     private String imagenUrl;
 
-    // Inicio efectivo
     @Column(name = "fecha_inicio", nullable = false, columnDefinition = "TIMESTAMPTZ")
     private OffsetDateTime fechaInicio;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "campus_carrera_id")
+    private CampusCarrera campusCarrera;
 
     public Encuesta() {}
 
     @PrePersist
     protected void onCreate() {
         if (creadaEn == null) creadaEn = OffsetDateTime.now();
-        if (fechaInicio == null) fechaInicio = creadaEn; // abre desde creada_en si no se especifica
+        if (fechaInicio == null) fechaInicio = creadaEn;
     }
 
     public boolean estaCerrada() {
@@ -52,7 +53,6 @@ public class Encuesta {
         return fechaCierre != null && !ahora.isBefore(fechaCierre);
     }
 
-
     public boolean noHaIniciadoAun(OffsetDateTime ahora) {
         if (ahora == null) ahora = OffsetDateTime.now();
         return fechaInicio != null && ahora.isBefore(fechaInicio);
@@ -60,16 +60,12 @@ public class Encuesta {
 
     public boolean estaActivaEn(OffsetDateTime ahora) {
         if (ahora == null) ahora = OffsetDateTime.now();
-
         if (fechaInicio != null && ahora.isBefore(fechaInicio)) return false;
         if (fechaCierre != null && !ahora.isBefore(fechaCierre)) return false;
-
         return true;
     }
 
-
     public Long getId() { return id; }
-
     public Long getUsuarioId() { return usuarioId; }
     public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
 
@@ -90,7 +86,7 @@ public class Encuesta {
 
     public OffsetDateTime getFechaInicio() { return fechaInicio; }
     public void setFechaInicio(OffsetDateTime fechaInicio) { this.fechaInicio = fechaInicio; }
+
+    public CampusCarrera getCampusCarrera() { return campusCarrera; }
+    public void setCampusCarrera(CampusCarrera campusCarrera) { this.campusCarrera = campusCarrera; }
 }
-
-
-

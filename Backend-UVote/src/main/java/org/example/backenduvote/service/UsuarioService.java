@@ -3,7 +3,9 @@ package org.example.backenduvote.service;
 import org.example.backenduvote.dtos.UsuarioRegistroRequest;
 import org.example.backenduvote.dtos.UsuarioResponse;
 import org.example.backenduvote.dtos.UsuarioUpdateRequest;
+import org.example.backenduvote.model.CampusCarrera;
 import org.example.backenduvote.model.Usuario;
+import org.example.backenduvote.repository.CampusCarreraRepository;
 import org.example.backenduvote.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,24 +25,24 @@ import java.util.UUID;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final CampusCarreraRepository campusCarreraRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-
     private final VerificationCodeService verificationCodeService;
 
     @Value("${app.upload-dir:uploads}")
     private String uploadDir;
 
     public UsuarioService(UsuarioRepository usuarioRepository,
+                          CampusCarreraRepository campusCarreraRepository,
                           BCryptPasswordEncoder passwordEncoder,
                           VerificationCodeService verificationCodeService) {
         this.usuarioRepository = usuarioRepository;
+        this.campusCarreraRepository = campusCarreraRepository;
         this.passwordEncoder = passwordEncoder;
         this.verificationCodeService = verificationCodeService;
     }
 
-
     public UsuarioResponse registrarUsuario(UsuarioRegistroRequest request) {
-
         if (usuarioRepository.existsByNombreUsuario(request.getNombreUsuario())) {
             throw new IllegalArgumentException("El nombre del usuario ya existe");
         }
@@ -49,22 +51,24 @@ public class UsuarioService {
             throw new IllegalArgumentException("El correo ya se encuentra registrado");
         }
 
+        CampusCarrera campusCarrera = campusCarreraRepository
+                .findByCampusIdAndCarreraId(request.getCampusId(), request.getCarreraId())
+                .orElseThrow(() -> new IllegalArgumentException("La carrera seleccionada no pertenece al campus indicado"));
+
         Usuario usuario = new Usuario();
-        usuario.setNombreUsuario(request.getNombreUsuario());
-        usuario.setCorreo(request.getCorreo());
+        usuario.setNombreUsuario(request.getNombreUsuario().trim());
+        usuario.setCorreo(request.getCorreo().trim());
         usuario.setContrasenaHash(passwordEncoder.encode(request.getContrasena()));
-
         usuario.setFotoPerfil(null);
-
+        usuario.setDescripcion(null);
+        usuario.setCampusCarrera(campusCarrera);
         usuario.setEmailVerificado(false);
 
         Usuario saved = usuarioRepository.save(usuario);
-
         verificationCodeService.generarYEnviarCodigo(saved, false);
 
         return mapToResponse(saved);
     }
-
 
     public List<UsuarioResponse> listarUsuarios() {
         return usuarioRepository.findAll().stream().map(this::mapToResponse).toList();
@@ -80,7 +84,6 @@ public class UsuarioService {
         return usuarioRepository.count();
     }
 
-
     @Transactional
     public void eliminarPorId(Long id) {
         if (!usuarioRepository.existsById(id)) {
@@ -89,7 +92,6 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-
     @Transactional
     public UsuarioResponse actualizarUsuario(Long id, UsuarioUpdateRequest request) {
         Usuario usuario = usuarioRepository.findById(id)
@@ -97,7 +99,6 @@ public class UsuarioService {
 
         if (request.getNombreUsuario() != null && !request.getNombreUsuario().isBlank()) {
             String nuevo = request.getNombreUsuario().trim();
-
             if (!nuevo.equals(usuario.getNombreUsuario()) && usuarioRepository.existsByNombreUsuario(nuevo)) {
                 throw new IllegalArgumentException("El nombre del usuario ya existe");
             }
@@ -109,9 +110,27 @@ public class UsuarioService {
             usuario.setDescripcion(desc.isBlank() ? null : desc);
         }
 
+        boolean cambioCampus = request.getCampusId() != null;
+        boolean cambioCarrera = request.getCarreraId() != null;
+
+        if (cambioCampus || cambioCarrera) {
+            Long campusId = cambioCampus
+                    ? request.getCampusId()
+                    : usuario.getCampusCarrera().getCampus().getId();
+
+            Long carreraId = cambioCarrera
+                    ? request.getCarreraId()
+                    : usuario.getCampusCarrera().getCarrera().getId();
+
+            CampusCarrera campusCarrera = campusCarreraRepository
+                    .findByCampusIdAndCarreraId(campusId, carreraId)
+                    .orElseThrow(() -> new IllegalArgumentException("La carrera seleccionada no pertenece al campus indicado"));
+
+            usuario.setCampusCarrera(campusCarrera);
+        }
+
         return mapToResponse(usuarioRepository.save(usuario));
     }
-
 
     @Transactional
     public UsuarioResponse actualizarFotoPerfil(Long id, MultipartFile file) {
@@ -127,42 +146,33 @@ public class UsuarioService {
             throw new IllegalArgumentException("Solo se permiten imágenes");
         }
 
-        // 2MB (ajústalo si quieres)
         long maxBytes = 2 * 1024 * 1024;
         if (file.getSize() > maxBytes) {
             throw new IllegalArgumentException("La imagen excede el tamaño permitido (2MB)");
         }
 
-        // Nombre seguro + extensión
         String original = StringUtils.cleanPath(file.getOriginalFilename() == null ? "imagen" : file.getOriginalFilename());
         String ext = "";
         int dot = original.lastIndexOf('.');
         if (dot >= 0) ext = original.substring(dot);
 
         String filename = "u_" + id + "_" + UUID.randomUUID() + ext;
-
-
         Path dir = Paths.get(uploadDir, "profile").toAbsolutePath().normalize();
 
         try {
             Files.createDirectories(dir);
-
             Path target = dir.resolve(filename);
             Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-
         } catch (IOException e) {
             throw new RuntimeException("No se pudo guardar la imagen", e);
         }
 
-
         String publicUrl = "/api/files/profile/" + filename;
-
         usuario.setFotoPerfil(publicUrl);
         usuarioRepository.save(usuario);
 
         return mapToResponse(usuario);
     }
-
 
     @Transactional
     public UsuarioResponse actualizarUsuarioSeguro(Long id, UsuarioUpdateRequest request, Authentication auth) {
@@ -193,13 +203,20 @@ public class UsuarioService {
     }
 
     private UsuarioResponse mapToResponse(Usuario usuario) {
+        CampusCarrera cc = usuario.getCampusCarrera();
+
         return new UsuarioResponse(
                 usuario.getId(),
                 usuario.getNombreUsuario(),
                 usuario.getCorreo(),
                 usuario.getCreadoEn(),
                 usuario.getFotoPerfil(),
-                usuario.getDescripcion()
+                usuario.getDescripcion(),
+                cc != null ? cc.getId() : null,
+                cc != null ? cc.getCampus().getId() : null,
+                cc != null ? cc.getCampus().getNombre() : null,
+                cc != null ? cc.getCarrera().getId() : null,
+                cc != null ? cc.getCarrera().getNombre() : null
         );
     }
 }

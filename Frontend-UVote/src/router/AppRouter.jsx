@@ -7,6 +7,8 @@ import VerifyCode from "../pages/Auth/VerifyCode";
 
 import PollDetail from "../pages/Polls/PollDetail";
 import CreatePoll from "../pages/Polls/CreatePoll";
+import VoteConfirmation from "../pages/Polls/VoteConfirmation";
+import PollExplorer from "../pages/Polls/PollExplorer";
 
 import ProtectedRoute from "../auth/ProtectedRoute";
 import Profile from "../pages/Profile/Profile";
@@ -21,7 +23,6 @@ function PollsIdRedirect() {
 export default function AppRouter() {
    return (
       <Routes>
-         {/* Públicas */}
          <Route path="/" element={<Home />} />
          <Route
             path="/about"
@@ -32,21 +33,19 @@ export default function AppRouter() {
          <Route path="/register" element={<Register />} />
          <Route path="/verify" element={<VerifyCode />} />
 
-         {/* Encuestas (público: solo búsqueda + detalle) */}
          <Route path="/encuestas" element={<Navigate to="/encuestas/buscar" replace />} />
+         <Route path="/encuestas/buscar" element={<PollExplorer />} />
          <Route path="/encuestas/:id" element={<PollDetail />} />
+         <Route path="/encuestas/:id/confirmacion-voto" element={<VoteConfirmation />} />
 
-         {/* Compatibilidad */}
          <Route path="/polls" element={<Navigate to="/encuestas/buscar" replace />} />
          <Route path="/polls/:id" element={<PollsIdRedirect />} />
 
-         {/* Protegidas */}
          <Route element={<ProtectedRoute />}>
             <Route path="/encuestas/crear" element={<CreatePoll />} />
             <Route path="/perfil" element={<Profile />} />
          </Route>
 
-         {/* 404 */}
          <Route
             path="*"
             element={<div className="container" style={{ padding: 24 }}>404 - No encontrado</div>}

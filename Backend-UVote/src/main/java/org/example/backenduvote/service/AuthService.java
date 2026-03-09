@@ -4,6 +4,7 @@ import org.example.backenduvote.security.JwtTokenService;
 import org.example.backenduvote.dtos.AuthLoginRequest;
 import org.example.backenduvote.dtos.AuthResponse;
 import org.example.backenduvote.dtos.UsuarioResponse;
+import org.example.backenduvote.model.CampusCarrera;
 import org.example.backenduvote.model.Usuario;
 import org.example.backenduvote.repository.UsuarioRepository;
 import org.springframework.security.access.AccessDeniedException;
@@ -36,7 +37,6 @@ public class AuthService {
             throw new IllegalArgumentException("Credenciales inválidas");
         }
 
-
         if (!usuario.isEmailVerificado()) {
             throw new AccessDeniedException("Cuenta no verificada. Revisa tu correo e ingresa el código.");
         }
@@ -48,13 +48,20 @@ public class AuthService {
     }
 
     private UsuarioResponse mapToResponse(Usuario usuario) {
+        CampusCarrera cc = usuario.getCampusCarrera();
+
         return new UsuarioResponse(
                 usuario.getId(),
                 usuario.getNombreUsuario(),
                 usuario.getCorreo(),
                 usuario.getCreadoEn(),
                 usuario.getFotoPerfil(),
-                usuario.getDescripcion()
+                usuario.getDescripcion(),
+                cc != null ? cc.getId() : null,
+                cc != null ? cc.getCampus().getId() : null,
+                cc != null ? cc.getCampus().getNombre() : null,
+                cc != null ? cc.getCarrera().getId() : null,
+                cc != null ? cc.getCarrera().getNombre() : null
         );
     }
 }

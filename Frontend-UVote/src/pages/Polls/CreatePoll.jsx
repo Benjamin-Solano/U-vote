@@ -1,5 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FiArrowLeft, FiCheck, FiPlus, FiTrash2, FiUpload, FiX } from "react-icons/fi";
+import {
+   FiArrowLeft,
+   FiBookOpen,
+   FiCheck,
+   FiClock,
+   FiInfo,
+   FiMapPin,
+   FiPlus,
+   FiTrash2,
+   FiUpload,
+   FiX,
+} from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 import Cropper from "react-easy-crop";
 import { AnimatePresence, motion } from "framer-motion";
@@ -7,6 +18,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { api } from "../../api/axios";
 import { pollsApi } from "../../api/polls.api";
 import { optionsApi } from "../../api/options.api";
+import { campusApi } from "../../api/campus.api";
 import "./createPoll.css";
 
 const MAX_IMG_MB = 3;
@@ -53,7 +65,6 @@ function isoToLocalParts(iso) {
    };
 }
 
-// date + time (local) -> ISO Z (OffsetDateTime lo parsea ok)
 function buildISOFromDateTime(dateStr, timeStr) {
    if (!dateStr && !timeStr) return null;
    if (!dateStr) return null;
@@ -133,9 +144,6 @@ function Label({ children, required = false }) {
    );
 }
 
-/* =========================================
-   Dropzone genérico (para opciones)
-========================================= */
 function ImageDropzone({
    value,
    disabled,
@@ -230,7 +238,6 @@ export default function CreatePoll() {
    const { id } = useParams();
    const isEdit = Boolean(id);
 
-   // Animaciones (sutiles)
    const pageVariants = useMemo(
       () => ({
          hidden: { opacity: 0, y: 10 },
@@ -280,17 +287,21 @@ export default function CreatePoll() {
       []
    );
 
-   // Encuesta
    const [nombre, setNombre] = useState("");
    const [descripcion, setDescripcion] = useState("");
 
-   // Fecha + hora separadas
    const [inicioDate, setInicioDate] = useState("");
    const [inicioTime, setInicioTime] = useState("");
    const [cierreDate, setCierreDate] = useState("");
    const [cierreTime, setCierreTime] = useState("");
 
-   // Portada
+   const [campusId, setCampusId] = useState("");
+   const [carreraId, setCarreraId] = useState("");
+   const [campusOptions, setCampusOptions] = useState([]);
+   const [carreraOptions, setCarreraOptions] = useState([]);
+   const [loadingCampus, setLoadingCampus] = useState(false);
+   const [loadingCarreras, setLoadingCarreras] = useState(false);
+
    const coverInputRef = useRef(null);
    const [coverSrc, setCoverSrc] = useState("");
    const [coverPreview, setCoverPreview] = useState("");
@@ -302,25 +313,20 @@ export default function CreatePoll() {
    const [coverZoom, setCoverZoom] = useState(1);
    const [coverCroppedPixels, setCoverCroppedPixels] = useState(null);
 
-   // Opciones
    const [options, setOptions] = useState([emptyOption(), emptyOption()]);
    const [optImgErrors, setOptImgErrors] = useState({});
-
    const [optionsListKey, setOptionsListKey] = useState(0);
 
-   // Estado
    const [loading, setLoading] = useState(isEdit);
    const [saving, setSaving] = useState(false);
    const [submitted, setSubmitted] = useState(false);
 
-   // Mensajes dentro del formulario
    const [successMsg, setSuccessMsg] = useState("");
    const [errorMsg, setErrorMsg] = useState("");
    const [lastPollId, setLastPollId] = useState(null);
 
    const cropperKey = useMemo(() => `${coverSrc}::${cropOpen}`, [coverSrc, cropOpen]);
 
-   // Mostrar confirmación luego de recargar (solo cuando se crea)
    useEffect(() => {
       try {
          const raw = sessionStorage.getItem(FLASH_KEY);
@@ -347,7 +353,73 @@ export default function CreatePoll() {
       };
    }, [coverSrc, coverPreview]);
 
-   // Cargar en edición
+   useEffect(() => {
+      let ignore = false;
+
+      const loadCampus = async () => {
+         setLoadingCampus(true);
+         try {
+            const res = await campusApi.list();
+            const data = res?.data;
+            if (!ignore) setCampusOptions(Array.isArray(data) ? data : []);
+         } catch {
+            if (!ignore) setCampusOptions([]);
+         } finally {
+            if (!ignore) setLoadingCampus(false);
+         }
+      };
+
+      loadCampus();
+      return () => {
+         ignore = true;
+      };
+   }, []);
+
+   useEffect(() => {
+      let ignore = false;
+
+      if (!campusId) {
+         setCarreraOptions([]);
+         setCarreraId("");
+         return;
+      }
+
+      const loadCarreras = async () => {
+         setLoadingCarreras(true);
+         try {
+            const res = await campusApi.getCarrerasByCampus(campusId);
+            const data = res?.data;
+
+            if (!ignore) {
+               const mapped = Array.isArray(data)
+                  ? data.map((item) => ({
+                     campusCarreraId: item.campusCarreraId,
+                     carreraId: item.carreraId,
+                     carreraNombre: item.carreraNombre,
+                  }))
+                  : [];
+
+               setCarreraOptions(mapped);
+               setCarreraId((prev) =>
+                  mapped.some((c) => String(c.carreraId) === String(prev)) ? prev : ""
+               );
+            }
+         } catch {
+            if (!ignore) {
+               setCarreraOptions([]);
+               setCarreraId("");
+            }
+         } finally {
+            if (!ignore) setLoadingCarreras(false);
+         }
+      };
+
+      loadCarreras();
+      return () => {
+         ignore = true;
+      };
+   }, [campusId]);
+
    useEffect(() => {
       if (!isEdit) return;
 
@@ -373,6 +445,9 @@ export default function CreatePoll() {
             setInicioTime(ini.time);
             setCierreDate(cie.date);
             setCierreTime(cie.time);
+
+            setCampusId(poll?.campusId ? String(poll.campusId) : "");
+            setCarreraId(poll?.carreraId ? String(poll.carreraId) : "");
 
             if (poll?.imagenUrl) {
                setCoverPreview(poll.imagenUrl);
@@ -400,7 +475,6 @@ export default function CreatePoll() {
                setOptions([emptyOption(), emptyOption()]);
             }
 
-            // refresca animación al cargar opciones
             setOptionsListKey((k) => k + 1);
          } catch (e) {
             console.error(e);
@@ -497,7 +571,6 @@ export default function CreatePoll() {
    const inicioISO = useMemo(() => buildISOFromDateTime(inicioDate, inicioTime), [inicioDate, inicioTime]);
    const cierreISO = useMemo(() => buildISOFromDateTime(cierreDate, cierreTime), [cierreDate, cierreTime]);
 
-   // Ayuda visual: estado + hints de fechas
    const estadoBadge = useMemo(() => {
       const now = new Date();
       const start = inicioISO ? new Date(inicioISO) : null;
@@ -574,7 +647,7 @@ export default function CreatePoll() {
       return errs;
    }, [fieldErrors, options, optImgErrors, coverError]);
 
-   const canSubmit = !saving && formErrors.length === 0;
+   const canSubmit = !saving && !loadingCampus && !loadingCarreras && formErrors.length === 0;
 
    async function savePoll(pollPayload) {
       if (!isEdit) {
@@ -623,6 +696,8 @@ export default function CreatePoll() {
             inicio: inicioISO,
             cierre: cierreISO,
             imagenUrl: imagenUrlStr,
+            campusId: campusId ? Number(campusId) : null,
+            carreraId: carreraId ? Number(carreraId) : null,
          };
 
          const saved = await savePoll(payload);
@@ -630,7 +705,6 @@ export default function CreatePoll() {
 
          await replaceOptions(encuestaId);
 
-         // En creación: recargamos la página y persistimos el mensaje para mostrarlo después.
          if (!isEdit) {
             sessionStorage.setItem(
                FLASH_KEY,
@@ -644,7 +718,6 @@ export default function CreatePoll() {
             return;
          }
 
-         // En edición: mantenemos el comportamiento actual sin recargar.
          setLastPollId(encuestaId);
          setSuccessMsg("Cambios guardados correctamente.");
       } catch (e) {
@@ -669,6 +742,10 @@ export default function CreatePoll() {
       setInicioTime("");
       setCierreDate("");
       setCierreTime("");
+
+      setCampusId("");
+      setCarreraId("");
+      setCarreraOptions([]);
 
       clearCover();
       setOptImgErrors({});
@@ -813,23 +890,34 @@ export default function CreatePoll() {
 
                   <div className="uv-field">
                      <Label>Inicio de la encuesta</Label>
+
                      <div className="uv-dt-row">
-                        <input
-                           className={`uv-input ${
-                              submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""
-                           }`}
-                           type="date"
-                           value={inicioDate}
-                           onChange={(e) => setInicioDate(e.target.value)}
-                        />
-                        <input
-                           className={`uv-input ${
-                              submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""
-                           }`}
-                           type="time"
-                           value={inicioTime}
-                           onChange={(e) => setInicioTime(e.target.value)}
-                        />
+                        <div className="uv-dt-col">
+                           <span className="uv-mini-label">Fecha</span>
+                           <input
+                              className={`uv-input ${
+                                 submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""
+                              }`}
+                              type="date"
+                              value={inicioDate}
+                              onChange={(e) => setInicioDate(e.target.value)}
+                           />
+                        </div>
+
+                        <div className="uv-dt-col">
+                           <span className="uv-mini-label uv-mini-label-time">
+                              <FiClock />
+                              Edición de la hora
+                           </span>
+                           <input
+                              className={`uv-input ${
+                                 submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""
+                              }`}
+                              type="time"
+                              value={inicioTime}
+                              onChange={(e) => setInicioTime(e.target.value)}
+                           />
+                        </div>
                      </div>
 
                      <div className="uv-date-help">
@@ -853,30 +941,105 @@ export default function CreatePoll() {
 
                   <div className="uv-field">
                      <Label>Cierre de la encuesta</Label>
+
                      <div className="uv-dt-row">
-                        <input
-                           className={`uv-input ${
-                              submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""
-                           }`}
-                           type="date"
-                           value={cierreDate}
-                           onChange={(e) => setCierreDate(e.target.value)}
-                        />
-                        <input
-                           className={`uv-input ${
-                              submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""
-                           }`}
-                           type="time"
-                           value={cierreTime}
-                           onChange={(e) => setCierreTime(e.target.value)}
-                        />
+                        <div className="uv-dt-col">
+                           <span className="uv-mini-label">Fecha</span>
+                           <input
+                              className={`uv-input ${
+                                 submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""
+                              }`}
+                              type="date"
+                              value={cierreDate}
+                              onChange={(e) => setCierreDate(e.target.value)}
+                           />
+                        </div>
+
+                        <div className="uv-dt-col">
+                           <span className="uv-mini-label uv-mini-label-time">
+                              <FiClock />
+                              Edición de la hora
+                           </span>
+                           <input
+                              className={`uv-input ${
+                                 submitted && (fieldErrors.fechas || fieldErrors.timeOnly) ? "uv-invalid" : ""
+                              }`}
+                              type="time"
+                              value={cierreTime}
+                              onChange={(e) => setCierreTime(e.target.value)}
+                           />
+                        </div>
                      </div>
+
                      {submitted && fieldErrors.timeOnly ? <div className="uv-error">{fieldErrors.timeOnly}</div> : null}
                      {submitted && fieldErrors.fechas ? <div className="uv-error">{fieldErrors.fechas}</div> : null}
 
                      <div className="uv-date-help">
                         <span className="uv-date-hint">{cierreHint}</span>
                      </div>
+                  </div>
+               </div>
+
+               <div className="uv-grid-2 uv-grid-2-academic">
+                  <div className="uv-field">
+                     <Label>Campus</Label>
+                     <div className="uv-select-wrap">
+                        <FiMapPin className="uv-select-icon" />
+                        <select
+                           className="uv-select"
+                           value={campusId}
+                           onChange={(e) => {
+                              setCampusId(e.target.value);
+                              if (!e.target.value) setCarreraId("");
+                           }}
+                           disabled={saving || loadingCampus}
+                        >
+                           <option value="">
+                              {loadingCampus ? "Cargando campus..." : "Sin campus"}
+                           </option>
+                           {campusOptions.map((campus) => (
+                              <option key={campus.id} value={campus.id}>
+                                 {campus.nombre}
+                              </option>
+                           ))}
+                        </select>
+                     </div>
+                  </div>
+
+                  <div className="uv-field">
+                     <Label>Carrera</Label>
+                     <div className="uv-select-wrap">
+                        <FiBookOpen className="uv-select-icon" />
+                        <select
+                           className="uv-select"
+                           value={carreraId}
+                           onChange={(e) => setCarreraId(e.target.value)}
+                           disabled={saving || loadingCarreras || (!campusId && carreraOptions.length === 0)}
+                        >
+                           <option value="">
+                              {!campusId
+                                 ? "Sin carrera"
+                                 : loadingCarreras
+                                    ? "Cargando carreras..."
+                                    : "Sin carrera"}
+                           </option>
+                           {carreraOptions.map((item) => (
+                              <option key={item.campusCarreraId} value={item.carreraId}>
+                                 {item.carreraNombre}
+                              </option>
+                           ))}
+                        </select>
+                     </div>
+                  </div>
+               </div>
+
+               <div className="uv-academic-note">
+                  <div className="uv-academic-note-icon">
+                     <FiInfo />
+                  </div>
+                  <div className="uv-academic-note-content">
+                     Si dejas <strong>Sin campus</strong> y <strong>Sin carrera</strong>, la encuesta quedará disponible
+                     para cualquier estudiante, sin importar su campus o carrera.
                   </div>
                </div>
 

@@ -2,7 +2,6 @@
    padding-top: 34px;
 }
 
-/* Layout contenedor */
 .uv-polldetail-scope.uv-detail-wrap {
    min-height: calc(100vh - 220px);
    padding: 40px 16px 260px;
@@ -21,7 +20,6 @@
    padding: 18px;
 }
 
-/* Head */
 .uv-polldetail-scope .uv-polls-head {
    display: flex;
    align-items: center;
@@ -36,7 +34,6 @@
    align-items: center;
 }
 
-/* Botones */
 .uv-polldetail-scope .uv-btn {
    display: inline-flex;
    align-items: center;
@@ -65,7 +62,6 @@
    box-shadow: none;
 }
 
-/* Botón oscuro */
 .uv-polldetail-scope .uv-btn-dark {
    background: #302f2c;
    color: #efede3;
@@ -79,12 +75,16 @@
    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
 }
 
-/* Botón compartir (ligeramente distinto) */
 .uv-polldetail-scope .uv-btn-share {
    border-style: dashed;
 }
 
-/* Alertas (errores/éxito/info) */
+.uv-polldetail-scope .uv-vote-btn-disabled-msg {
+   background: rgba(48, 47, 44, 0.48);
+   border-color: rgba(48, 47, 44, 0.48);
+   color: #efede3;
+}
+
 .uv-polldetail-scope .uv-alert {
    margin-top: 12px;
    padding: 12px 14px;
@@ -113,7 +113,6 @@
    color: rgba(45, 75, 155, 0.95);
 }
 
-/* States */
 .uv-polldetail-scope .uv-polls-state,
 .uv-polldetail-scope .uv-polls-error {
    margin-top: 12px;
@@ -129,7 +128,6 @@
    background: rgba(48, 47, 44, 0.06);
 }
 
-/* Tabs */
 .uv-polldetail-scope .uv-tabs {
    display: flex;
    gap: 8px;
@@ -170,7 +168,6 @@
    border-radius: 2px;
 }
 
-/* Cover */
 .uv-polldetail-scope .uv-detail-cover {
    margin-top: 14px;
    width: 100%;
@@ -189,7 +186,6 @@
    object-fit: cover;
 }
 
-/* Poll card base */
 .uv-polldetail-scope .uv-poll-card {
    text-align: left;
    border: 1px solid rgba(48, 47, 44, 0.12);
@@ -213,11 +209,19 @@
    font-size: 16px;
 }
 
+.uv-polldetail-scope .uv-poll-name-lg {
+   font-size: 18px;
+}
+
 .uv-polldetail-scope .uv-poll-desc {
    margin-top: 8px;
    color: rgba(48, 47, 44, 0.78);
    font-size: 13px;
    line-height: 1.35;
+}
+
+.uv-polldetail-scope .uv-poll-desc-lg {
+   margin-top: 10px;
 }
 
 .uv-polldetail-scope .uv-poll-meta-row {
@@ -227,9 +231,48 @@
    font-size: 12px;
    color: rgba(48, 47, 44, 0.6);
    gap: 12px;
+   flex-wrap: wrap;
 }
 
-/* Pills */
+.uv-polldetail-scope .uv-detail-meta-grid {
+   margin-top: 14px;
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 12px;
+}
+
+@media (max-width: 860px) {
+   .uv-polldetail-scope .uv-detail-meta-grid {
+      grid-template-columns: 1fr;
+   }
+}
+
+.uv-polldetail-scope .uv-detail-meta-item {
+   border: 1px solid rgba(48, 47, 44, 0.10);
+   border-radius: 14px;
+   background: rgba(239, 237, 227, 0.36);
+   padding: 12px;
+   display: flex;
+   flex-direction: column;
+   gap: 6px;
+}
+
+.uv-polldetail-scope .uv-detail-meta-label {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   font-size: 12px;
+   font-weight: 900;
+   color: rgba(48, 47, 44, 0.68);
+}
+
+.uv-polldetail-scope .uv-detail-meta-value {
+   font-size: 14px;
+   font-weight: 900;
+   color: #302f2c;
+   line-height: 1.3;
+}
+
 .uv-polldetail-scope .uv-pills {
    font-size: 12px;
    padding: 6px 10px;
@@ -261,14 +304,12 @@
    color: rgba(48, 47, 44, 0.85);
 }
 
-/* Section title */
 .uv-polldetail-scope .uv-detail-h2 {
    margin: 12px 0 10px;
    color: #302f2c;
    font-size: 18px;
 }
 
-/* Grid opciones */
 .uv-polldetail-scope .uv-detail-grid-2 {
    display: grid;
    grid-template-columns: repeat(2, 1fr);
@@ -282,7 +323,6 @@
    }
 }
 
-/* Imagen en opciones */
 .uv-polldetail-scope .uv-option-media {
    margin-top: 10px;
    display: grid;
@@ -300,7 +340,6 @@
    display: block;
 }
 
-/* Link minimalista */
 .uv-polldetail-scope .uv-muted-link {
    font-size: 12px;
    color: rgba(48, 47, 44, 0.75);
@@ -313,13 +352,15 @@
    border-bottom-color: rgba(48, 47, 44, 0.55);
 }
 
-/* Hint */
 .uv-polldetail-scope .uv-hint {
    font-size: 12px;
    color: rgba(48, 47, 44, 0.7);
 }
 
-/* ===== Stats / charts ===== */
+.uv-polldetail-scope .uv-hint-block {
+   margin-top: 10px;
+}
+
 .uv-polldetail-scope .uv-stats-head {
    display: flex;
    justify-content: space-between;
@@ -383,11 +424,10 @@
    overflow: hidden;
 }
 
-.uv-polldetail-scope .uv-bar>div {
+.uv-polldetail-scope .uv-bar > div {
    height: 100%;
 }
 
-/* Chips */
 .uv-polldetail-scope .uv-chart-toolbar {
    display: inline-flex;
    gap: 8px;
@@ -464,7 +504,6 @@
    font-weight: 900;
 }
 
-/* Recharts tweaks */
 .uv-polldetail-scope .recharts-cartesian-grid-horizontal line,
 .uv-polldetail-scope .recharts-cartesian-grid-vertical line {
    stroke: rgba(48, 47, 44, 0.12);
@@ -475,7 +514,6 @@
    font-weight: 800;
 }
 
-/* Legend pie */
 .uv-polldetail-scope .uv-pie-legend {
    margin-top: 10px;
    display: grid;

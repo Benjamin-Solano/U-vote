@@ -95,9 +95,20 @@
    color: var(--uv-ink);
 }
 
+.uv-login-alert--ok {
+   border-color: rgba(40, 120, 60, 0.25);
+   background: rgba(40, 120, 60, 0.06);
+}
+
 .uv-login-form {
    margin-top: 22px;
    display: grid;
+   gap: 16px;
+}
+
+.uv-login-grid-2 {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
    gap: 16px;
 }
 
@@ -106,7 +117,7 @@
    gap: 8px;
 }
 
-.uv-field>span {
+.uv-field > span {
    color: var(--uv-ink);
    font-size: 0.92rem;
    font-weight: 600;
@@ -133,16 +144,28 @@
    opacity: 0.75;
 }
 
-.uv-input-wrap input {
+.uv-input-wrap input,
+.uv-select-wrap select {
    border: none;
    outline: none;
    padding: 12px 12px 12px 0;
    background: transparent;
    color: var(--uv-ink);
    font-size: 1rem;
+   width: 100%;
 }
 
 .uv-input-wrap input::placeholder {
+   color: rgba(48, 47, 44, 0.45);
+}
+
+.uv-select-wrap select {
+   appearance: none;
+   cursor: pointer;
+}
+
+.uv-select-wrap select:disabled {
+   cursor: not-allowed;
    color: rgba(48, 47, 44, 0.45);
 }
 
@@ -251,25 +274,6 @@
    border-bottom-color: rgba(48, 47, 44, 0.65);
 }
 
-/* Responsive */
-@media (max-width: 860px) {
-   .uv-login-card {
-      grid-template-columns: 1fr;
-   }
-
-   .uv-login-left {
-      padding: 32px 22px;
-   }
-
-   .uv-login-right {
-      padding: 32px 22px;
-   }
-
-   .uv-login-left::after {
-      inset: 14px;
-   }
-}
-
 .uv-link-as-btn {
    border: none;
    background: transparent;
@@ -302,7 +306,7 @@
 }
 
 /* =========================
-   Input error state (toque final)
+   Input error state
    ========================= */
 .uv-input-wrap.uv-input-error {
    border-color: rgba(160, 0, 0, 0.55);
@@ -314,6 +318,34 @@
    opacity: 1;
 }
 
+.uv-input-wrap.uv-input-error:focus-within {
+   border-color: rgba(160, 0, 0, 0.75);
+   box-shadow: 0 0 0 4px rgba(160, 0, 0, 0.10);
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+   .uv-login-card {
+      grid-template-columns: 1fr;
+   }
+
+   .uv-login-left {
+      padding: 32px 22px;
+   }
+
+   .uv-login-right {
+      padding: 32px 22px;
+   }
+
+   .uv-login-left::after {
+      inset: 14px;
+   }
+
+   .uv-login-grid-2 {
+      grid-template-columns: 1fr;
+      gap: 16px;
+   }
+}
 .uv-input-wrap.uv-input-error:focus-within {
    border-color: rgba(160, 0, 0, 0.75);
    box-shadow: 0 0 0 4px rgba(160, 0, 0, 0.10);

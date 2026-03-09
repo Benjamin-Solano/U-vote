@@ -1,0 +1,70 @@
+.uv-vote-confirm-wrap {
+   min-height: calc(100vh - 180px);
+   padding: 48px 16px 120px;
+   display: grid;
+   place-items: center;
+}
+
+.uv-vote-confirm-card {
+   width: 100%;
+   max-width: 620px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   border-radius: 22px;
+   background: rgba(255, 255, 255, 0.58);
+   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+   padding: 34px 28px;
+   text-align: center;
+}
+
+.uv-vote-confirm-icon {
+   width: 84px;
+   height: 84px;
+   margin: 0 auto 18px;
+   border-radius: 999px;
+   display: grid;
+   place-items: center;
+   background: rgba(60, 170, 120, 0.12);
+   color: rgba(25, 110, 70, 0.95);
+   border: 1px solid rgba(60, 170, 120, 0.30);
+   font-size: 38px;
+}
+
+.uv-vote-confirm-card h1 {
+   margin: 0 0 10px;
+   color: #302f2c;
+   font-size: 32px;
+   font-weight: 900;
+}
+
+.uv-vote-confirm-card p {
+   margin: 0;
+   color: rgba(48, 47, 44, 0.78);
+   font-size: 15px;
+   line-height: 1.5;
+}
+
+.uv-vote-confirm-sub {
+   margin-top: 10px !important;
+}
+
+.uv-vote-confirm-btn {
+   margin-top: 22px;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   gap: 8px;
+   border: 1px solid #302f2c;
+   background: #302f2c;
+   color: #efede3;
+   border-radius: 999px;
+   padding: 12px 18px;
+   font-weight: 900;
+   cursor: pointer;
+   transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.uv-vote-confirm-btn:hover {
+   transform: translateY(-1px);
+   background: #242321;
+   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}

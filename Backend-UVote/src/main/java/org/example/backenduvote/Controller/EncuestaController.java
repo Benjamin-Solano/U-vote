@@ -20,26 +20,22 @@ public class EncuestaController {
         this.encuestaService = encuestaService;
     }
 
-
     @PostMapping
     public ResponseEntity<EncuestaResponse> crear(@Valid @RequestBody EncuestaCreateRequest request) {
         EncuestaResponse creada = encuestaService.crearEncuesta(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(creada);
     }
 
-
     @GetMapping
     public List<EncuestaResponse> listar() {
         return encuestaService.listarEncuestas();
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<EncuestaResponse> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(encuestaService.obtenerPorId(id));
     }
 
-    // Cerrar encuesta (solo creador)
     @PostMapping("/{id}/cerrar")
     public ResponseEntity<EncuestaResponse> cerrar(@PathVariable Long id) {
         return ResponseEntity.ok(encuestaService.cerrarEncuesta(id));
@@ -50,4 +46,16 @@ public class EncuestaController {
         return encuestaService.listarPorCreador(id);
     }
 
+    @GetMapping("/campus-carrera/{campusCarreraId}")
+    public List<EncuestaResponse> listarPorCampusCarrera(@PathVariable Long campusCarreraId) {
+        return encuestaService.listarPorCampusCarrera(campusCarreraId);
+    }
+
+    @GetMapping("/filtro")
+    public List<EncuestaResponse> listarPorCampusYCarrera(
+            @RequestParam(required = false) Long campusId,
+            @RequestParam(required = false) Long carreraId
+    ) {
+        return encuestaService.listarPorCampusYCarrera(campusId, carreraId);
+    }
 }

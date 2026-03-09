@@ -1,6 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FiArrowLeft, FiCheckCircle, FiShare2 } from "react-icons/fi";
+import {
+   FiArrowLeft,
+   FiBookOpen,
+   FiCheckCircle,
+   FiHome,
+   FiMapPin,
+   FiShare2,
+   FiUser,
+} from "react-icons/fi";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { pollsApi } from "../../api/polls.api";
@@ -8,7 +16,7 @@ import { optionsApi } from "../../api/options.api";
 import { votesApi } from "../../api/votes.api";
 import { useAuth } from "../../auth/useAuth";
 
-import "./PollDetail.css";
+import "./pollDetail.css";
 
 import {
    ResponsiveContainer,
@@ -22,6 +30,8 @@ import {
    Pie,
    Cell,
 } from "recharts";
+
+const VOTE_CONFIRMATION_KEY = "uv_vote_confirmation";
 
 function formatMaybeDate(v) {
    if (!v) return "—";
@@ -42,21 +52,16 @@ function getPollStatus(poll) {
    const inicio = safeDate(poll?.fechaInicio ?? poll?.fechaApertura ?? poll?.inicio);
    const cierre = safeDate(poll?.fechaCierre ?? poll?.cierre);
 
-   // 1) Pendiente: aún no abre (prioridad máxima)
    const isPending = inicio ? now.getTime() < inicio.getTime() : false;
    if (isPending) return { key: "pending", label: "Pendiente" };
 
-   // 2) Cerrada por bandera del backend (cierre manual o lógica del backend)
-   //    Como ya filtramos "Pendiente" arriba, aquí 'cerrada=true' lo tratamos como cerrada real.
    if (poll?.cerrada === true) return { key: "closed", label: "Cerrada" };
 
-   // 3) Cerrada por tiempo (si existe cierre)
    const isClosedByTime = cierre ? now.getTime() >= cierre.getTime() : false;
    if (isClosedByTime) return { key: "closed", label: "Cerrada" };
 
    return { key: "open", label: "Activa" };
 }
-
 
 function clampLabel(s, max = 14) {
    const t = String(s ?? "");
@@ -238,18 +243,16 @@ export default function PollDetail() {
 
    const [poll, setPoll] = useState(null);
    const [options, setOptions] = useState([]);
-
    const [results, setResults] = useState([]);
+
    const [loading, setLoading] = useState(true);
    const [submittingVote, setSubmittingVote] = useState(false);
    const [loadingStats, setLoadingStats] = useState(false);
 
-   // Notificaciones (errores / éxito / info)
-   const [notice, setNotice] = useState(null); // { kind: "error"|"success"|"info", text: string }
-
-   // Tabs + charts
-   const [activeTab, setActiveTab] = useState("info"); // "info" | "stats"
-   const [chartType, setChartType] = useState("vertical"); // "vertical" | "horizontal" | "pie"
+   const [notice, setNotice] = useState(null);
+   const [activeTab, setActiveTab] = useState("info");
+   const [chartType, setChartType] = useState("vertical");
+   const [hasVoted, setHasVoted] = useState(false);
 
    const authUserId = useMemo(() => usuario?.id ?? usuario?.usuarioId ?? null, [usuario]);
 
@@ -264,7 +267,6 @@ export default function PollDetail() {
       return results.reduce((acc, r) => acc + Number(r.votos || 0), 0);
    }, [results]);
 
-   // Paleta pastel para estadísticas
    const PASTELS = useMemo(
       () => [
          "rgba(186, 220, 255, 0.95)",
@@ -294,8 +296,25 @@ export default function PollDetail() {
       }));
    }, [results, totalVotes, PASTELS]);
 
-
    const status = useMemo(() => getPollStatus(poll), [poll]);
+
+   const creatorName = useMemo(() => {
+      return (
+         poll?.usuarioNombre ||
+         poll?.creadorNombre ||
+         poll?.nombreCreador ||
+         poll?.nombreUsuarioCreador ||
+         "No disponible"
+      );
+   }, [poll]);
+
+   const campusName = useMemo(() => {
+      return poll?.campusNombre || "Sin campus";
+   }, [poll]);
+
+   const carreraName = useMemo(() => {
+      return poll?.carreraNombre || "Sin carrera";
+   }, [poll]);
 
    async function loadPollAndOptions() {
       setLoading(true);
@@ -314,6 +333,16 @@ export default function PollDetail() {
 
          setPoll(pollData);
          setOptions(optionsData);
+
+         setHasVoted(
+            Boolean(
+               pollData?.yaVoto ??
+               pollData?.yaHaVotado ??
+               pollData?.usuarioYaVoto ??
+               pollData?.votadaPorUsuarioActual ??
+               false
+            )
+         );
       } catch (e) {
          setNotice({ kind: "error", text: normalizeServerMessage(e) || "Error cargando la encuesta" });
       } finally {
@@ -348,7 +377,20 @@ export default function PollDetail() {
    }, [activeTab, canViewStats, encuestaId]);
 
    async function handleVote(opcionId) {
-      if (!isAuthenticated) return navigate("/login");
+      if (!isAuthenticated) {
+         navigate("/login");
+         return;
+      }
+
+      if (isOwner) {
+         setNotice({ kind: "info", text: "No puedes votar en una encuesta creada por ti." });
+         return;
+      }
+
+      if (hasVoted) {
+         setNotice({ kind: "info", text: "Ya has votado en esta encuesta." });
+         return;
+      }
 
       if (status.key === "closed") {
          setNotice({ kind: "error", text: "Esta encuesta está cerrada. No es posible votar." });
@@ -366,14 +408,36 @@ export default function PollDetail() {
       try {
          await votesApi.vote(encuestaId, opcionId);
 
+         setHasVoted(true);
 
-         setNotice({ kind: "success", text: "Voto exitoso" });
+         if (!isOwner) {
+            sessionStorage.setItem(
+               VOTE_CONFIRMATION_KEY,
+               JSON.stringify({
+                  encuestaId,
+                  nombreEncuesta: poll?.nombre ?? "Encuesta",
+               })
+            );
+            navigate(`/encuestas/${encuestaId}/confirmacion-voto`, { replace: true });
+            return;
+         }
+
+         setNotice({ kind: "success", text: "Voto exitoso." });
 
          if (activeTab === "stats" && canViewStats) {
             await loadStats();
          }
       } catch (e) {
          const serverMsg = normalizeServerMessage(e);
+
+         if (
+            /ya\s+ha\s+votad/i.test(serverMsg) ||
+            /ya\s+vot/i.test(serverMsg) ||
+            /already\s+voted/i.test(serverMsg)
+         ) {
+            setHasVoted(true);
+         }
+
          setNotice({ kind: "error", text: voteFriendlyMessage(serverMsg) });
       } finally {
          setSubmittingVote(false);
@@ -394,6 +458,23 @@ export default function PollDetail() {
       }
    }
 
+   function getVoteButtonText() {
+      if (isOwner) return "No puedes votar";
+      if (hasVoted) return "Ya has votado";
+      if (status.key === "closed") return "Encuesta cerrada";
+      if (status.key === "pending") return "Aún no inicia";
+      if (submittingVote) return "Votando…";
+      return "Votar";
+   }
+
+   function getVoteButtonTitle() {
+      if (isOwner) return "El creador no puede votar en su propia encuesta";
+      if (hasVoted) return "Ya registraste tu voto en esta encuesta";
+      if (status.key === "closed") return "La encuesta está cerrada";
+      if (status.key === "pending") return "La encuesta aún no ha iniciado";
+      if (!isAuthenticated) return "Inicia sesión para votar";
+      return "Votar";
+   }
 
    const pageMotion = {
       initial: { opacity: 0, y: 8 },
@@ -441,8 +522,7 @@ export default function PollDetail() {
    return (
       <div className="uv-polldetail-scope uv-detail-wrap">
          <motion.div className="uv-detail-card" {...pageMotion}>
-            {/* Head */}
-            <div className="uv-polls-head" style={{ alignItems: "center" }}>
+            <div className="uv-polls-head">
                <button className="uv-btn" onClick={() => navigate(-1)}>
                   <FiArrowLeft /> Volver
                </button>
@@ -455,17 +535,17 @@ export default function PollDetail() {
                </div>
             </div>
 
-
             <AnimatePresence mode="wait">
                {notice && (
                   <motion.div
                      key={`${notice.kind}:${notice.text}`}
-                     className={`uv-alert ${notice.kind === "error"
-                        ? "uv-alert-error"
-                        : notice.kind === "success"
-                           ? "uv-alert-success"
-                           : "uv-alert-info"
-                        }`}
+                     className={`uv-alert ${
+                        notice.kind === "error"
+                           ? "uv-alert-error"
+                           : notice.kind === "success"
+                              ? "uv-alert-success"
+                              : "uv-alert-info"
+                     }`}
                      {...fadeMotion}
                   >
                      {notice.text}
@@ -497,7 +577,6 @@ export default function PollDetail() {
                )}
             </div>
 
-
             <AnimatePresence mode="wait">
                {activeTab === "info" && (
                   <motion.div key="tab-info" {...fadeMotion}>
@@ -516,21 +595,40 @@ export default function PollDetail() {
 
                      <div className="uv-poll-card uv-flat" style={{ marginTop: 14, cursor: "default" }}>
                         <div className="uv-poll-card-top">
-                           <div className="uv-poll-name" style={{ fontSize: 18 }}>
-                              {poll.nombre}
-                           </div>
-
-                           {/* Badge corregido */}
+                           <div className="uv-poll-name uv-poll-name-lg">{poll.nombre}</div>
                            <span className={`uv-pills ${status.key}`}>{status.label}</span>
                         </div>
 
-                        <div className="uv-poll-desc" style={{ marginTop: 10 }}>
+                        <div className="uv-poll-desc uv-poll-desc-lg">
                            {poll.descripcion?.trim() ? poll.descripcion : "Sin descripción."}
                         </div>
 
-                        <div className="uv-poll-meta-row" style={{ marginTop: 12 }}>
+                        <div className="uv-poll-meta-row">
                            <span>Apertura: {fechaApertura}</span>
                            <span>Cierre: {fechaCierre}</span>
+                        </div>
+
+                        <div className="uv-detail-meta-grid">
+                           <div className="uv-detail-meta-item">
+                              <span className="uv-detail-meta-label">
+                                 <FiUser /> Creador
+                              </span>
+                              <span className="uv-detail-meta-value">{creatorName}</span>
+                           </div>
+
+                           <div className="uv-detail-meta-item">
+                              <span className="uv-detail-meta-label">
+                                 <FiMapPin /> Campus
+                              </span>
+                              <span className="uv-detail-meta-value">{campusName}</span>
+                           </div>
+
+                           <div className="uv-detail-meta-item">
+                              <span className="uv-detail-meta-label">
+                                 <FiBookOpen /> Carrera
+                              </span>
+                              <span className="uv-detail-meta-value">{carreraName}</span>
+                           </div>
                         </div>
                      </div>
 
@@ -542,7 +640,11 @@ export default function PollDetail() {
                         ) : (
                            <div className="uv-detail-grid-2">
                               {options.map((o) => {
-                                 const voteDisabled = submittingVote || status.key !== "open";
+                                 const voteDisabled =
+                                    submittingVote ||
+                                    status.key !== "open" ||
+                                    isOwner ||
+                                    hasVoted;
 
                                  return (
                                     <motion.div
@@ -557,7 +659,9 @@ export default function PollDetail() {
                                           {typeof o.orden === "number" && <span className="uv-pills">#{o.orden}</span>}
                                        </div>
 
-                                       <div className="uv-poll-desc">{o.descripcion?.trim() ? o.descripcion : "Sin descripción."}</div>
+                                       <div className="uv-poll-desc">
+                                          {o.descripcion?.trim() ? o.descripcion : "Sin descripción."}
+                                       </div>
 
                                        {o.imagenUrl?.trim() && (
                                           <div className="uv-option-media">
@@ -568,38 +672,37 @@ export default function PollDetail() {
                                                 loading="lazy"
                                                 decoding="async"
                                              />
-
                                           </div>
                                        )}
 
                                        <button
-                                          className="uv-btn uv-btn-dark"
+                                          className={`uv-btn uv-btn-dark uv-vote-btn ${
+                                             isOwner || hasVoted ? "uv-vote-btn-disabled-msg" : ""
+                                          }`}
                                           style={{ width: "100%", justifyContent: "center", marginTop: 10 }}
                                           disabled={voteDisabled}
                                           onClick={() => handleVote(o.id)}
-                                          title={
-                                             status.key === "closed"
-                                                ? "La encuesta está cerrada"
-                                                : status.key === "pending"
-                                                   ? "La encuesta aún no ha iniciado"
-                                                   : !isAuthenticated
-                                                      ? "Inicia sesión para votar"
-                                                      : "Votar"
-                                          }
+                                          title={getVoteButtonTitle()}
                                        >
                                           <FiCheckCircle />
-                                          {status.key === "closed"
-                                             ? "Encuesta cerrada"
-                                             : status.key === "pending"
-                                                ? "Aún no inicia"
-                                                : submittingVote
-                                                   ? "Votando…"
-                                                   : "Votar"}
+                                          {getVoteButtonText()}
                                        </button>
 
-                                       {!isAuthenticated && status.key === "open" && (
+                                       {!isAuthenticated && status.key === "open" && !hasVoted && !isOwner && (
                                           <div className="uv-hint" style={{ marginTop: 10 }}>
                                              Debes iniciar sesión para votar.
+                                          </div>
+                                       )}
+
+                                       {isOwner && (
+                                          <div className="uv-hint uv-hint-block">
+                                             Como creador, no puedes votar en tu propia encuesta.
+                                          </div>
+                                       )}
+
+                                       {hasVoted && !isOwner && (
+                                          <div className="uv-hint uv-hint-block">
+                                             Tu voto ya fue registrado en esta encuesta.
                                           </div>
                                        )}
                                     </motion.div>
