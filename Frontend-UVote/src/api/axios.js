@@ -1,18 +1,18 @@
 import axios from "axios";
 
+const baseURL = import.meta.env.VITE_API_URL;
+
 export const api = axios.create({
-   baseURL: import.meta.env.VITE_API_URL, // http://localhost:8080/api
-   timeout: 15000, // 15s
+   baseURL,
+   timeout: 15000,
    headers: {
       "Content-Type": "application/json",
    },
 });
 
-
 api.interceptors.request.use(
    (config) => {
       const token = localStorage.getItem("token");
-
 
       config.headers = config.headers ?? {};
 
