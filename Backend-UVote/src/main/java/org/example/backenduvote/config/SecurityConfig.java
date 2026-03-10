@@ -30,7 +30,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOriginPatterns(List.of("http://localhost:5173"));
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:5173",
+                "https://tu-frontend.vercel.app"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -65,29 +68,21 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-
-                        // Preflight
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // Files públicos
                         .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll()
 
-                        // Campus y carreras públicos
                         .requestMatchers(HttpMethod.GET, "/api/campus", "/api/campus/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/carreras", "/api/carreras/**").permitAll()
 
-                        // Usuarios
                         .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/usuarios", "/api/usuarios/**").permitAll()
 
-                        // Usuario protegido
-                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/id/*").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/usuarios/id/*/foto").authenticated()
-
-                        // Encuestas públicas en lectura
                         .requestMatchers(HttpMethod.GET, "/api/encuestas", "/api/encuestas/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/encuestas/*/opciones").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/encuestas/*/resultados").permitAll()
+
+                        .requestMatchers(HttpMethod.PUT, "/api/usuarios/id/*").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/id/*/foto").authenticated()
 
                         .anyRequest().authenticated()
                 )
