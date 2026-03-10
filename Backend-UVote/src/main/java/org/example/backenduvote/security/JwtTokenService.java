@@ -10,24 +10,23 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
-
 @Service
 public class JwtTokenService {
 
-    // ⚠ SOLO PARA DESARROLLO
-    // En producción, esta clave debería venir de variables de entorno o un vault.
-    private static final String SECRET = "CAMBIA_ESTA_CLAVE_SUPER_SECRETA_PARA_DEV_1234567890"; // Pruebas en Dev
-    private static final long EXPIRATION_MS = 3600000L; // 1 hora
-
     private final Key signingKey;
+    private final long expirationMs;
 
-    public JwtTokenService() {
-        this.signingKey = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+    public JwtTokenService(
+            @Value("${uvote.jwt.secret}") String secret,
+            @Value("${uvote.jwt.expiration-ms}") long expirationMs
+    ) {
+        this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.expirationMs = expirationMs;
     }
 
     public String generarToken(String subject) {
         Date ahora = new Date();
-        Date expiracion = new Date(ahora.getTime() + EXPIRATION_MS);
+        Date expiracion = new Date(ahora.getTime() + expirationMs);
 
         return Jwts.builder()
                 .subject(subject)
