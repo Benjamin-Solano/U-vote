@@ -1,45 +1,86 @@
 package org.example.backenduvote.service;
 
-import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientResponseException;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
+    private static final String SENDGRID_URL = "https://api.sendgrid.com/v3/mail/send";
 
-    private final JavaMailSender mailSender;
+    private final RestTemplate restTemplate;
 
     @Value("${app.mail.from}")
     private String from;
 
-    public EmailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
+    @Value("${sendgrid.api-key}")
+    private String sendGridApiKey;
+
+    public EmailService() {
+        this.restTemplate = new RestTemplate();
     }
 
     public void enviarCodigoVerificacion(String to, String code, int minutes) {
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
+        String subject = "U-Vote | Código de verificación";
+        String body = """
+                Tu código de verificación es: %s
 
-            helper.setFrom(from);
-            helper.setTo(to);
-            helper.setSubject("U-Vote | Código de verificación");
-            helper.setText(
-                    "Tu código de verificación es: " + code + "\n\n" +
-                            "Expira en " + minutes + " minutos.\n" +
-                            "Si no solicitaste este código, ignora este correo.",
-                    false
+                Expira en %d minutos.
+                Si no solicitaste este código, ignora este correo.
+                """.formatted(code, minutes);
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(sendGridApiKey);
+
+            Map<String, Object> payload = Map.of(
+                    "personalizations", List.of(
+                            Map.of(
+                                    "to", List.of(
+                                            Map.of("email", to)
+                                    )
+                            )
+                    ),
+                    "from", Map.of("email", from),
+                    "subject", subject,
+                    "content", List.of(
+                            Map.of(
+                                    "type", "text/plain",
+                                    "value", body
+                            )
+                    )
             );
 
-            mailSender.send(message);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    SENDGRID_URL,
+                    HttpMethod.POST,
+                    request,
+                    String.class
+            );
+
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                log.error("SendGrid respondió con estado {} para {}", response.getStatusCode(), to);
+                throw new RuntimeException("Error enviando correo con SendGrid");
+            }
+
             log.info("Correo enviado correctamente a {}", to);
 
+        } catch (RestClientResponseException e) {
+            log.error("Error SendGrid enviando correo a {}. Status: {} Body: {}",
+                    to, e.getRawStatusCode(), e.getResponseBodyAsString(), e);
+            throw new RuntimeException("Error enviando correo", e);
         } catch (Exception e) {
             log.error("Error enviando correo a {} desde {}", to, from, e);
             throw new RuntimeException("Error enviando correo", e);

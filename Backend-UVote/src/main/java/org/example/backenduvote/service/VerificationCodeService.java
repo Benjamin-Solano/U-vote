@@ -1,4 +1,3 @@
-
 package org.example.backenduvote.service;
 
 import org.example.backenduvote.model.Usuario;
@@ -57,7 +56,6 @@ public class VerificationCodeService {
 
         String code = generarCodigo6();
 
-
         usuario.setVerifCodigoHash(passwordEncoder.encode(code));
         usuario.setVerifExpiraEn(ahora.plusMinutes(otpMinutes));
         usuario.setVerifUltimoEnvio(ahora);
@@ -65,11 +63,12 @@ public class VerificationCodeService {
 
         usuarioRepository.save(usuario);
 
-
         try {
             emailService.enviarCodigoVerificacion(usuario.getCorreo(), code, otpMinutes);
+            log.info("Correo OTP enviado a {}", usuario.getCorreo());
         } catch (Exception ex) {
-            log.warn("No se pudo enviar correo OTP a {}: {}", usuario.getCorreo(), ex.getMessage());
+            log.error("No se pudo enviar correo OTP a {}", usuario.getCorreo(), ex);
+            throw new RuntimeException("No se pudo enviar el correo de verificación", ex);
         }
     }
 
