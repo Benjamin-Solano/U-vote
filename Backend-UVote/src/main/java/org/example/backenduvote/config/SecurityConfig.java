@@ -30,11 +30,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOriginPatterns(List.of(
+        config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "https://u-vote-three.vercel.app",
-                "https://u-vote-git-main-benjaminsolanos-projects.vercel.app",
-                "https://*.vercel.app"
+                "https://u-vote-git-main-benjaminsolanos-projects.vercel.app"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
