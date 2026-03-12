@@ -10,11 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @RestController
@@ -27,7 +22,6 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    // Registrar usuario
     @PostMapping
     public ResponseEntity<UsuarioResponse> registrarUsuario(
             @Valid @RequestBody UsuarioRegistroRequest request
@@ -36,13 +30,11 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
     }
 
-    // Listar usuarios
     @GetMapping
     public List<UsuarioResponse> listarUsuarios() {
         return usuarioService.listarUsuarios();
     }
 
-    // Obtener usuario por nombre
     @GetMapping("/nombre/{nombreUsuario}")
     public ResponseEntity<UsuarioResponse> getUsuarioPorNombre(
             @PathVariable String nombreUsuario
@@ -51,14 +43,11 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    // Eliminar usuario por id
     @DeleteMapping("/id/{id}")
     public ResponseEntity<Void> eliminarUsuarioPorId(@PathVariable Long id) {
         usuarioService.eliminarPorId(id);
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseEntity.noContent().build();
     }
-
-
 
     @PutMapping("/id/{id}")
     public ResponseEntity<UsuarioResponse> actualizarUsuario(
@@ -69,16 +58,4 @@ public class UsuarioController {
         UsuarioResponse actualizado = usuarioService.actualizarUsuarioSeguro(id, request, auth);
         return ResponseEntity.ok(actualizado);
     }
-
-    @PostMapping(value = "/id/{id}/foto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UsuarioResponse> subirFotoPerfil(
-            @PathVariable Long id,
-            @RequestParam("file") MultipartFile file,
-            Authentication auth
-    ) {
-        UsuarioResponse actualizado = usuarioService.actualizarFotoPerfilSeguro(id, file, auth);
-        return ResponseEntity.ok(actualizado);
-    }
-
-
 }

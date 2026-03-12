@@ -7,19 +7,14 @@ import org.example.backenduvote.model.CampusCarrera;
 import org.example.backenduvote.model.Usuario;
 import org.example.backenduvote.repository.CampusCarreraRepository;
 import org.example.backenduvote.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.*;
+import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class UsuarioService {
@@ -28,9 +23,6 @@ public class UsuarioService {
     private final CampusCarreraRepository campusCarreraRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final VerificationCodeService verificationCodeService;
-
-    @Value("${app.upload-dir:uploads}")
-    private String uploadDir;
 
     public UsuarioService(UsuarioRepository usuarioRepository,
                           CampusCarreraRepository campusCarreraRepository,
@@ -110,6 +102,18 @@ public class UsuarioService {
             usuario.setDescripcion(desc.isBlank() ? null : desc);
         }
 
+        if (request.getFotoPerfil() != null) {
+            String foto = request.getFotoPerfil().trim();
+
+            if (foto.isBlank()) {
+                usuario.setFotoPerfil(null);
+            } else {
+                validarFormatoFotoBase64(foto);
+                validarTamanoFotoBase64(foto);
+                usuario.setFotoPerfil(foto);
+            }
+        }
+
         boolean cambioCampus = request.getCampusId() != null;
         boolean cambioCarrera = request.getCarreraId() != null;
 
@@ -133,48 +137,6 @@ public class UsuarioService {
     }
 
     @Transactional
-    public UsuarioResponse actualizarFotoPerfil(Long id, MultipartFile file) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("El usuario no existe"));
-
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("El archivo está vacío");
-        }
-
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            throw new IllegalArgumentException("Solo se permiten imágenes");
-        }
-
-        long maxBytes = 2 * 1024 * 1024;
-        if (file.getSize() > maxBytes) {
-            throw new IllegalArgumentException("La imagen excede el tamaño permitido (2MB)");
-        }
-
-        String original = StringUtils.cleanPath(file.getOriginalFilename() == null ? "imagen" : file.getOriginalFilename());
-        String ext = "";
-        int dot = original.lastIndexOf('.');
-        if (dot >= 0) ext = original.substring(dot);
-
-        String filename = "u_" + id + "_" + UUID.randomUUID() + ext;
-        Path dir = Paths.get(uploadDir, "profile").toAbsolutePath().normalize();
-
-        try {
-            Files.createDirectories(dir);
-            Path target = dir.resolve(filename);
-            Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException("No se pudo guardar la imagen", e);
-        }
-
-        String publicUrl = "/api/files/profile/" + filename;
-        usuario.setFotoPerfil(publicUrl);
-        usuarioRepository.save(usuario);
-
-        return mapToResponse(usuario);
-    }
-
-    @Transactional
     public UsuarioResponse actualizarUsuarioSeguro(Long id, UsuarioUpdateRequest request, Authentication auth) {
         String correoAuth = auth.getName();
 
@@ -188,18 +150,31 @@ public class UsuarioService {
         return actualizarUsuario(id, request);
     }
 
-    @Transactional
-    public UsuarioResponse actualizarFotoPerfilSeguro(Long id, MultipartFile file, Authentication auth) {
-        String correoAuth = auth.getName();
-
-        Usuario usuarioAuth = usuarioRepository.findByCorreo(correoAuth)
-                .orElseThrow(() -> new IllegalArgumentException("El usuario no existe"));
-
-        if (!usuarioAuth.getId().equals(id)) {
-            throw new AccessDeniedException("No tienes permiso para modificar este usuario");
+    private void validarFormatoFotoBase64(String foto) {
+        if (!foto.matches("^data:image\\/(png|jpg|jpeg|webp|gif);base64,.+$")) {
+            throw new IllegalArgumentException("Formato de imagen base64 inválido");
         }
+    }
 
-        return actualizarFotoPerfil(id, file);
+    private void validarTamanoFotoBase64(String foto) {
+        try {
+            String[] parts = foto.split(",", 2);
+            if (parts.length != 2) {
+                throw new IllegalArgumentException("Formato de imagen base64 inválido");
+            }
+
+            byte[] bytes = Base64.getDecoder().decode(parts[1]);
+            long maxBytes = 2 * 1024 * 1024;
+
+            if (bytes.length > maxBytes) {
+                throw new IllegalArgumentException("La imagen excede el tamaño permitido (2MB)");
+            }
+        } catch (IllegalArgumentException e) {
+            if ("La imagen excede el tamaño permitido (2MB)".equals(e.getMessage())) {
+                throw e;
+            }
+            throw new IllegalArgumentException("Imagen base64 inválida");
+        }
     }
 
     private UsuarioResponse mapToResponse(Usuario usuario) {

@@ -7,7 +7,7 @@ public class UsuarioUpdateRequest {
     @Size(min = 3, max = 100)
     private String nombreUsuario;
 
-    @Size(max = 500)
+    // Base64 puede ser mucho más grande que 500 caracteres
     private String fotoPerfil;
 
     @Size(max = 500)
