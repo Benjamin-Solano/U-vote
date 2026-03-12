@@ -35,11 +35,10 @@ export default function Profile() {
    const [nombreUsuario, setNombreUsuario] = useState(usuario?.nombreUsuario ?? "");
    const [savingName, setSavingName] = useState(false);
 
-   // foto (upload + preview)
+   // foto (upload + preview en base64)
    const [selectedFile, setSelectedFile] = useState(null);
    const [previewUrl, setPreviewUrl] = useState("");
    const [uploadingPhoto, setUploadingPhoto] = useState(false);
-   const [photoVersion, setPhotoVersion] = useState(0);
 
    // editar descripcion
    const [editDescMode, setEditDescMode] = useState(false);
@@ -56,8 +55,6 @@ export default function Profile() {
    const [okMsg, setOkMsg] = useState("");
 
    const userId = profile?.id;
-   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
-
    const DESC_MAX = 500;
 
    const normalizeError = (err, fallback = "Ocurrió un error.") => {
@@ -77,9 +74,22 @@ export default function Profile() {
    const syncLocalUser = (newUser) => {
       try {
          localStorage.setItem("usuario", JSON.stringify(newUser));
-      } catch (_) { }
+      } catch (_) {}
    };
 
+   const fileToBase64 = (file) =>
+      new Promise((resolve, reject) => {
+         const reader = new FileReader();
+
+         reader.onload = () => resolve(reader.result);
+         reader.onerror = () => reject(new Error("No se pudo leer la imagen."));
+
+         reader.readAsDataURL(file);
+      });
+
+   const isBase64Image = (value) => {
+      return typeof value === "string" && value.startsWith("data:image/");
+   };
 
    // Parse robusto: devuelve timestamp o NaN
    const parseTime = (raw) => {
@@ -89,7 +99,6 @@ export default function Profile() {
    };
 
    const normalizeEstado = (p) => String(p?.estado ?? p?.estadoEncuesta ?? "").toLowerCase();
-
 
    const isPollPending = (p) => {
       const s = normalizeEstado(p);
@@ -115,7 +124,6 @@ export default function Profile() {
 
       return close <= Date.now();
    };
-
 
    const pollStateLabel = (p) => {
       if (isPollPending(p)) return "Pendiente";
@@ -174,15 +182,29 @@ export default function Profile() {
       run();
    }, [userId]);
 
-   // preview de imagen seleccionada
+   // preview de imagen seleccionada en base64
    useEffect(() => {
       if (!selectedFile) {
          setPreviewUrl("");
          return;
       }
-      const url = URL.createObjectURL(selectedFile);
-      setPreviewUrl(url);
-      return () => URL.revokeObjectURL(url);
+
+      let active = true;
+
+      fileToBase64(selectedFile)
+         .then((base64) => {
+            if (active) setPreviewUrl(base64);
+         })
+         .catch(() => {
+            if (active) {
+               setPreviewUrl("");
+               setError("No se pudo generar la vista previa de la imagen.");
+            }
+         });
+
+      return () => {
+         active = false;
+      };
    }, [selectedFile]);
 
    const canSaveName = useMemo(() => {
@@ -200,11 +222,13 @@ export default function Profile() {
    }, [descripcion]);
 
    const fotoSrc = useMemo(() => {
-      const path = profile?.fotoPerfil;
-      if (!path) return "";
-      const raw = path.startsWith("http") ? path : `${BACKEND_URL}${path}`;
-      return `${raw}?v=${photoVersion}`;
-   }, [profile?.fotoPerfil, BACKEND_URL, photoVersion]);
+      const foto = profile?.fotoPerfil;
+      if (!foto) return "";
+
+      if (isBase64Image(foto)) return foto;
+
+      return "";
+   }, [profile?.fotoPerfil]);
 
    const initials = useMemo(() => {
       const n = (profile?.nombreUsuario || "").trim();
@@ -316,17 +340,23 @@ export default function Profile() {
       try {
          setUploadingPhoto(true);
 
-         const res = await usersApi.uploadFotoPerfil(userId, selectedFile);
-         const updated = res?.data ?? null;
+         const base64Image = await fileToBase64(selectedFile);
 
-         if (updated) {
-            setProfile(updated);
-            syncLocalUser(updated);
-         }
+         const res = await usersApi.updateUsuario(userId, {
+            fotoPerfil: base64Image,
+         });
+
+         const updated = res?.data ?? {
+            ...profile,
+            fotoPerfil: base64Image,
+         };
+
+         setProfile(updated);
+         syncLocalUser(updated);
 
          setSelectedFile(null);
+         setPreviewUrl("");
          setOkMsg("Foto de perfil actualizada.");
-         setPhotoVersion((v) => v + 1);
       } catch (err) {
          setError(normalizeError(err, "No se pudo subir la imagen."));
       } finally {
@@ -383,7 +413,6 @@ export default function Profile() {
             {okMsg && <div className="uv-profile-advice">{okMsg}</div>}
 
             <div className="uv-profile-top">
-               {/* Foto */}
                <section className="uv-profile-box uv-photo-box">
                   <div className="uv-photo-stack">
                      <div className="uv-avatar uv-avatar-xl">
@@ -417,7 +446,10 @@ export default function Profile() {
                            <button
                               className="uv-edit-btn uv-edit-cancel"
                               type="button"
-                              onClick={() => setSelectedFile(null)}
+                              onClick={() => {
+                                 setSelectedFile(null);
+                                 setPreviewUrl("");
+                              }}
                            >
                               <FiXCircle /> Quitar
                            </button>
@@ -428,7 +460,6 @@ export default function Profile() {
                   </div>
                </section>
 
-               {/* Info */}
                <section className="uv-profile-box uv-info-box">
                   <h2>
                      <FiFileText aria-hidden="true" />
@@ -440,7 +471,6 @@ export default function Profile() {
                      <span className="uv-v">{profile?.correo ?? "-"}</span>
                   </div>
 
-                  {/* Nombre */}
                   <div className="uv-profile-row uv-profile-row-edit">
                      <span className="uv-k">Nombre de usuario</span>
 
@@ -461,7 +491,6 @@ export default function Profile() {
                                  <FiEdit3 />
                               </button>
                            </div>
-
                         </div>
                      ) : (
                         <div className="uv-edit">
@@ -493,7 +522,7 @@ export default function Profile() {
                         </div>
                      )}
                   </div>
-                  
+
                   <div className="uv-user-meta-sub">
                      {[profile?.campusNombre, profile?.carreraNombre].filter(Boolean).join(" · ") || "-"}
                   </div>
