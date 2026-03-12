@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { FiLinkedin, FiGithub } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import "./footer.css";
 
 import logo from "../../assets/U-VoteLogoW.png";
@@ -15,22 +16,42 @@ function Footer() {
       >
          <div className="container uv-footer-inner">
             <div className="uv-footer-brand">
-               <div className="uv-footer-title"> <img src={logo} alt="U-Vote" className="uv-brand-logo" /> U-Vote</div>
+               <div className="uv-footer-title">
+                  <img src={logo} alt="U-Vote" className="uv-brand-logo" />
+                  U-Vote
+               </div>
             </div>
 
             <div className="uv-footer-cols">
                <div>
                   <div className="uv-footer-h">Enlaces</div>
-                  <a className="uv-footer-link" href="/">Inicio</a>
-                  <a className="uv-footer-link" href="/about">Sobre el desarrollador</a>
-                  <a className="uv-footer-link" href="/login">Iniciar Sesión</a>
+                  <Link className="uv-footer-link" to="/">Inicio</Link>
+                  <Link className="uv-footer-link" to="/about">Sobre el desarrollador</Link>
+                  <Link className="uv-footer-link" to="/login">Iniciar Sesión</Link>
                </div>
 
                <div>
                   <div className="uv-footer-h">Síguenos</div>
                   <div className="uv-social">
-                     <a className="uv-social-btn" href="https://github.com/Benjamin-Solano" aria-label="Github"><FiGithub /></a>
-                     <a className="uv-social-btn" href="https://www.linkedin.com/in/inng-benjamin-solano/" aria-label="LinkedIn del desarrollador"><FiLinkedin /></a>
+                     <a
+                        className="uv-social-btn"
+                        href="https://github.com/Benjamin-Solano"
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="Github"
+                     >
+                        <FiGithub />
+                     </a>
+
+                     <a
+                        className="uv-social-btn"
+                        href="https://www.linkedin.com/in/inng-benjamin-solano/"
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="LinkedIn del desarrollador"
+                     >
+                        <FiLinkedin />
+                     </a>
                   </div>
                </div>
             </div>

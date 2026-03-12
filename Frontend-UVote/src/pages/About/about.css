@@ -1,0 +1,277 @@
+/* =========================================================
+   About Developer - U-Vote
+   Paleta:
+   - Fondo: #efede3
+   - Texto/base: #302f2c
+   ========================================================= */
+
+.uv-about-page {
+  min-height: calc(100vh - 140px);
+  background:
+    radial-gradient(circle at top, rgba(48, 47, 44, 0.05), transparent 30%),
+    #efede3;
+  padding: 42px 16px 56px;
+}
+
+.uv-about-wrapper {
+  max-width: 980px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.uv-about-card {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(48, 47, 44, 0.10);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow:
+    0 22px 60px rgba(48, 47, 44, 0.10),
+    0 8px 24px rgba(48, 47, 44, 0.06);
+  backdrop-filter: blur(12px);
+  position: relative;
+}
+
+.uv-about-cover {
+  height: 116px;
+  background:
+    linear-gradient(135deg, rgba(48, 47, 44, 0.96), rgba(72, 69, 63, 0.88)),
+    #302f2c;
+  position: relative;
+}
+
+.uv-about-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(255, 214, 102, 0.14), transparent 45%);
+}
+
+.uv-about-photo-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: -44px;
+  position: relative;
+  z-index: 2;
+}
+
+.uv-about-photo {
+  width: 94px;
+  height: 94px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #efede3;
+  box-shadow:
+    0 10px 24px rgba(48, 47, 44, 0.18),
+    0 0 0 1px rgba(48, 47, 44, 0.12);
+  background: #d9d3c4;
+}
+
+.uv-about-content {
+  padding: 18px 28px 30px;
+  text-align: center;
+  color: #302f2c;
+}
+
+.uv-about-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(48, 47, 44, 0.06);
+  color: rgba(48, 47, 44, 0.72);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.uv-about-name {
+  margin: 0;
+  font-size: clamp(1.85rem, 2vw, 2.2rem);
+  line-height: 1.05;
+  font-weight: 900;
+  color: #302f2c;
+}
+
+.uv-about-role {
+  margin: 8px 0 0;
+  font-size: 0.98rem;
+  color: rgba(48, 47, 44, 0.72);
+  line-height: 1.6;
+}
+
+.uv-about-divider {
+  width: 54px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(48, 47, 44, 0.08),
+    rgba(48, 47, 44, 0.38),
+    rgba(48, 47, 44, 0.08)
+  );
+  margin: 20px auto 22px;
+}
+
+.uv-about-description {
+  display: grid;
+  gap: 14px;
+  text-align: left;
+}
+
+.uv-about-description p {
+  margin: 0;
+  color: rgba(48, 47, 44, 0.82);
+  font-size: 0.98rem;
+  line-height: 1.9;
+}
+
+.uv-about-quote {
+  margin: 24px 0 0;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(48, 47, 44, 0.045);
+  border: 1px solid rgba(48, 47, 44, 0.08);
+  color: #302f2c;
+  font-size: 0.96rem;
+  font-style: italic;
+  line-height: 1.8;
+}
+
+.uv-about-quote span {
+  display: block;
+  margin-top: 8px;
+  font-style: normal;
+  font-weight: 700;
+  color: rgba(48, 47, 44, 0.72);
+}
+
+.uv-about-socials {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.uv-social-btn {
+  min-width: 138px;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(48, 47, 44, 0.12);
+  background: #302f2c;
+  color: #efede3;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 0.94rem;
+  font-weight: 700;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease,
+    color 0.22s ease;
+}
+
+.uv-social-btn svg {
+  font-size: 1rem;
+}
+
+.uv-social-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Instagram */
+.uv-social-btn--instagram:hover {
+  border-color: rgba(225, 48, 108, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(225, 48, 108, 0.16),
+    0 0 20px rgba(225, 48, 108, 0.20);
+}
+
+/* GitHub */
+.uv-social-btn--github:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 0 18px rgba(255, 255, 255, 0.12);
+}
+
+/* LinkedIn */
+.uv-social-btn--linkedin:hover {
+  border-color: rgba(10, 102, 194, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(10, 102, 194, 0.16),
+    0 0 20px rgba(10, 102, 194, 0.20);
+}
+
+.uv-social-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+  .uv-about-page {
+    padding: 28px 14px 42px;
+  }
+
+  .uv-about-card {
+    max-width: 100%;
+    border-radius: 22px;
+  }
+
+  .uv-about-cover {
+    height: 98px;
+  }
+
+  .uv-about-photo {
+    width: 84px;
+    height: 84px;
+    margin-top: 6px;
+  }
+
+  .uv-about-content {
+    padding: 16px 18px 24px;
+  }
+
+  .uv-about-name {
+    font-size: 1.65rem;
+  }
+
+  .uv-about-role {
+    font-size: 0.92rem;
+  }
+
+  .uv-about-description {
+    text-align: center;
+  }
+
+  .uv-about-description p {
+    font-size: 0.93rem;
+    line-height: 1.8;
+  }
+
+  .uv-about-quote {
+    font-size: 0.90rem;
+    padding: 14px 14px;
+  }
+
+  .uv-about-socials {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .uv-social-btn {
+    width: 100%;
+    min-width: unset;
+  }
+}
