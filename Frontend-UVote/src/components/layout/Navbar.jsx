@@ -15,14 +15,19 @@ export default function Navbar() {
 
    const linkClass = ({ isActive }) => `uv-link ${isActive ? "active" : ""}`;
 
-   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
-
    const fotoSrc = useMemo(() => {
-      const path = usuario?.fotoPerfil;
-      if (!path) return "";
-      if (path.startsWith("http://") || path.startsWith("https://")) return path;
-      return `${BACKEND_URL}${path}`;
-   }, [usuario?.fotoPerfil, BACKEND_URL]);
+      const foto = usuario?.fotoPerfil;
+      if (!foto || typeof foto !== "string") return "";
+
+      // Nuevo formato: base64 guardado en BD
+      if (foto.startsWith("data:image/")) return foto;
+
+      // Compatibilidad por si aún existe alguna URL absoluta vieja
+      if (foto.startsWith("http://") || foto.startsWith("https://")) return foto;
+
+      // Si viniera una ruta relativa antigua, no la usamos ya
+      return "";
+   }, [usuario?.fotoPerfil]);
 
    const initial = useMemo(() => {
       const n = (usuario?.nombreUsuario || "").trim();
