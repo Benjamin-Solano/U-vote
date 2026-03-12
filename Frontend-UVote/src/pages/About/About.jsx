@@ -1,5 +1,5 @@
 import React from "react";
-import "./About.css";
+import "./about.css";
 import { FaInstagram, FaGithub, FaLinkedinIn } from "react-icons/fa";
 import developerPhoto from "../../assets/desarrolladorFoto.jpeg";
 
