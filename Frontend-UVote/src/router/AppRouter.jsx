@@ -12,7 +12,7 @@ import PollExplorer from "../pages/Polls/PollExplorer";
 
 import ProtectedRoute from "../auth/ProtectedRoute";
 import Profile from "../pages/Profile/Profile";
-import About from '../pages/About/About';
+import About from "../pages/About/About";
 
 function PollsIdRedirect() {
    const location = useLocation();
@@ -25,10 +25,7 @@ export default function AppRouter() {
    return (
       <Routes>
          <Route path="/" element={<Home />} />
-         <Route
-            path="/about"
-            element={<div className="container" style={{ padding: 24 }}>About (pendiente)</div>}
-         />
+         <Route path="/about" element={<About />} />
 
          <Route path="/login" element={<Login />} />
          <Route path="/register" element={<Register />} />
@@ -46,7 +43,7 @@ export default function AppRouter() {
             <Route path="/encuestas/crear" element={<CreatePoll />} />
             <Route path="/perfil" element={<Profile />} />
          </Route>
-         <Route path="/about" element={<About />} />
+
          <Route
             path="*"
             element={<div className="container" style={{ padding: 24 }}>404 - No encontrado</div>}
