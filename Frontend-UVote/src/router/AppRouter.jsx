@@ -12,7 +12,7 @@ import PollExplorer from "../pages/Polls/PollExplorer";
 
 import ProtectedRoute from "../auth/ProtectedRoute";
 import Profile from "../pages/Profile/Profile";
-import About from './pages/about/About';
+import About from '../pages/About/About';
 
 function PollsIdRedirect() {
    const location = useLocation();
