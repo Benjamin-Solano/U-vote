@@ -710,7 +710,7 @@ export default function CreatePoll() {
                FLASH_KEY,
                JSON.stringify({
                   type: "success",
-                  msg: "Encuesta creada correctamente. Ya puedes compartirla o revisarla en detalle.",
+                  msg: "Votación creada correctamente. Ya puedes compartirla o revisarla en detalle.",
                   pollId: encuestaId,
                })
             );
@@ -725,7 +725,7 @@ export default function CreatePoll() {
          const msg =
             e?.response?.data?.message ||
             e?.response?.data?.error ||
-            "No se pudo guardar la encuesta. Revisa los campos e inténtalo de nuevo.";
+            "No se pudo guardar la votación. Revisa los campos e inténtalo de nuevo.";
          setErrorMsg(msg);
       } finally {
          setSaving(false);
@@ -803,8 +803,8 @@ export default function CreatePoll() {
                      <FiArrowLeft /> Volver
                   </button>
 
-                  <h1 className="uv-polls-title">{isEdit ? "Editar encuesta" : "Crear encuesta"}</h1>
-                  <p className="uv-muted">Define la encuesta y agrega sus opciones. (Mínimo 2)</p>
+                  <h1 className="uv-polls-title">{isEdit ? "Editar votación" : "Crear votación"}</h1>
+                  <p className="uv-muted">Define la votación y agrega sus opciones. (Mínimo 2)</p>
                </div>
 
                {successMsg ? (
@@ -819,7 +819,7 @@ export default function CreatePoll() {
                               className="uv-btn uv-btn-ghost"
                               onClick={() => navigate(`/polls/${lastPollId}`)}
                            >
-                              Ver encuesta
+                              Ver votación
                            </button>
                         </div>
                      ) : null}
@@ -889,7 +889,7 @@ export default function CreatePoll() {
                   </div>
 
                   <div className="uv-field">
-                     <Label>Inicio de la encuesta</Label>
+                     <Label>Inicio de la votación</Label>
 
                      <div className="uv-dt-row">
                         <div className="uv-dt-col">
@@ -934,13 +934,13 @@ export default function CreatePoll() {
                         className={`uv-textarea uv-textarea--fixed ${!descripcion.trim() ? "uv-invalid" : ""}`}
                         value={descripcion}
                         onChange={(e) => setDescripcion(e.target.value)}
-                        placeholder="Describe el objetivo de la encuesta..."
+                        placeholder="Describe el objetivo de la votación..."
                      />
                      {submitted && fieldErrors.descripcion ? <div className="uv-error">{fieldErrors.descripcion}</div> : null}
                   </div>
 
                   <div className="uv-field">
-                     <Label>Cierre de la encuesta</Label>
+                     <Label>Cierre de la votación</Label>
 
                      <div className="uv-dt-row">
                         <div className="uv-dt-col">
@@ -1038,12 +1038,12 @@ export default function CreatePoll() {
                      <FiInfo />
                   </div>
                   <div className="uv-academic-note-content">
-                     Si dejas <strong>Sin campus</strong> y <strong>Sin carrera</strong>, la encuesta quedará disponible
+                     Si dejas <strong>Sin campus</strong> y <strong>Sin carrera</strong>, la votación quedará disponible
                      para cualquier estudiante, sin importar su campus o carrera.
                   </div>
                </div>
 
-               <h2 className="uv-section-title">Opciones de la encuesta</h2>
+               <h2 className="uv-section-title">Opciones de la votación</h2>
 
                <motion.div key={optionsListKey} className="uv-options" variants={listVariants} initial="hidden" animate="show">
                   {options.map((opt, idx) => {
@@ -1119,11 +1119,11 @@ export default function CreatePoll() {
 
                <div className="uv-actions">
                   <button type="button" className="uv-btn uv-btn-ghost" onClick={addOption} disabled={saving}>
-                     <FiPlus /> Agregar opción a la encuesta
+                     <FiPlus /> Agregar opción a la votación
                   </button>
 
                   <button type="button" className="uv-btn uv-btn-primary" onClick={handleSubmit} disabled={!canSubmit}>
-                     <FiCheck /> {saving ? "Guardando..." : isEdit ? "Guardar cambios" : "Crear encuesta"}
+                     <FiCheck /> {saving ? "Guardando..." : isEdit ? "Guardar cambios" : "Crear votación"}
                   </button>
 
                   <button

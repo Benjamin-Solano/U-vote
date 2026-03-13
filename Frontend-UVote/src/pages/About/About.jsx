@@ -60,7 +60,7 @@ function About() {
                         aria-label="Instagram del desarrollador"
                      >
                         <FaInstagram />
-                        <span>Instagram</span>
+                        
                      </a>
 
                      <a
@@ -71,7 +71,7 @@ function About() {
                         aria-label="Github del desarrollador"
                      >
                         <FaGithub />
-                        <span>GitHub</span>
+                        
                      </a>
 
                      <a
@@ -82,7 +82,7 @@ function About() {
                         aria-label="LinkedIn del desarrollador"
                      >
                         <FaLinkedinIn />
-                        <span>LinkedIn</span>
+                     
                      </a>
                   </div>
                </div>

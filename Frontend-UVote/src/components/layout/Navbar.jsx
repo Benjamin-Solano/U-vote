@@ -73,7 +73,7 @@ export default function Navbar() {
                   className={linkClass}
                >
                   <FiPlusCircle />
-                  <span className="uv-link-label">Crear Encuesta</span>
+                  <span className="uv-link-label">Crear Votación</span>
                </NavLink>
 
                {!isAuthenticated ? (

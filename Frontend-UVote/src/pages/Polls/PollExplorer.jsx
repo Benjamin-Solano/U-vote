@@ -81,7 +81,7 @@ export default function PollExplorer() {
             if (!ignore) {
                setError(
                   err?.response?.data?.message ||
-                  "No se pudieron cargar las encuestas."
+                  "No se pudieron cargar las votaciones."
                );
                setPolls([]);
             }
@@ -422,7 +422,7 @@ export default function PollExplorer() {
             <section className="uv-explorer-content">
                <div className="uv-explorer-topbar">
                   <div>
-                     <h1>Explorar encuestas</h1>
+                     <h1>Explorar votaciones</h1>
                      <p>Busca por nombre o filtra por campus y carrera.</p>
                   </div>
 
@@ -467,7 +467,7 @@ export default function PollExplorer() {
                   </div>
                ) : filteredPolls.length === 0 ? (
                   <div className="uv-explorer-empty">
-                     <h3>No se encontraron encuestas</h3>
+                     <h3>No se encontraron votaciones</h3>
                      <p>Prueba con otro nombre o cambia los filtros seleccionados.</p>
                      <button type="button" className="uv-explorer-clear-main" onClick={clearFilters}>
                         <FiRefreshCw />
@@ -511,7 +511,7 @@ export default function PollExplorer() {
                                  <p>
                                     {poll?.descripcion?.trim()
                                        ? poll.descripcion
-                                       : "Encuesta sin descripción."}
+                                       : "Votación sin descripción."}
                                  </p>
 
                                  <div className="uv-explorer-meta">

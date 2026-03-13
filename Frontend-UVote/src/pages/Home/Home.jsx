@@ -94,7 +94,7 @@ export default function Home() {
                setPolls([]);
                setPollsError(
                   err?.response?.data?.message ||
-                  "No se pudieron cargar las encuestas."
+                  "No se pudieron cargar las votaciones."
                );
             }
          } finally {
@@ -196,9 +196,9 @@ export default function Home() {
                animate="show"
                variants={fadeUp}
             >
-               <h1 className="uv-hero-title">Crea encuestas de forma simple</h1>
+               <h1 className="uv-hero-title">Crea votaciones de forma simple</h1>
                <p className="uv-hero-sub">
-                  Diseña, comparte y analiza encuestas en minutos. Claro, rápido y sin distracciones.
+                  Diseña, comparte y analiza votaciones en minutos. Claro, rápido y sin distracciones.
                </p>
 
                <div className="uv-hero-actions">
@@ -209,7 +209,7 @@ export default function Home() {
 
                <div className="uv-hero-note">
                   <span className="uv-hero-note-dot" />
-                  Crea una encuesta, comparte el enlace y visualiza estadísticas en tiempo real.
+                  Crea una votación, comparte el enlace y visualiza estadísticas en tiempo real.
                </div>
             </motion.section>
 
@@ -221,10 +221,10 @@ export default function Home() {
                            <div>
                               <h2 className="uv-section-title uv-section-title-left">
                                  <FiPlus />
-                                 Encuestas creadas por mí
+                                 Votaciones creadas por mí
                               </h2>
                               <p className="uv-home-block-sub">
-                                 Tus encuestas más recientes.
+                                 Tus votaciones más recientes.
                               </p>
                            </div>
                         </div>
@@ -239,7 +239,7 @@ export default function Home() {
                            <div className="uv-home-alert">{pollsError}</div>
                         ) : myCreatedPolls.length === 0 ? (
                            <div className="uv-home-empty-box">
-                              Aún no has creado encuestas.
+                              Aún no has creado votaciones.
                            </div>
                         ) : (
                            <>
@@ -280,7 +280,7 @@ export default function Home() {
                            <div>
                               <h2 className="uv-section-title uv-section-title-left">
                                  <FiBarChart2 />
-                                 Encuestas en las que he votado
+                                 Votaciones en las que he votado
                               </h2>
                               <p className="uv-home-block-sub">
                                  Actividad reciente de tus participaciones.
@@ -298,7 +298,7 @@ export default function Home() {
                            <div className="uv-home-alert">{pollsError}</div>
                         ) : myVotedPolls.length === 0 ? (
                            <div className="uv-home-empty-box">
-                              Aún no has votado en encuestas.
+                              Aún no has votado en votaciones.
                            </div>
                         ) : (
                            <>
@@ -364,7 +364,7 @@ export default function Home() {
                      <div>
                         <h3 className="uv-feature-title">Creación rápida</h3>
                         <p className="uv-feature-text">
-                           Publica encuestas en minutos con una interfaz clara.
+                           Publica votaciones en minutos con una interfaz clara.
                         </p>
                      </div>
                   </motion.article>

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FiLinkedin, FiGithub } from "react-icons/fi";
+import { FaLinkedin, FaGithub, FaInstagram } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "./footer.css";
 
@@ -34,23 +34,36 @@ function Footer() {
                   <div className="uv-footer-h">Síguenos</div>
                   <div className="uv-social">
                      <a
-                        className="uv-social-btn"
-                        href="https://github.com/Benjamin-Solano"
+                        href="https://www.instagram.com/"
                         target="_blank"
                         rel="noreferrer"
-                        aria-label="Github"
+                        className="uv-social-btn"
+                        aria-label="Instagram del desarrollador"
                      >
-                        <FiGithub />
+                        <FaInstagram />
+                        
                      </a>
 
                      <a
+                        href="https://github.com/Benjamin-Solano"
+                        target="_blank"
+                        rel="noreferrer"
                         className="uv-social-btn"
+                        aria-label="Github del desarrollador"
+                     >
+                        <FaGithub />
+                        
+                     </a>
+
+                     <a
                         href="https://www.linkedin.com/in/inng-benjamin-solano/"
                         target="_blank"
                         rel="noreferrer"
+                        className="uv-social-btn"
                         aria-label="LinkedIn del desarrollador"
                      >
-                        <FiLinkedin />
+                     <FaLinkedin/>
+                     
                      </a>
                   </div>
                </div>

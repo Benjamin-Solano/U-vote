@@ -90,19 +90,19 @@ function voteFriendlyMessage(serverMsg) {
       /already\s+voted/.test(s) ||
       /voto\s+duplic/.test(s)
    ) {
-      return "Ya habías votado en esta encuesta.";
+      return "Ya habías votado en esta votación.";
    }
 
    if (/cerrad/.test(s) || /closed/.test(s) || /finaliz/.test(s)) {
-      return "Esta encuesta está cerrada. No es posible votar.";
+      return "Esta votación está cerrada. No es posible votar.";
    }
 
    if (/no\s+autoriz/.test(s) || /unauthoriz/.test(s) || /forbidden/.test(s) || /403/.test(s)) {
-      return "No tienes permisos para votar en esta encuesta.";
+      return "No tienes permisos para votar en esta votación.";
    }
 
    if (/no\s+encontr/.test(s) || /not\s+found/.test(s) || /404/.test(s)) {
-      return "No se encontró la encuesta u opción seleccionada.";
+      return "No se encontró la votación u opción seleccionada.";
    }
 
    return "No se pudo registrar el voto. Intenta de nuevo.";
@@ -344,7 +344,7 @@ export default function PollDetail() {
             )
          );
       } catch (e) {
-         setNotice({ kind: "error", text: normalizeServerMessage(e) || "Error cargando la encuesta" });
+         setNotice({ kind: "error", text: normalizeServerMessage(e) || "Error cargando la votación" });
       } finally {
          setLoading(false);
       }
@@ -383,22 +383,22 @@ export default function PollDetail() {
       }
 
       if (isOwner) {
-         setNotice({ kind: "info", text: "No puedes votar en una encuesta creada por ti." });
+         setNotice({ kind: "info", text: "No puedes votar en una votación creada por ti." });
          return;
       }
 
       if (hasVoted) {
-         setNotice({ kind: "info", text: "Ya has votado en esta encuesta." });
+         setNotice({ kind: "info", text: "Ya has votado en esta votación." });
          return;
       }
 
       if (status.key === "closed") {
-         setNotice({ kind: "error", text: "Esta encuesta está cerrada. No es posible votar." });
+         setNotice({ kind: "error", text: "Esta votación está cerrada. No es posible votar." });
          return;
       }
 
       if (status.key === "pending") {
-         setNotice({ kind: "info", text: "Esta encuesta aún no ha iniciado. Vuelve cuando llegue la fecha de apertura." });
+         setNotice({ kind: "info", text: "Esta votación aún no ha iniciado. Vuelve cuando llegue la fecha de apertura." });
          return;
       }
 
@@ -415,7 +415,7 @@ export default function PollDetail() {
                VOTE_CONFIRMATION_KEY,
                JSON.stringify({
                   encuestaId,
-                  nombreEncuesta: poll?.nombre ?? "Encuesta",
+                  nombreEncuesta: poll?.nombre ?? "Votación",
                })
             );
             navigate(`/encuestas/${encuestaId}/confirmacion-voto`, { replace: true });
@@ -461,17 +461,17 @@ export default function PollDetail() {
    function getVoteButtonText() {
       if (isOwner) return "No puedes votar";
       if (hasVoted) return "Ya has votado";
-      if (status.key === "closed") return "Encuesta cerrada";
+      if (status.key === "closed") return "Votación cerrada";
       if (status.key === "pending") return "Aún no inicia";
       if (submittingVote) return "Votando…";
       return "Votar";
    }
 
    function getVoteButtonTitle() {
-      if (isOwner) return "El creador no puede votar en su propia encuesta";
-      if (hasVoted) return "Ya registraste tu voto en esta encuesta";
-      if (status.key === "closed") return "La encuesta está cerrada";
-      if (status.key === "pending") return "La encuesta aún no ha iniciado";
+      if (isOwner) return "El creador no puede votar en su propia votación";
+      if (hasVoted) return "Ya registraste tu voto en esta votación";
+      if (status.key === "closed") return "La votación está cerrada";
+      if (status.key === "pending") return "La votación aún no ha iniciado";
       if (!isAuthenticated) return "Inicia sesión para votar";
       return "Votar";
    }
@@ -528,7 +528,7 @@ export default function PollDetail() {
                </button>
 
                <div className="uv-detail-actions">
-                  <button className="uv-btn uv-btn-share" onClick={handleShare} title="Copiar link de la encuesta">
+                  <button className="uv-btn uv-btn-share" onClick={handleShare} title="Copiar link de la votación">
                      <FiShare2 />
                      Compartir
                   </button>
@@ -553,7 +553,7 @@ export default function PollDetail() {
                )}
             </AnimatePresence>
 
-            <div className="uv-tabs" role="tablist" aria-label="Secciones de la encuesta">
+            <div className="uv-tabs" role="tablist" aria-label="Secciones de la votación">
                <button
                   type="button"
                   className={`uv-tab ${activeTab === "info" ? "active" : ""}`}
@@ -584,7 +584,7 @@ export default function PollDetail() {
                         <div className="uv-detail-cover">
                            <img
                               src={poll.imagenUrl}
-                              alt="Portada de la encuesta"
+                              alt="Portada de la votación"
                               className="uv-detail-cover-img"
                               style={{ objectPosition: coverObjectPosition(poll) }}
                               loading="lazy"
@@ -636,7 +636,7 @@ export default function PollDetail() {
                         <h2 className="uv-detail-h2">Opciones</h2>
 
                         {options.length === 0 ? (
-                           <div className="uv-polls-state">Esta encuesta no tiene opciones todavía.</div>
+                           <div className="uv-polls-state">Esta votación no tiene opciones todavía.</div>
                         ) : (
                            <div className="uv-detail-grid-2">
                               {options.map((o) => {
@@ -696,13 +696,13 @@ export default function PollDetail() {
 
                                        {isOwner && (
                                           <div className="uv-hint uv-hint-block">
-                                             Como creador, no puedes votar en tu propia encuesta.
+                                             Como creador, no puedes votar en tu propia votación.
                                           </div>
                                        )}
 
                                        {hasVoted && !isOwner && (
                                           <div className="uv-hint uv-hint-block">
-                                             Tu voto ya fue registrado en esta encuesta.
+                                             Tu voto ya fue registrado en esta votación.
                                           </div>
                                        )}
                                     </motion.div>
