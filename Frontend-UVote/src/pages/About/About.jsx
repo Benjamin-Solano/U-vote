@@ -8,20 +8,21 @@ function About() {
       <section className="uv-about-page">
          <div className="uv-about-wrapper">
             <article className="uv-about-card">
-               <div className="uv-about-cover" />
-
-               <div className="uv-about-photo-wrap">
-                  <img
-                     src={developerPhoto}
-                     alt="Desarrollador de U-Vote"
-                     className="uv-about-photo"
-                  />
+               <div className="uv-about-left">
+                  <div className="uv-about-photo-shell">
+                     <img
+                        src={developerPhoto}
+                        alt="Desarrollador de U-Vote"
+                        className="uv-about-photo"
+                     />
+                  </div>
                </div>
 
-               <div className="uv-about-content">
+               <div className="uv-about-right">
                   <span className="uv-about-badge">Desarrollador</span>
 
-                  <h1 className="uv-about-name">Benjamín Herrera</h1>
+                  <h1 className="uv-about-name">Benjamín Solano Ortega</h1>
+
                   <p className="uv-about-role">
                      Estudiante de Ingeniería en Sistemas · Full Stack Developer
                   </p>
@@ -30,19 +31,17 @@ function About() {
 
                   <div className="uv-about-description">
                      <p>
-                        Soy estudiante de Ingeniería en Sistemas con una sólida formación
-                        en desarrollo Full Stack, combinando experiencia práctica en Java,
-                        C#, .NET, React, PostgreSQL y MySQL. Me apasiona el diseño de
-                        software moderno y minimalista, la resolución de problemas complejos
-                        y la mejora continua de la experiencia de usuario.
+                        Soy estudiante de Ingeniería en Sistemas con enfoque en desarrollo
+                        Full Stack. He trabajado con tecnologías como Java, C#, .NET,
+                        React, PostgreSQL y MySQL, combinando lógica, diseño y experiencia
+                        de usuario en soluciones modernas.
                      </p>
 
                      <p>
-                        He participado en competencias de alto nivel como el International
-                        Collegiate Programming Contest (ICPC) y torneos internos de
-                        programación de la Universidad Nacional de Costa Rica, demostrando
-                        mi compromiso con la excelencia técnica y el trabajo en equipo bajo
-                        presión.
+                        Me interesa construir software con una estética limpia, buena
+                        arquitectura y una experiencia intuitiva. También he participado en
+                        competencias de programación como ICPC y torneos universitarios,
+                        fortaleciendo mi capacidad para resolver problemas bajo presión.
                      </p>
                   </div>
 
@@ -57,7 +56,7 @@ function About() {
                         href="https://www.instagram.com/"
                         target="_blank"
                         rel="noreferrer"
-                        className="uv-social-btn uv-social-btn--instagram"
+                        className="uv-social-btn"
                         aria-label="Instagram del desarrollador"
                      >
                         <FaInstagram />
@@ -68,7 +67,7 @@ function About() {
                         href="https://github.com/Benjamin-Solano"
                         target="_blank"
                         rel="noreferrer"
-                        className="uv-social-btn uv-social-btn--github"
+                        className="uv-social-btn"
                         aria-label="Github del desarrollador"
                      >
                         <FaGithub />
@@ -79,7 +78,7 @@ function About() {
                         href="https://www.linkedin.com/in/inng-benjamin-solano/"
                         target="_blank"
                         rel="noreferrer"
-                        className="uv-social-btn uv-social-btn--linkedin"
+                        className="uv-social-btn"
                         aria-label="LinkedIn del desarrollador"
                      >
                         <FaLinkedinIn />
