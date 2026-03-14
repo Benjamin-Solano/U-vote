@@ -85,7 +85,7 @@
    padding: 0 14px;
    border-radius: 999px;
    border: 1px solid rgba(48, 47, 44, 0.16);
-   background: rgba(255, 255, 255, 0.70);
+   background: rgba(255, 255, 255, 0.7);
    color: #302f2c;
    cursor: pointer;
    transition: transform 120ms ease, background 120ms ease, border-color 120ms ease,
@@ -148,7 +148,7 @@
 
 .uv-polls-scope .uv-icon-btn-danger:hover {
    background: rgba(180, 35, 24, 0.08);
-   border-color: rgba(180, 35, 24, 0.70);
+   border-color: rgba(180, 35, 24, 0.7);
    color: #8f1f15;
    transform: translateY(-1px);
 }
@@ -206,7 +206,7 @@
 .uv-polls-scope .uv-input:focus,
 .uv-polls-scope .uv-textarea:focus,
 .uv-polls-scope .uv-select:focus {
-   border-color: rgba(48, 47, 44, 0.30);
+   border-color: rgba(48, 47, 44, 0.3);
    box-shadow: 0 0 0 3px rgba(48, 47, 44, 0.08);
 }
 
@@ -222,7 +222,7 @@
 
 .uv-polls-scope .uv-invalid {
    border-color: rgba(180, 35, 24, 0.55) !important;
-   box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.10) !important;
+   box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.1) !important;
 }
 
 /* =========================================================
@@ -333,7 +333,7 @@
    height: 28px;
    min-width: 28px;
    border-radius: 999px;
-   background: rgba(48, 47, 44, 0.10);
+   background: rgba(48, 47, 44, 0.1);
    color: #302f2c;
    margin-top: 1px;
 }
@@ -383,12 +383,12 @@
 
 .uv-polls-scope .uv-badge--pending {
    border-color: rgba(245, 158, 11, 0.34);
-   background: rgba(245, 158, 11, 0.10);
+   background: rgba(245, 158, 11, 0.1);
    color: #92400e;
 }
 
 .uv-polls-scope .uv-badge--closed {
-   border-color: rgba(180, 35, 24, 0.30);
+   border-color: rgba(180, 35, 24, 0.3);
    background: rgba(180, 35, 24, 0.08);
    color: #b42318;
 }
@@ -401,7 +401,7 @@
    border-radius: 16px;
    padding: 12px 14px;
    border: 1px solid rgba(48, 47, 44, 0.12);
-   background: rgba(255, 255, 255, 0.60);
+   background: rgba(255, 255, 255, 0.6);
    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.05);
 }
 
@@ -450,7 +450,7 @@
 .uv-polls-scope .uv-cover {
    border-radius: 18px;
    border: 1px solid rgba(48, 47, 44, 0.12);
-   background: rgba(239, 237, 227, 0.30);
+   background: rgba(239, 237, 227, 0.3);
    overflow: hidden;
 }
 
@@ -505,6 +505,245 @@
    color: #302f2c;
 }
 
+.uv-polls-scope .uv-section-title-left {
+   text-align: left;
+   margin: 0 0 4px;
+}
+
+/* =========================================================
+   Sección Excel
+   ========================================================= */
+.uv-polls-scope .uv-file-section {
+   margin-top: 18px;
+   padding: 16px;
+   border-radius: 18px;
+   border: 1px solid rgba(48, 47, 44, 0.1);
+   background: rgba(255, 255, 255, 0.45);
+}
+
+.uv-polls-scope .uv-file-section-head {
+   display: flex;
+   align-items: flex-start;
+   gap: 12px;
+   margin-bottom: 12px;
+}
+
+.uv-polls-scope .uv-file-section-icon {
+   width: 42px;
+   height: 42px;
+   min-width: 42px;
+   border-radius: 14px;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   background: rgba(48, 47, 44, 0.08);
+   color: #302f2c;
+   font-size: 18px;
+}
+
+.uv-polls-scope .uv-file-section-text {
+   margin: 0;
+   color: rgba(48, 47, 44, 0.72);
+   font-size: 13px;
+   line-height: 1.45;
+}
+
+.uv-polls-scope .uv-excel-dropzone {
+   position: relative;
+   width: 100%;
+   min-height: 164px;
+   border-radius: 18px;
+   border: 1px dashed rgba(48, 47, 44, 0.22);
+   background: rgba(239, 237, 227, 0.22);
+   display: grid;
+   align-items: center;
+   cursor: pointer;
+   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+   overflow: hidden;
+}
+
+.uv-polls-scope .uv-excel-dropzone:hover {
+   transform: translateY(-1px);
+   background: rgba(239, 237, 227, 0.32);
+   border-color: rgba(48, 47, 44, 0.32);
+}
+
+.uv-polls-scope .uv-excel-dropzone.is-drag {
+   border-color: rgba(48, 47, 44, 0.55);
+   background: rgba(255, 255, 255, 0.62);
+}
+
+.uv-polls-scope .uv-excel-empty {
+   display: grid;
+   place-items: center;
+   gap: 6px;
+   text-align: center;
+   padding: 20px;
+   color: rgba(48, 47, 44, 0.76);
+}
+
+.uv-polls-scope .uv-excel-title {
+   font-size: 15px;
+   font-weight: 900;
+   color: #302f2c;
+}
+
+.uv-polls-scope .uv-excel-sub {
+   font-size: 13px;
+   color: rgba(48, 47, 44, 0.72);
+}
+
+.uv-polls-scope .uv-excel-sub2 {
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.6);
+   font-weight: 700;
+}
+
+.uv-polls-scope .uv-excel-file {
+   width: 100%;
+   padding: 16px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 14px;
+   flex-wrap: wrap;
+   box-sizing: border-box;
+}
+
+.uv-polls-scope .uv-excel-file-main {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+   min-width: 0;
+}
+
+.uv-polls-scope .uv-excel-file-icon {
+   width: 46px;
+   height: 46px;
+   min-width: 46px;
+   border-radius: 14px;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   background: rgba(48, 47, 44, 0.1);
+   color: #302f2c;
+   font-size: 20px;
+}
+
+.uv-polls-scope .uv-excel-file-meta {
+   min-width: 0;
+}
+
+.uv-polls-scope .uv-excel-file-name {
+   font-size: 14px;
+   font-weight: 900;
+   color: #302f2c;
+   word-break: break-word;
+}
+
+.uv-polls-scope .uv-excel-file-sub {
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.66);
+   margin-top: 2px;
+}
+
+.uv-polls-scope .uv-excel-file-actions {
+   display: flex;
+   gap: 8px;
+   flex-wrap: wrap;
+}
+
+.uv-polls-scope .uv-excel-note {
+   margin-top: 10px;
+   font-size: 12px;
+   line-height: 1.45;
+   color: rgba(48, 47, 44, 0.7);
+}
+
+.uv-polls-scope .uv-upload-summary {
+   margin-top: 14px;
+   padding: 14px;
+   border-radius: 16px;
+   border: 1px solid rgba(0, 135, 90, 0.16);
+   background: rgba(0, 135, 90, 0.05);
+}
+
+.uv-polls-scope .uv-upload-summary-title {
+   font-size: 13px;
+   font-weight: 900;
+   color: #067647;
+   margin-bottom: 10px;
+}
+
+.uv-polls-scope .uv-upload-summary-grid {
+   display: grid;
+   grid-template-columns: repeat(5, minmax(0, 1fr));
+   gap: 10px;
+}
+
+@media (max-width: 900px) {
+   .uv-polls-scope .uv-upload-summary-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+   }
+}
+
+@media (max-width: 560px) {
+   .uv-polls-scope .uv-upload-summary-grid {
+      grid-template-columns: 1fr;
+   }
+}
+
+.uv-polls-scope .uv-upload-chip {
+   padding: 12px;
+   border-radius: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.1);
+   background: rgba(255, 255, 255, 0.82);
+   display: flex;
+   flex-direction: column;
+   gap: 4px;
+}
+
+.uv-polls-scope .uv-upload-chip span {
+   font-size: 12px;
+   color: rgba(48, 47, 44, 0.65);
+}
+
+.uv-polls-scope .uv-upload-chip strong {
+   font-size: 18px;
+   color: #302f2c;
+   font-weight: 900;
+}
+
+.uv-polls-scope .uv-upload-invalids {
+   margin-top: 12px;
+}
+
+.uv-polls-scope .uv-upload-invalids-title {
+   font-size: 12px;
+   font-weight: 800;
+   color: #8f1f15;
+   margin-bottom: 8px;
+}
+
+.uv-polls-scope .uv-upload-invalids-list {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 8px;
+}
+
+.uv-polls-scope .uv-upload-invalid-tag {
+   display: inline-flex;
+   align-items: center;
+   padding: 6px 10px;
+   border-radius: 999px;
+   border: 1px solid rgba(180, 35, 24, 0.18);
+   background: rgba(180, 35, 24, 0.08);
+   color: #8f1f15;
+   font-size: 12px;
+   max-width: 100%;
+   word-break: break-word;
+}
+
 /* =========================================================
    Options list
    ========================================================= */
@@ -521,7 +760,7 @@
    gap: 14px;
    padding: 14px;
    border-radius: 18px;
-   border: 1px solid rgba(48, 47, 44, 0.10);
+   border: 1px solid rgba(48, 47, 44, 0.1);
    background: rgba(255, 255, 255, 0.55);
    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
    box-sizing: border-box;
@@ -661,7 +900,7 @@
    flex-wrap: wrap;
    margin-top: 16px;
    padding-top: 12px;
-   border-top: 1px solid rgba(48, 47, 44, 0.10);
+   border-top: 1px solid rgba(48, 47, 44, 0.1);
 }
 
 /* =========================================================
@@ -670,7 +909,7 @@
 .uv-polls-scope .uv-errors {
    margin-top: 12px;
    padding-top: 8px;
-   border-top: 1px solid rgba(48, 47, 44, 0.10);
+   border-top: 1px solid rgba(48, 47, 44, 0.1);
 }
 
 .uv-polls-scope .uv-error {

@@ -4,9 +4,11 @@ import org.example.backenduvote.dtos.ResultadoOpcionDetalleResponse;
 import org.example.backenduvote.dtos.VotoCreateRequest;
 import org.example.backenduvote.dtos.VotoResponse;
 import org.example.backenduvote.model.Encuesta;
+import org.example.backenduvote.model.EncuestaCorreoAutorizado;
 import org.example.backenduvote.model.Opcion;
 import org.example.backenduvote.model.Usuario;
 import org.example.backenduvote.model.Voto;
+import org.example.backenduvote.repository.EncuestaCorreoAutorizadoRepository;
 import org.example.backenduvote.repository.EncuestaRepository;
 import org.example.backenduvote.repository.OpcionRepository;
 import org.example.backenduvote.repository.UsuarioRepository;
@@ -27,15 +29,18 @@ public class VotoService {
     private final EncuestaRepository encuestaRepository;
     private final OpcionRepository opcionRepository;
     private final UsuarioRepository usuarioRepository;
+    private final EncuestaCorreoAutorizadoRepository encuestaCorreoAutorizadoRepository;
 
     public VotoService(VotoRepository votoRepository,
                        EncuestaRepository encuestaRepository,
                        OpcionRepository opcionRepository,
-                       UsuarioRepository usuarioRepository) {
+                       UsuarioRepository usuarioRepository,
+                       EncuestaCorreoAutorizadoRepository encuestaCorreoAutorizadoRepository) {
         this.votoRepository = votoRepository;
         this.encuestaRepository = encuestaRepository;
         this.opcionRepository = opcionRepository;
         this.usuarioRepository = usuarioRepository;
+        this.encuestaCorreoAutorizadoRepository = encuestaCorreoAutorizadoRepository;
     }
 
     @Transactional
@@ -45,7 +50,7 @@ public class VotoService {
         Encuesta encuesta = encuestaRepository.findById(encuestaId)
                 .orElseThrow(() -> new IllegalArgumentException("La encuesta no existe"));
 
-        var ahora = OffsetDateTime.now();
+        OffsetDateTime ahora = OffsetDateTime.now();
 
         if (encuesta.getUsuarioId() != null && encuesta.getUsuarioId().equals(usuarioActual.getId())) {
             throw new IllegalArgumentException("No puedes votar en una encuesta creada por ti");
@@ -59,7 +64,7 @@ public class VotoService {
             throw new IllegalArgumentException("La encuesta ya está cerrada");
         }
 
-        validarElegibilidad(usuarioActual, encuesta);
+        EncuestaCorreoAutorizado registroAutorizado = validarElegibilidad(usuarioActual, encuesta);
 
         Long opcionId = request.getOpcionId();
 
@@ -82,6 +87,12 @@ public class VotoService {
 
         try {
             Voto guardado = votoRepository.save(voto);
+
+            if (registroAutorizado != null && !registroAutorizado.isYaVoto()) {
+                registroAutorizado.setYaVoto(true);
+                encuestaCorreoAutorizadoRepository.save(registroAutorizado);
+            }
+
             return mapToResponse(guardado);
         } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("Ya has votado en esta encuesta");
@@ -102,15 +113,31 @@ public class VotoService {
                 .toList();
     }
 
-    private void validarElegibilidad(Usuario usuario, Encuesta encuesta) {
-        if (encuesta.getCampusCarrera() == null) {
-            return;
+    private EncuestaCorreoAutorizado validarElegibilidad(Usuario usuario, Encuesta encuesta) {
+        if (encuesta.getCampusCarrera() != null) {
+            if (usuario.getCampusCarrera() == null ||
+                    !encuesta.getCampusCarrera().getId().equals(usuario.getCampusCarrera().getId())) {
+                throw new IllegalArgumentException("No perteneces al campus y carrera requeridos para votar en esta encuesta");
+            }
         }
 
-        if (usuario.getCampusCarrera() == null ||
-                !encuesta.getCampusCarrera().getId().equals(usuario.getCampusCarrera().getId())) {
-            throw new IllegalArgumentException("No perteneces al campus y carrera requeridos para votar en esta encuesta");
+        long totalAutorizados = encuestaCorreoAutorizadoRepository.countByEncuestaId(encuesta.getId());
+
+        if (totalAutorizados == 0) {
+            return null;
         }
+
+        String correoUsuario = normalizarCorreo(usuario.getCorreo());
+
+        EncuestaCorreoAutorizado registro = encuestaCorreoAutorizadoRepository
+                .findByEncuestaIdAndCorreo(encuesta.getId(), correoUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Tu correo no está autorizado para votar en esta encuesta"));
+
+        if (registro.isYaVoto()) {
+            throw new IllegalArgumentException("Ya has votado en esta encuesta");
+        }
+
+        return registro;
     }
 
     private Usuario obtenerUsuarioAutenticado() {
@@ -122,6 +149,10 @@ public class VotoService {
         String correo = (String) auth.getPrincipal();
         return usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario autenticado no encontrado"));
+    }
+
+    private String normalizarCorreo(String correo) {
+        return correo == null ? "" : correo.trim().toLowerCase();
     }
 
     private VotoResponse mapToResponse(Voto v) {

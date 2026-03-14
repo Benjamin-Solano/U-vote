@@ -23,6 +23,10 @@ public class EncuestaResponse {
     private String usuarioNombre;
     private boolean yaVoto;
 
+    // NUEVOS
+    private boolean usaListaCorreos;
+    private long cantidadCorreosAutorizados;
+
     public EncuestaResponse() {}
 
     public EncuestaResponse(Long id,
@@ -99,5 +103,21 @@ public class EncuestaResponse {
 
     public void setYaVoto(boolean yaVoto) {
         this.yaVoto = yaVoto;
+    }
+
+    public boolean isUsaListaCorreos() {
+        return usaListaCorreos;
+    }
+
+    public void setUsaListaCorreos(boolean usaListaCorreos) {
+        this.usaListaCorreos = usaListaCorreos;
+    }
+
+    public long getCantidadCorreosAutorizados() {
+        return cantidadCorreosAutorizados;
+    }
+
+    public void setCantidadCorreosAutorizados(long cantidadCorreosAutorizados) {
+        this.cantidadCorreosAutorizados = cantidadCorreosAutorizados;
     }
 }

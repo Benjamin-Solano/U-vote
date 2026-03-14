@@ -4,11 +4,13 @@ import {
    FiBookOpen,
    FiCheck,
    FiClock,
+   FiFile,
    FiInfo,
    FiMapPin,
    FiPlus,
    FiTrash2,
    FiUpload,
+   FiUsers,
    FiX,
 } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,9 +21,11 @@ import { api } from "../../api/axios";
 import { pollsApi } from "../../api/polls.api";
 import { optionsApi } from "../../api/options.api";
 import { campusApi } from "../../api/campus.api";
+import { pollAuthorizedEmailsApi } from "../../api/pollAuthorizedEmails.api";
 import "./createPoll.css";
 
 const MAX_IMG_MB = 3;
+const MAX_EXCEL_MB = 5;
 const FLASH_KEY = "uv_create_poll_flash";
 
 const emptyOption = () => ({
@@ -129,6 +133,19 @@ function fileToDataUrl(file) {
       r.onerror = reject;
       r.readAsDataURL(file);
    });
+}
+
+function formatBytes(bytes = 0) {
+   if (!bytes) return "0 KB";
+   const kb = bytes / 1024;
+   if (kb < 1024) return `${kb.toFixed(1)} KB`;
+   return `${(kb / 1024).toFixed(2)} MB`;
+}
+
+function isExcelFile(file) {
+   if (!file) return false;
+   const name = file.name?.toLowerCase?.() || "";
+   return name.endsWith(".xlsx") || name.endsWith(".xls");
 }
 
 function Label({ children, required = false }) {
@@ -317,6 +334,12 @@ export default function CreatePoll() {
    const [optImgErrors, setOptImgErrors] = useState({});
    const [optionsListKey, setOptionsListKey] = useState(0);
 
+   const [authorizedExcelFile, setAuthorizedExcelFile] = useState(null);
+   const [authorizedExcelDrag, setAuthorizedExcelDrag] = useState(false);
+   const [authorizedExcelError, setAuthorizedExcelError] = useState("");
+   const [authorizedExcelSummary, setAuthorizedExcelSummary] = useState(null);
+   const authorizedExcelInputRef = useRef(null);
+
    const [loading, setLoading] = useState(isEdit);
    const [saving, setSaving] = useState(false);
    const [submitted, setSubmitted] = useState(false);
@@ -393,10 +416,10 @@ export default function CreatePoll() {
             if (!ignore) {
                const mapped = Array.isArray(data)
                   ? data.map((item) => ({
-                     campusCarreraId: item.campusCarreraId,
-                     carreraId: item.carreraId,
-                     carreraNombre: item.carreraNombre,
-                  }))
+                       campusCarreraId: item.campusCarreraId,
+                       carreraId: item.carreraId,
+                       carreraNombre: item.carreraNombre,
+                    }))
                   : [];
 
                setCarreraOptions(mapped);
@@ -568,6 +591,39 @@ export default function CreatePoll() {
       setOptions((prev) => [...prev, emptyOption()]);
    }
 
+   function handleAuthorizedExcelPick() {
+      if (saving) return;
+      authorizedExcelInputRef.current?.click();
+   }
+
+   function clearAuthorizedExcel() {
+      setAuthorizedExcelFile(null);
+      setAuthorizedExcelError("");
+      setAuthorizedExcelSummary(null);
+      if (authorizedExcelInputRef.current) {
+         authorizedExcelInputRef.current.value = "";
+      }
+   }
+
+   function handleAuthorizedExcelFile(file) {
+      setAuthorizedExcelError("");
+      setAuthorizedExcelSummary(null);
+
+      if (!file) return;
+
+      if (!isExcelFile(file)) {
+         setAuthorizedExcelError("El archivo debe ser de tipo .xlsx o .xls.");
+         return;
+      }
+
+      if (!clampFileSizeMB(file, MAX_EXCEL_MB)) {
+         setAuthorizedExcelError(`El archivo Excel excede ${MAX_EXCEL_MB}MB.`);
+         return;
+      }
+
+      setAuthorizedExcelFile(file);
+   }
+
    const inicioISO = useMemo(() => buildISOFromDateTime(inicioDate, inicioTime), [inicioDate, inicioTime]);
    const cierreISO = useMemo(() => buildISOFromDateTime(cierreDate, cierreTime), [cierreDate, cierreTime]);
 
@@ -643,9 +699,10 @@ export default function CreatePoll() {
 
       Object.values(optImgErrors || {}).forEach((msg) => msg && errs.push(msg));
       if (coverError) errs.push(coverError);
+      if (authorizedExcelError) errs.push(authorizedExcelError);
 
       return errs;
-   }, [fieldErrors, options, optImgErrors, coverError]);
+   }, [fieldErrors, options, optImgErrors, coverError, authorizedExcelError]);
 
    const canSubmit = !saving && !loadingCampus && !loadingCarreras && formErrors.length === 0;
 
@@ -670,6 +727,12 @@ export default function CreatePoll() {
          };
          await optionsApi.create(encuestaId, payload);
       }
+   }
+
+   async function uploadAuthorizedEmailsIfNeeded(encuestaId) {
+      if (!authorizedExcelFile) return null;
+      const res = await pollAuthorizedEmailsApi.uploadExcel(encuestaId, authorizedExcelFile);
+      return res?.data ?? null;
    }
 
    async function handleSubmit() {
@@ -705,12 +768,19 @@ export default function CreatePoll() {
 
          await replaceOptions(encuestaId);
 
+         const excelSummary = await uploadAuthorizedEmailsIfNeeded(encuestaId);
+         if (excelSummary) {
+            setAuthorizedExcelSummary(excelSummary);
+         }
+
          if (!isEdit) {
             sessionStorage.setItem(
                FLASH_KEY,
                JSON.stringify({
                   type: "success",
-                  msg: "Votación creada correctamente. Ya puedes compartirla o revisarla en detalle.",
+                  msg: excelSummary
+                     ? `Votación creada correctamente. Se cargaron ${excelSummary.totalGuardados ?? 0} correos autorizados.`
+                     : "Votación creada correctamente. Ya puedes compartirla o revisarla en detalle.",
                   pollId: encuestaId,
                })
             );
@@ -719,7 +789,11 @@ export default function CreatePoll() {
          }
 
          setLastPollId(encuestaId);
-         setSuccessMsg("Cambios guardados correctamente.");
+         setSuccessMsg(
+            excelSummary
+               ? `Cambios guardados correctamente. Se cargaron ${excelSummary.totalGuardados ?? 0} correos autorizados.`
+               : "Cambios guardados correctamente."
+         );
       } catch (e) {
          console.error("CREATE/EDIT POLL ERROR:", e?.response?.data ?? e);
          const msg =
@@ -748,6 +822,7 @@ export default function CreatePoll() {
       setCarreraOptions([]);
 
       clearCover();
+      clearAuthorizedExcel();
       setOptImgErrors({});
       setOptions([emptyOption(), emptyOption()]);
 
@@ -804,7 +879,7 @@ export default function CreatePoll() {
                   </button>
 
                   <h1 className="uv-polls-title">{isEdit ? "Editar votación" : "Crear votación"}</h1>
-                  <p className="uv-muted">Define la votación y agrega sus opciones. (Mínimo 2)</p>
+                  <p className="uv-muted">Define la votación, agrega sus opciones y, si quieres, carga un Excel de correos autorizados.</p>
                </div>
 
                {successMsg ? (
@@ -1020,8 +1095,8 @@ export default function CreatePoll() {
                               {!campusId
                                  ? "Sin carrera"
                                  : loadingCarreras
-                                    ? "Cargando carreras..."
-                                    : "Sin carrera"}
+                                 ? "Cargando carreras..."
+                                 : "Sin carrera"}
                            </option>
                            {carreraOptions.map((item) => (
                               <option key={item.campusCarreraId} value={item.carreraId}>
@@ -1041,6 +1116,151 @@ export default function CreatePoll() {
                      Si dejas <strong>Sin campus</strong> y <strong>Sin carrera</strong>, la votación quedará disponible
                      para cualquier estudiante, sin importar su campus o carrera.
                   </div>
+               </div>
+
+               <div className="uv-file-section">
+                  <div className="uv-file-section-head">
+                     <div className="uv-file-section-icon">
+                        <FiUsers />
+                     </div>
+                     <div>
+                        <h2 className="uv-section-title uv-section-title-left">Lista de correos autorizados</h2>
+                        <p className="uv-file-section-text">
+                           Puedes cargar un archivo Excel con correos institucionales permitidos para votar en esta encuesta.
+                        </p>
+                     </div>
+                  </div>
+
+                  <div
+                     className={`uv-excel-dropzone ${authorizedExcelDrag ? "is-drag" : ""} ${authorizedExcelError ? "uv-invalid" : ""}`}
+                     onClick={handleAuthorizedExcelPick}
+                     onDragOver={(e) => {
+                        e.preventDefault();
+                        if (saving) return;
+                        setAuthorizedExcelDrag(true);
+                     }}
+                     onDragLeave={() => setAuthorizedExcelDrag(false)}
+                     onDrop={(e) => {
+                        e.preventDefault();
+                        if (saving) return;
+                        setAuthorizedExcelDrag(false);
+                        handleAuthorizedExcelFile(e.dataTransfer?.files?.[0]);
+                     }}
+                     role="button"
+                     tabIndex={0}
+                  >
+                     <input
+                        ref={authorizedExcelInputRef}
+                        type="file"
+                        accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                        className="uv-hidden"
+                        onChange={(e) => {
+                           handleAuthorizedExcelFile(e.target.files?.[0]);
+                        }}
+                        disabled={saving}
+                     />
+
+                     {authorizedExcelFile ? (
+                        <div className="uv-excel-file">
+                           <div className="uv-excel-file-main">
+                              <div className="uv-excel-file-icon">
+                                 <FiFile />
+                              </div>
+
+                              <div className="uv-excel-file-meta">
+                                 <div className="uv-excel-file-name">{authorizedExcelFile.name}</div>
+                                 <div className="uv-excel-file-sub">
+                                    {formatBytes(authorizedExcelFile.size)} · Excel autorizado
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div className="uv-excel-file-actions">
+                              <button
+                                 type="button"
+                                 className="uv-btn uv-btn-ghost"
+                                 onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleAuthorizedExcelPick();
+                                 }}
+                                 disabled={saving}
+                              >
+                                 <FiUpload /> Reemplazar
+                              </button>
+
+                              <button
+                                 type="button"
+                                 className="uv-btn uv-btn-ghost"
+                                 onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    clearAuthorizedExcel();
+                                 }}
+                                 disabled={saving}
+                              >
+                                 <FiX /> Quitar
+                              </button>
+                           </div>
+                        </div>
+                     ) : (
+                        <div className="uv-excel-empty">
+                           <FiUpload />
+                           <div className="uv-excel-title">Arrastra tu archivo Excel aquí</div>
+                           <div className="uv-excel-sub">o haz click para seleccionarlo</div>
+                           <div className="uv-excel-sub2">Formatos permitidos: .xlsx y .xls · Máx {MAX_EXCEL_MB}MB</div>
+                        </div>
+                     )}
+                  </div>
+
+                  {authorizedExcelError ? <div className="uv-error">{authorizedExcelError}</div> : null}
+
+                  <div className="uv-excel-note">
+                     Si cargas este archivo, además de los filtros de campus y carrera, solo podrán votar los correos incluidos en la lista.
+                  </div>
+
+                  {authorizedExcelSummary ? (
+                     <div className="uv-upload-summary">
+                        <div className="uv-upload-summary-title">Resumen del archivo cargado</div>
+
+                        <div className="uv-upload-summary-grid">
+                           <div className="uv-upload-chip">
+                              <span>Leídos</span>
+                              <strong>{authorizedExcelSummary.totalLeidos ?? 0}</strong>
+                           </div>
+                           <div className="uv-upload-chip">
+                              <span>Válidos</span>
+                              <strong>{authorizedExcelSummary.totalValidos ?? 0}</strong>
+                           </div>
+                           <div className="uv-upload-chip">
+                              <span>Inválidos</span>
+                              <strong>{authorizedExcelSummary.totalInvalidos ?? 0}</strong>
+                           </div>
+                           <div className="uv-upload-chip">
+                              <span>Duplicados</span>
+                              <strong>{authorizedExcelSummary.totalDuplicados ?? 0}</strong>
+                           </div>
+                           <div className="uv-upload-chip">
+                              <span>Guardados</span>
+                              <strong>{authorizedExcelSummary.totalGuardados ?? 0}</strong>
+                           </div>
+                        </div>
+
+                        {Array.isArray(authorizedExcelSummary.correosInvalidos) &&
+                        authorizedExcelSummary.correosInvalidos.length > 0 ? (
+                           <div className="uv-upload-invalids">
+                              <div className="uv-upload-invalids-title">Correos inválidos detectados</div>
+                              <div className="uv-upload-invalids-list">
+                                 {authorizedExcelSummary.correosInvalidos.slice(0, 12).map((correo, index) => (
+                                    <span key={`${correo}-${index}`} className="uv-upload-invalid-tag">
+                                       {correo}
+                                    </span>
+                                 ))}
+                              </div>
+                           </div>
+                        ) : null}
+                     </div>
+                  ) : null}
                </div>
 
                <h2 className="uv-section-title">Opciones de la votación</h2>

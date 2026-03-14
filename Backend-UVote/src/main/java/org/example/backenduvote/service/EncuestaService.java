@@ -6,6 +6,7 @@ import org.example.backenduvote.model.CampusCarrera;
 import org.example.backenduvote.model.Encuesta;
 import org.example.backenduvote.model.Usuario;
 import org.example.backenduvote.repository.CampusCarreraRepository;
+import org.example.backenduvote.repository.EncuestaCorreoAutorizadoRepository;
 import org.example.backenduvote.repository.EncuestaRepository;
 import org.example.backenduvote.repository.UsuarioRepository;
 import org.example.backenduvote.repository.VotoRepository;
@@ -24,15 +25,18 @@ public class EncuestaService {
     private final UsuarioRepository usuarioRepository;
     private final CampusCarreraRepository campusCarreraRepository;
     private final VotoRepository votoRepository;
+    private final EncuestaCorreoAutorizadoRepository encuestaCorreoAutorizadoRepository;
 
     public EncuestaService(EncuestaRepository encuestaRepository,
                            UsuarioRepository usuarioRepository,
                            CampusCarreraRepository campusCarreraRepository,
-                           VotoRepository votoRepository) {
+                           VotoRepository votoRepository,
+                           EncuestaCorreoAutorizadoRepository encuestaCorreoAutorizadoRepository) {
         this.encuestaRepository = encuestaRepository;
         this.usuarioRepository = usuarioRepository;
         this.campusCarreraRepository = campusCarreraRepository;
         this.votoRepository = votoRepository;
+        this.encuestaCorreoAutorizadoRepository = encuestaCorreoAutorizadoRepository;
     }
 
     @Transactional
@@ -159,6 +163,19 @@ public class EncuestaService {
         }
     }
 
+    private String obtenerCorreoAutenticadoNullable() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getPrincipal() == null) {
+            return null;
+        }
+
+        try {
+            return ((String) auth.getPrincipal()).trim().toLowerCase();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private EncuestaResponse mapToResponse(Encuesta e) {
         CampusCarrera cc = e.getCampusCarrera();
 
@@ -182,11 +199,27 @@ public class EncuestaService {
         usuarioRepository.findById(e.getUsuarioId())
                 .ifPresent(usuario -> response.setUsuarioNombre(usuario.getNombreUsuario()));
 
+        long cantidadCorreosAutorizados = encuestaCorreoAutorizadoRepository.countByEncuestaId(e.getId());
+        boolean usaListaCorreos = cantidadCorreosAutorizados > 0;
+
+        response.setUsaListaCorreos(usaListaCorreos);
+        response.setCantidadCorreosAutorizados(cantidadCorreosAutorizados);
+
         Long usuarioActualId = obtenerUsuarioAutenticadoIdNullable();
-        response.setYaVoto(
+        String correoActual = obtenerCorreoAutenticadoNullable();
+
+        boolean yaVotoEnTablaVotos =
                 usuarioActualId != null &&
-                        votoRepository.existsByUsuarioIdAndEncuestaId(usuarioActualId, e.getId())
-        );
+                        votoRepository.existsByUsuarioIdAndEncuestaId(usuarioActualId, e.getId());
+
+        boolean yaVotoEnListaAutorizada =
+                correoActual != null &&
+                        encuestaCorreoAutorizadoRepository
+                                .findByEncuestaIdAndCorreo(e.getId(), correoActual)
+                                .map(reg -> reg.isYaVoto())
+                                .orElse(false);
+
+        response.setYaVoto(yaVotoEnTablaVotos || yaVotoEnListaAutorizada);
 
         return response;
     }
