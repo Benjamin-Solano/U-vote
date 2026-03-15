@@ -94,7 +94,6 @@ export default function PollParticipantsTab({
    const voted = rows.filter((r) => r.yaVoto).length;
    const pending = total - voted;
    const participationPct = total > 0 ? Math.round((voted * 100) / total) : 0;
-
    const usaListaExcel = total > 0;
 
    const totalFiltered = filteredRows.length;
@@ -148,7 +147,7 @@ export default function PollParticipantsTab({
                      <FiUsers />
                   </div>
 
-                  <div>
+                  <div className="uv-admin-panel-copy">
                      <div className="uv-stats-title">Participantes autorizados</div>
                      <div className="uv-participants-sub">
                         Control de correos cargados desde Excel y estado de participación.
@@ -193,7 +192,7 @@ export default function PollParticipantsTab({
                </div>
             </div>
 
-            <div className="uv-admin-kpis">
+            <div className="uv-admin-kpis uv-admin-kpis-compact">
                <div className="uv-admin-kpi">
                   <div className="uv-admin-kpi-top">
                      <span className="uv-admin-kpi-icon">
@@ -300,38 +299,67 @@ export default function PollParticipantsTab({
                   </div>
                ) : (
                   <>
-                     <table className="uv-participants-table">
-                        <thead>
-                           <tr>
-                              <th>#</th>
-                              <th>Correo institucional</th>
-                              <th>Estado</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                           {paginatedRows.map((row, index) => (
-                              <tr key={`${row.correo}-${index}`}>
-                                 <td>{startIndex + index + 1}</td>
-                                 <td>
-                                    <div className="uv-participant-mail-cell">
-                                       <span className="uv-participant-mail-main">
-                                          {highlightMatch(row.correo, query)}
-                                       </span>
-                                    </div>
-                                 </td>
-                                 <td>
-                                    <span
-                                       className={`uv-vote-state ${
-                                          row.yaVoto ? "yes" : "no"
-                                       }`}
-                                    >
-                                       {row.yaVoto ? "Ha votado" : "Pendiente"}
-                                    </span>
-                                 </td>
+                     <div className="uv-participants-table-desktop">
+                        <table className="uv-participants-table">
+                           <thead>
+                              <tr>
+                                 <th>#</th>
+                                 <th>Correo institucional</th>
+                                 <th>Estado</th>
                               </tr>
-                           ))}
-                        </tbody>
-                     </table>
+                           </thead>
+                           <tbody>
+                              {paginatedRows.map((row, index) => (
+                                 <tr key={`${row.correo}-${index}`}>
+                                    <td>{startIndex + index + 1}</td>
+                                    <td>
+                                       <div className="uv-participant-mail-cell">
+                                          <span className="uv-participant-mail-main">
+                                             {highlightMatch(row.correo, query)}
+                                          </span>
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <span
+                                          className={`uv-vote-state ${
+                                             row.yaVoto ? "yes" : "no"
+                                          }`}
+                                       >
+                                          {row.yaVoto ? "Ha votado" : "Pendiente"}
+                                       </span>
+                                    </td>
+                                 </tr>
+                              ))}
+                           </tbody>
+                        </table>
+                     </div>
+
+                     <div className="uv-participants-mobile-list">
+                        {paginatedRows.map((row, index) => (
+                           <div
+                              className="uv-participant-mobile-card"
+                              key={`${row.correo}-mobile-${index}`}
+                           >
+                              <div className="uv-participant-mobile-top">
+                                 <div className="uv-participant-mobile-index">
+                                    #{startIndex + index + 1}
+                                 </div>
+
+                                 <span
+                                    className={`uv-vote-state ${
+                                       row.yaVoto ? "yes" : "no"
+                                    }`}
+                                 >
+                                    {row.yaVoto ? "Ha votado" : "Pendiente"}
+                                 </span>
+                              </div>
+
+                              <div className="uv-participant-mobile-mail">
+                                 {highlightMatch(row.correo, query)}
+                              </div>
+                           </div>
+                        ))}
+                     </div>
 
                      <div className="uv-pagination">
                         <div className="uv-pagination-info">

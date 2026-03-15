@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FiArrowLeft, FiShare2 } from "react-icons/fi";
+import {
+   FiArrowLeft,
+   FiBarChart2,
+   FiInfo,
+   FiShare2,
+   FiUsers,
+} from "react-icons/fi";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { pollsApi } from "../../api/polls.api";
@@ -472,50 +478,56 @@ export default function PollDetail() {
                )}
             </AnimatePresence>
 
-            <div className="uv-tabs" role="tablist" aria-label="Secciones de la votación">
-               <button
-                  type="button"
-                  className={`uv-tab ${activeTab === "info" ? "active" : ""}`}
-                  onClick={() => setActiveTab("info")}
-                  role="tab"
-                  aria-selected={activeTab === "info"}
-               >
-                  Información
-               </button>
-
-               {canViewStats && (
+            <div className="uv-tabs-shell">
+               <div className="uv-tabs" role="tablist" aria-label="Secciones de la votación">
                   <button
                      type="button"
-                     className={`uv-tab ${activeTab === "stats" ? "active" : ""}`}
-                     onClick={() => setActiveTab("stats")}
+                     className={`uv-tab ${activeTab === "info" ? "active" : ""}`}
+                     onClick={() => setActiveTab("info")}
                      role="tab"
-                     aria-selected={activeTab === "stats"}
+                     aria-selected={activeTab === "info"}
                   >
-                     Estadísticas
+                     <FiInfo />
+                     <span>Información</span>
                   </button>
-               )}
 
-               {canViewStats && (
+                  {canViewStats && (
+                     <button
+                        type="button"
+                        className={`uv-tab ${activeTab === "stats" ? "active" : ""}`}
+                        onClick={() => setActiveTab("stats")}
+                        role="tab"
+                        aria-selected={activeTab === "stats"}
+                     >
+                        <FiBarChart2 />
+                        <span>Estadísticas</span>
+                     </button>
+                  )}
+
+                  {canViewStats && (
+                     <button
+                        type="button"
+                        className={`uv-tab ${activeTab === "participants" ? "active" : ""}`}
+                        onClick={() => setActiveTab("participants")}
+                        role="tab"
+                        aria-selected={activeTab === "participants"}
+                     >
+                        <FiUsers />
+                        <span>Participantes</span>
+                     </button>
+                  )}
+
                   <button
                      type="button"
-                     className={`uv-tab ${activeTab === "participants" ? "active" : ""}`}
-                     onClick={() => setActiveTab("participants")}
+                     className={`uv-tab ${activeTab === "share" ? "active" : ""}`}
+                     onClick={() => setActiveTab("share")}
                      role="tab"
-                     aria-selected={activeTab === "participants"}
+                     aria-selected={activeTab === "share"}
                   >
-                     Participantes autorizados
+                     <FiShare2 />
+                     <span>Compartir</span>
                   </button>
-               )}
-
-               <button
-                  type="button"
-                  className={`uv-tab ${activeTab === "share" ? "active" : ""}`}
-                  onClick={() => setActiveTab("share")}
-                  role="tab"
-                  aria-selected={activeTab === "share"}
-               >
-                  Compartir
-               </button>
+               </div>
             </div>
 
             <AnimatePresence mode="wait">

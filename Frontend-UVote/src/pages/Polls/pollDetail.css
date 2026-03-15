@@ -1,3 +1,19 @@
+/* =========================================================
+   PollDetail - U-Vote
+   Orden:
+   1) Layout base
+   2) Botones / alerts
+   3) Tabs
+   4) Información general
+   5) Estadísticas / charts
+   6) Participantes
+   7) Compartir
+   8) Responsive
+   ========================================================= */
+
+/* =========================================================
+   1) Layout base
+   ========================================================= */
 .uv-polldetail-scope {
    padding-top: 34px;
 }
@@ -34,9 +50,13 @@
    align-items: center;
 }
 
+/* =========================================================
+   2) Botones / alerts / states
+   ========================================================= */
 .uv-polldetail-scope .uv-btn {
    display: inline-flex;
    align-items: center;
+   justify-content: center;
    gap: 8px;
    padding: 10px 14px;
    border-radius: 14px;
@@ -44,7 +64,12 @@
    background: rgba(255, 255, 255, 0.55);
    color: #302f2c;
    cursor: pointer;
-   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, box-shadow 120ms ease, color 120ms ease;
+   transition:
+      transform 120ms ease,
+      background 120ms ease,
+      border-color 120ms ease,
+      box-shadow 120ms ease,
+      color 120ms ease;
 }
 
 .uv-polldetail-scope .uv-btn:hover {
@@ -77,6 +102,15 @@
 
 .uv-polldetail-scope .uv-btn-share {
    border-style: dashed;
+}
+
+.uv-polldetail-scope .uv-btn-soft {
+   background: rgba(239, 237, 227, 0.6);
+   border-color: rgba(48, 47, 44, 0.12);
+}
+
+.uv-polldetail-scope .uv-btn-soft:hover {
+   background: rgba(239, 237, 227, 0.86);
 }
 
 .uv-polldetail-scope .uv-vote-btn-disabled-msg {
@@ -123,47 +157,143 @@
    color: #302f2c;
 }
 
-.uv-polldetail-scope .uv-tabs {
-   display: flex;
-   gap: 8px;
-   margin-top: 12px;
-   padding-top: 2px;
+/* =========================================================
+   3) Tabs redondeados con colores e iconos
+   ========================================================= */
+.uv-polldetail-scope .uv-tabs-shell {
+   margin-top: 14px;
+   padding-top: 4px;
    border-bottom: 1px solid rgba(48, 47, 44, 0.12);
-   flex-wrap: wrap;
+   overflow-x: auto;
+   overflow-y: hidden;
+   scrollbar-width: thin;
+}
+
+.uv-polldetail-scope .uv-tabs-shell::-webkit-scrollbar {
+   height: 6px;
+}
+
+.uv-polldetail-scope .uv-tabs-shell::-webkit-scrollbar-thumb {
+   background: rgba(48, 47, 44, 0.18);
+   border-radius: 999px;
+}
+
+.uv-polldetail-scope .uv-tabs {
+   display: inline-flex;
+   align-items: flex-end;
+   gap: 10px;
+   min-width: max-content;
+   padding-bottom: 10px;
+   border-bottom: none;
 }
 
 .uv-polldetail-scope .uv-tab {
-   padding: 10px 14px;
-   background: transparent;
-   border: none;
-   font-weight: 800;
-   color: rgba(48, 47, 44, 0.62);
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   gap: 8px;
+   min-height: 48px;
+   padding: 0 18px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   border-radius: 18px 18px 0 0;
+   background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 243, 236, 0.98) 100%);
+   color: rgba(48, 47, 44, 0.7);
+   font-weight: 900;
    cursor: pointer;
    position: relative;
-   border-radius: 12px 12px 0 0;
-   transition: color 120ms ease, background 120ms ease;
+   white-space: nowrap;
+   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.035);
+   transition:
+      transform 120ms ease,
+      background 120ms ease,
+      color 120ms ease,
+      border-color 120ms ease,
+      box-shadow 120ms ease;
+}
+
+.uv-polldetail-scope .uv-tab svg {
+   font-size: 15px;
+   flex-shrink: 0;
+   opacity: 0.95;
 }
 
 .uv-polldetail-scope .uv-tab:hover {
-   background: rgba(255, 255, 255, 0.35);
-   color: rgba(48, 47, 44, 0.82);
+   transform: translateY(-1px);
+   color: #302f2c;
+   border-color: rgba(48, 47, 44, 0.2);
+   box-shadow: 0 10px 18px rgba(48, 47, 44, 0.08);
 }
 
+/* tonos inactivos */
+.uv-polldetail-scope .uv-tab:nth-child(1) {
+   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(245, 243, 236, 0.98) 100%);
+}
+
+.uv-polldetail-scope .uv-tab:nth-child(2) {
+   background: linear-gradient(180deg, rgba(245, 247, 250, 0.96) 0%, rgba(232, 236, 240, 0.98) 100%);
+}
+
+.uv-polldetail-scope .uv-tab:nth-child(3) {
+   background: linear-gradient(180deg, rgba(245, 248, 243, 0.96) 0%, rgba(233, 239, 229, 0.98) 100%);
+}
+
+.uv-polldetail-scope .uv-tab:nth-child(4) {
+   background: linear-gradient(180deg, rgba(248, 244, 239, 0.96) 0%, rgba(239, 231, 222, 0.98) 100%);
+}
+
+/* activo general */
 .uv-polldetail-scope .uv-tab.active {
-   color: #302f2c;
+   color: #efede3;
+   border-color: transparent;
+   box-shadow: 0 12px 22px rgba(48, 47, 44, 0.16);
+}
+
+.uv-polldetail-scope .uv-tab.active svg {
+   opacity: 1;
 }
 
 .uv-polldetail-scope .uv-tab.active::after {
    content: "";
    position: absolute;
-   left: 10px;
-   right: 10px;
-   bottom: -1px;
-   height: 2px;
-   background: #302f2c;
-   border-radius: 2px;
+   left: 0;
+   right: 0;
+   bottom: -11px;
+   height: 3px;
+   border-radius: 999px;
 }
 
+/* activo por tipo */
+.uv-polldetail-scope .uv-tab:nth-child(1).active {
+   background: linear-gradient(180deg, #302f2c 0%, #242321 100%);
+}
+.uv-polldetail-scope .uv-tab:nth-child(1).active::after {
+   background: #302f2c;
+}
+
+.uv-polldetail-scope .uv-tab:nth-child(2).active {
+   background: linear-gradient(180deg, #5f6f7a 0%, #4d5a63 100%);
+}
+.uv-polldetail-scope .uv-tab:nth-child(2).active::after {
+   background: #5f6f7a;
+}
+
+.uv-polldetail-scope .uv-tab:nth-child(3).active {
+   background: linear-gradient(180deg, #6f7d60 0%, #5d684f 100%);
+}
+.uv-polldetail-scope .uv-tab:nth-child(3).active::after {
+   background: #6f7d60;
+}
+
+.uv-polldetail-scope .uv-tab:nth-child(4).active {
+   background: linear-gradient(180deg, #8a6f5a 0%, #735c4b 100%);
+}
+.uv-polldetail-scope .uv-tab:nth-child(4).active::after {
+   background: #8a6f5a;
+}
+
+/* =========================================================
+   4) Información general
+   ========================================================= */
 .uv-polldetail-scope .uv-detail-cover {
    margin-top: 14px;
    width: 100%;
@@ -237,12 +367,6 @@
    gap: 12px;
 }
 
-@media (max-width: 860px) {
-   .uv-polldetail-scope .uv-detail-meta-grid {
-      grid-template-columns: 1fr;
-   }
-}
-
 .uv-polldetail-scope .uv-detail-meta-item {
    border: 1px solid rgba(48, 47, 44, 0.1);
    border-radius: 14px;
@@ -313,12 +437,6 @@
    margin-top: 10px;
 }
 
-@media (max-width: 860px) {
-   .uv-polldetail-scope .uv-detail-grid-2 {
-      grid-template-columns: 1fr;
-   }
-}
-
 .uv-polldetail-scope .uv-option-media {
    margin-top: 10px;
    display: grid;
@@ -345,6 +463,9 @@
    margin-top: 10px;
 }
 
+/* =========================================================
+   5) Estadísticas / charts
+   ========================================================= */
 .uv-polldetail-scope .uv-stats-head {
    display: flex;
    justify-content: space-between;
@@ -533,7 +654,9 @@
    color: rgba(48, 47, 44, 0.8);
 }
 
-/* participantes */
+/* =========================================================
+   6) Participantes
+   ========================================================= */
 .uv-polldetail-scope .uv-participants-head {
    display: flex;
    justify-content: space-between;
@@ -559,12 +682,6 @@
    grid-template-columns: repeat(3, minmax(0, 1fr));
    gap: 10px;
    margin-top: 14px;
-}
-
-@media (max-width: 760px) {
-   .uv-polldetail-scope .uv-participants-summary {
-      grid-template-columns: 1fr;
-   }
 }
 
 .uv-polldetail-scope .uv-participant-chip {
@@ -594,12 +711,6 @@
    display: grid;
    grid-template-columns: minmax(220px, 1fr) 220px 280px;
    gap: 10px;
-}
-
-@media (max-width: 920px) {
-   .uv-polldetail-scope .uv-participants-toolbar {
-      grid-template-columns: 1fr;
-   }
 }
 
 .uv-polldetail-scope .uv-participants-search {
@@ -633,12 +744,39 @@
    font-size: 14px;
 }
 
+.uv-polldetail-scope .uv-participants-meta {
+   margin-top: 14px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 12px;
+   flex-wrap: wrap;
+}
+
+.uv-polldetail-scope .uv-participants-meta-text {
+   font-size: 13px;
+   color: rgba(48, 47, 44, 0.72);
+   font-weight: 700;
+}
+
+.uv-polldetail-scope .uv-meta-query {
+   color: #302f2c;
+   font-weight: 900;
+}
+
 .uv-polldetail-scope .uv-participants-table-wrap {
    margin-top: 14px;
    overflow: auto;
    border: 1px solid rgba(48, 47, 44, 0.1);
    border-radius: 16px;
    background: rgba(255, 255, 255, 0.55);
+}
+
+.uv-polldetail-scope .uv-participants-table-wrap-admin {
+   margin-top: 16px;
+   border-radius: 18px;
+   background: rgba(255, 255, 255, 0.7);
+   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .uv-polldetail-scope .uv-participants-table {
@@ -654,6 +792,7 @@
    border-bottom: 1px solid rgba(48, 47, 44, 0.08);
    font-size: 14px;
    color: #302f2c;
+   vertical-align: middle;
 }
 
 .uv-polldetail-scope .uv-participants-table thead th {
@@ -664,15 +803,31 @@
    z-index: 1;
 }
 
+.uv-polldetail-scope .uv-participants-table tbody tr {
+   transition: background 120ms ease;
+}
+
 .uv-polldetail-scope .uv-participants-table tbody tr:hover {
-   background: rgba(255, 255, 255, 0.7);
+   background: rgba(239, 237, 227, 0.32);
+}
+
+.uv-polldetail-scope .uv-participant-mail-cell {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+}
+
+.uv-polldetail-scope .uv-participant-mail-main {
+   font-weight: 800;
+   color: #302f2c;
+   word-break: break-word;
 }
 
 .uv-polldetail-scope .uv-vote-state {
    display: inline-flex;
    align-items: center;
    justify-content: center;
-   min-width: 54px;
+   min-width: 108px;
    padding: 6px 10px;
    border-radius: 999px;
    font-size: 12px;
@@ -691,10 +846,6 @@
    color: rgba(130, 92, 0, 0.95);
 }
 
-
-/* =========================================================
-   Admin panel - participantes
-   ========================================================= */
 .uv-polldetail-scope .uv-admin-panel {
    background: rgba(255, 255, 255, 0.62);
 }
@@ -732,18 +883,6 @@
    display: grid;
    grid-template-columns: repeat(4, minmax(0, 1fr));
    gap: 12px;
-}
-
-@media (max-width: 980px) {
-   .uv-polldetail-scope .uv-admin-kpis {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-   }
-}
-
-@media (max-width: 640px) {
-   .uv-polldetail-scope .uv-admin-kpis {
-      grid-template-columns: 1fr;
-   }
 }
 
 .uv-polldetail-scope .uv-admin-kpi {
@@ -803,78 +942,6 @@
    font-weight: 900;
 }
 
-.uv-polldetail-scope .uv-participants-toolbar-admin {
-   margin-top: 16px;
-}
-
-.uv-polldetail-scope .uv-participants-table-wrap-admin {
-   margin-top: 16px;
-   border-radius: 18px;
-   background: rgba(255, 255, 255, 0.7);
-   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.uv-polldetail-scope .uv-participant-mail-cell {
-   display: flex;
-   align-items: center;
-   gap: 10px;
-}
-
-.uv-polldetail-scope .uv-participant-mail-main {
-   font-weight: 800;
-   color: #302f2c;
-   word-break: break-word;
-}
-
-.uv-polldetail-scope .uv-participants-table tbody td {
-   vertical-align: middle;
-}
-
-.uv-polldetail-scope .uv-participants-table tbody tr {
-   transition: background 120ms ease;
-}
-
-.uv-polldetail-scope .uv-participants-table tbody tr:hover {
-   background: rgba(239, 237, 227, 0.32);
-}
-
-.uv-polldetail-scope .uv-vote-state {
-   min-width: 108px;
-   justify-content: center;
-}
-
-/* =========================================================
-   Participantes - filtros avanzados y paginación
-   ========================================================= */
-.uv-polldetail-scope .uv-participants-meta {
-   margin-top: 14px;
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   gap: 12px;
-   flex-wrap: wrap;
-}
-
-.uv-polldetail-scope .uv-participants-meta-text {
-   font-size: 13px;
-   color: rgba(48, 47, 44, 0.72);
-   font-weight: 700;
-}
-
-.uv-polldetail-scope .uv-meta-query {
-   color: #302f2c;
-   font-weight: 900;
-}
-
-.uv-polldetail-scope .uv-btn-soft {
-   background: rgba(239, 237, 227, 0.6);
-   border-color: rgba(48, 47, 44, 0.12);
-}
-
-.uv-polldetail-scope .uv-btn-soft:hover {
-   background: rgba(239, 237, 227, 0.86);
-}
-
 .uv-polldetail-scope .uv-highlight {
    background: rgba(255, 214, 102, 0.42);
    color: #302f2c;
@@ -907,48 +974,6 @@
    flex-wrap: wrap;
 }
 
-/* =========================================================
-   Badge de lista Excel
-   ========================================================= */
-.uv-polldetail-scope .uv-participants-badges {
-   display: flex;
-   align-items: center;
-   gap: 8px;
-   flex-wrap: wrap;
-   margin-top: 10px;
-}
-
-.uv-polldetail-scope .uv-participants-badge {
-   display: inline-flex;
-   align-items: center;
-   justify-content: center;
-   padding: 6px 10px;
-   border-radius: 999px;
-   font-size: 12px;
-   font-weight: 900;
-   line-height: 1;
-   border: 1px solid rgba(48, 47, 44, 0.12);
-}
-
-.uv-polldetail-scope .uv-participants-badge.active {
-   background: rgba(60, 170, 120, 0.12);
-   border-color: rgba(60, 170, 120, 0.34);
-   color: rgba(25, 110, 70, 0.95);
-}
-
-.uv-polldetail-scope .uv-participants-badge.inactive {
-   background: rgba(180, 35, 24, 0.08);
-   border-color: rgba(180, 35, 24, 0.2);
-   color: #8f1f15;
-}
-
-.uv-polldetail-scope .uv-participants-badge.soft {
-   background: rgba(239, 237, 227, 0.7);
-   border-color: rgba(48, 47, 44, 0.1);
-   color: rgba(48, 47, 44, 0.78);
-}/* =========================================================
-   Badge de lista Excel
-   ========================================================= */
 .uv-polldetail-scope .uv-participants-badges {
    display: flex;
    align-items: center;
@@ -988,7 +1013,7 @@
 }
 
 /* =========================================================
-   Share tab
+   7) Compartir
    ========================================================= */
 .uv-polldetail-scope .uv-share-panel {
    background: rgba(255, 255, 255, 0.62);
@@ -1028,12 +1053,6 @@
    grid-template-columns: 380px 1fr;
    gap: 18px;
    align-items: start;
-}
-
-@media (max-width: 920px) {
-   .uv-polldetail-scope .uv-share-grid {
-      grid-template-columns: 1fr;
-   }
 }
 
 .uv-polldetail-scope .uv-share-qr-card {
@@ -1146,4 +1165,615 @@
    font-size: 13px;
    line-height: 1.5;
    color: rgba(48, 47, 44, 0.72);
+}
+
+/* =========================================================
+   8. Responsive tabs - 2 columnas en móvil
+   ========================================================= */
+@media (max-width: 680px) {
+   .uv-polldetail-scope .uv-detail-card {
+      padding: 14px;
+   }
+
+   .uv-polldetail-scope .uv-polls-head {
+      flex-direction: column;
+      align-items: stretch;
+   }
+
+   .uv-polldetail-scope .uv-detail-actions {
+      width: 100%;
+      justify-content: stretch;
+   }
+
+   .uv-polldetail-scope .uv-detail-actions .uv-btn {
+      width: 100%;
+      justify-content: center;
+   }
+
+   .uv-polldetail-scope .uv-tabs-shell {
+      overflow: visible;
+      padding-top: 2px;
+      padding-bottom: 2px;
+   }
+
+   .uv-polldetail-scope .uv-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      min-width: 100%;
+      width: 100%;
+      padding-bottom: 10px;
+   }
+
+   .uv-polldetail-scope .uv-tab {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      gap: 6px;
+   }
+
+   .uv-polldetail-scope .uv-tab svg {
+      font-size: 14px;
+   }
+
+   .uv-polldetail-scope .uv-tab.active::after {
+      display: none;
+   }
+
+   .uv-polldetail-scope .uv-share-actions,
+   .uv-polldetail-scope .uv-participants-export,
+   .uv-polldetail-scope .uv-pagination-actions {
+      width: 100%;
+   }
+
+   .uv-polldetail-scope .uv-share-actions .uv-btn,
+   .uv-polldetail-scope .uv-participants-export .uv-btn,
+   .uv-polldetail-scope .uv-pagination-actions .uv-btn {
+      flex: 1 1 100%;
+      justify-content: center;
+   }
+}
+
+@media (max-width: 520px) {
+   .uv-polldetail-scope.uv-detail-wrap {
+      padding: 22px 10px 140px;
+   }
+
+   .uv-polldetail-scope .uv-detail-card {
+      padding: 12px;
+      border-radius: 16px;
+   }
+
+   .uv-polldetail-scope .uv-detail-cover {
+      height: 220px;
+      border-radius: 14px;
+   }
+
+   .uv-polldetail-scope .uv-poll-card,
+   .uv-polldetail-scope .uv-detail-meta-item,
+   .uv-polldetail-scope .uv-admin-kpi,
+   .uv-polldetail-scope .uv-share-link-card,
+   .uv-polldetail-scope .uv-share-note,
+   .uv-polldetail-scope .uv-share-qr-card {
+      padding: 12px;
+      border-radius: 14px;
+   }
+
+   .uv-polldetail-scope .uv-poll-card-top,
+   .uv-polldetail-scope .uv-stats-head,
+   .uv-polldetail-scope .uv-admin-panel-head,
+   .uv-polldetail-scope .uv-share-head,
+   .uv-polldetail-scope .uv-participants-meta,
+   .uv-polldetail-scope .uv-pagination {
+      flex-direction: column;
+      align-items: stretch;
+   }
+
+   .uv-polldetail-scope .uv-poll-name-lg {
+      font-size: 16px;
+   }
+
+   .uv-polldetail-scope .uv-poll-name {
+      font-size: 15px;
+   }
+
+   .uv-polldetail-scope .uv-result-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+   }
+
+   .uv-polldetail-scope .uv-chart-box {
+      padding: 10px;
+      border-radius: 14px;
+   }
+
+   .uv-polldetail-scope .uv-chart-empty {
+      min-height: 180px;
+      padding: 12px;
+      text-align: center;
+   }
+
+   .uv-polldetail-scope .uv-share-qr-inner {
+      width: 240px;
+      height: 240px;
+      padding: 16px;
+   }
+
+   .uv-polldetail-scope .uv-share-qr-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+   }
+
+   .uv-polldetail-scope .uv-share-qr-caption {
+      font-size: 12px;
+      max-width: 100%;
+   }
+
+   .uv-polldetail-scope .uv-participants-table {
+      min-width: 560px;
+   }
+}
+
+@media (max-width: 430px) {
+   .uv-polldetail-scope .uv-tabs {
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+   }
+
+   .uv-polldetail-scope .uv-tab {
+      min-height: 42px;
+      padding: 0 10px;
+      font-size: 12px;
+      gap: 6px;
+   }
+
+   .uv-polldetail-scope .uv-tab span {
+      max-width: none;
+      overflow: visible;
+      text-overflow: unset;
+      white-space: nowrap;
+   }
+
+   .uv-polldetail-scope .uv-btn {
+      width: 100%;
+   }
+
+   .uv-polldetail-scope .uv-pills,
+   .uv-polldetail-scope .uv-participants-badge,
+   .uv-polldetail-scope .uv-vote-state {
+      font-size: 11px;
+   }
+
+   .uv-polldetail-scope .uv-participants-search,
+   .uv-polldetail-scope .uv-participants-select {
+      height: 40px;
+   }
+
+   .uv-polldetail-scope .uv-participants-table th,
+   .uv-polldetail-scope .uv-participants-table td {
+      padding: 10px 12px;
+      font-size: 13px;
+   }
+
+   .uv-polldetail-scope .uv-admin-kpi strong {
+      font-size: 22px;
+   }
+}
+
+@media (max-width: 380px) {
+   .uv-polldetail-scope .uv-tabs {
+      grid-template-columns: 1fr;
+      gap: 8px;
+   }
+
+   .uv-polldetail-scope .uv-tab {
+      min-height: 40px;
+      padding: 0 10px;
+      border-radius: 14px;
+      justify-content: flex-start;
+   }
+
+   .uv-polldetail-scope .uv-detail-cover {
+      height: 190px;
+   }
+
+   .uv-polldetail-scope .uv-share-qr-inner {
+      width: 210px;
+      height: 210px;
+      padding: 14px;
+   }
+
+   .uv-polldetail-scope .uv-share-qr-logo {
+      width: 46px;
+      height: 46px;
+      padding: 7px;
+   }
+
+   .uv-polldetail-scope .uv-poll-desc,
+   .uv-polldetail-scope .uv-poll-meta-row,
+   .uv-polldetail-scope .uv-participants-sub,
+   .uv-polldetail-scope .uv-share-note,
+   .uv-polldetail-scope .uv-share-link-box {
+      font-size: 12px;
+   }
+}
+
+
+/* =========================================================
+   Ajustes extra responsive - tabs Participantes / Compartir
+   ========================================================= */
+
+@media (max-width: 560px) {
+   .uv-polldetail-scope .uv-tabs {
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+   }
+
+   .uv-polldetail-scope .uv-tab {
+      width: 100%;
+      min-width: 0;
+      padding: 0 10px;
+      min-height: 44px;
+      border-radius: 14px;
+      justify-content: center;
+   }
+
+   .uv-polldetail-scope .uv-tab span {
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+   }
+
+   /* PARTICIPANTES */
+   .uv-polldetail-scope .uv-admin-panel-head,
+   .uv-polldetail-scope .uv-admin-panel-title-wrap,
+   .uv-polldetail-scope .uv-participants-meta,
+   .uv-polldetail-scope .uv-pagination {
+      flex-direction: column;
+      align-items: stretch;
+   }
+
+   .uv-polldetail-scope .uv-admin-panel-title-wrap {
+      gap: 10px;
+   }
+
+   .uv-polldetail-scope .uv-participants-export {
+      display: grid;
+      grid-template-columns: 1fr;
+      width: 100%;
+      gap: 8px;
+   }
+
+   .uv-polldetail-scope .uv-participants-export .uv-btn {
+      width: 100%;
+   }
+
+   .uv-polldetail-scope .uv-admin-kpis {
+      grid-template-columns: 1fr;
+      gap: 10px;
+   }
+
+   .uv-polldetail-scope .uv-participants-toolbar,
+   .uv-polldetail-scope .uv-participants-toolbar-admin {
+      grid-template-columns: 1fr;
+      gap: 8px;
+   }
+
+   .uv-polldetail-scope .uv-participants-search,
+   .uv-polldetail-scope .uv-participants-select {
+      width: 100%;
+      min-width: 0;
+   }
+
+   .uv-polldetail-scope .uv-participants-meta-text {
+      line-height: 1.4;
+   }
+
+   .uv-polldetail-scope .uv-pagination-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      width: 100%;
+      gap: 8px;
+   }
+
+   .uv-polldetail-scope .uv-pagination-actions .uv-btn {
+      width: 100%;
+   }
+
+   .uv-polldetail-scope .uv-participants-table-wrap,
+   .uv-polldetail-scope .uv-participants-table-wrap-admin {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+   }
+
+   .uv-polldetail-scope .uv-participants-table {
+      min-width: 520px;
+   }
+
+   /* COMPARTIR */
+   .uv-polldetail-scope .uv-share-grid {
+      grid-template-columns: 1fr;
+      gap: 14px;
+   }
+
+   .uv-polldetail-scope .uv-share-side {
+      width: 100%;
+      min-width: 0;
+   }
+
+   .uv-polldetail-scope .uv-share-link-card,
+   .uv-polldetail-scope .uv-share-note,
+   .uv-polldetail-scope .uv-share-qr-card {
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+   }
+
+   .uv-polldetail-scope .uv-share-link-box {
+      width: 100%;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+   }
+
+   .uv-polldetail-scope .uv-share-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      width: 100%;
+      gap: 8px;
+   }
+
+   .uv-polldetail-scope .uv-share-actions .uv-btn {
+      width: 100%;
+   }
+
+   .uv-polldetail-scope .uv-share-qr-box {
+      width: 100%;
+      overflow: hidden;
+   }
+
+   .uv-polldetail-scope .uv-share-qr-inner {
+      width: min(100%, 250px);
+      height: min(100vw - 110px, 250px);
+      max-height: 250px;
+      margin: 0 auto;
+      padding: 14px;
+      box-sizing: border-box;
+   }
+
+   .uv-polldetail-scope .uv-share-qr-logo {
+      width: 50px;
+      height: 50px;
+      padding: 7px;
+   }
+}
+
+@media (max-width: 430px) {
+   .uv-polldetail-scope .uv-tabs {
+      grid-template-columns: 1fr;
+      gap: 8px;
+   }
+
+   .uv-polldetail-scope .uv-tab {
+      justify-content: flex-start;
+      padding: 0 12px;
+      min-height: 42px;
+   }
+
+   .uv-polldetail-scope .uv-tab span {
+      max-width: none;
+      overflow: visible;
+      text-overflow: unset;
+      white-space: nowrap;
+   }
+
+   .uv-polldetail-scope .uv-detail-card {
+      padding: 10px;
+   }
+
+   .uv-polldetail-scope .uv-poll-card,
+   .uv-polldetail-scope .uv-admin-kpi,
+   .uv-polldetail-scope .uv-share-link-card,
+   .uv-polldetail-scope .uv-share-note,
+   .uv-polldetail-scope .uv-share-qr-card {
+      padding: 10px;
+   }
+
+   .uv-polldetail-scope .uv-share-qr-inner {
+      width: min(100%, 220px);
+      height: 220px;
+      padding: 12px;
+   }
+
+   .uv-polldetail-scope .uv-share-qr-logo {
+      width: 44px;
+      height: 44px;
+      padding: 6px;
+   }
+
+   .uv-polldetail-scope .uv-share-link-title,
+   .uv-polldetail-scope .uv-stats-title,
+   .uv-polldetail-scope .uv-detail-h2 {
+      font-size: 15px;
+   }
+
+   .uv-polldetail-scope .uv-participants-badges {
+      gap: 6px;
+   }
+
+   .uv-polldetail-scope .uv-participants-badge,
+   .uv-polldetail-scope .uv-vote-state,
+   .uv-polldetail-scope .uv-pills {
+      font-size: 11px;
+   }
+
+   .uv-polldetail-scope .uv-participants-table {
+      min-width: 480px;
+   }
+}
+
+@media (max-width: 360px) {
+   .uv-polldetail-scope .uv-share-qr-inner {
+      width: min(100%, 200px);
+      height: 200px;
+      padding: 10px;
+   }
+
+   .uv-polldetail-scope .uv-share-qr-logo {
+      width: 40px;
+      height: 40px;
+      padding: 5px;
+   }
+
+   .uv-polldetail-scope .uv-tab {
+      min-height: 40px;
+      padding: 0 10px;
+   }
+
+   .uv-polldetail-scope .uv-btn {
+      font-size: 13px;
+      padding: 9px 12px;
+   }
+}
+
+/* =========================================================
+   Participantes - modo móvil real
+   ========================================================= */
+.uv-polldetail-scope .uv-admin-panel-copy {
+   min-width: 0;
+}
+
+.uv-polldetail-scope .uv-admin-kpis-compact .uv-admin-kpi {
+   min-width: 0;
+}
+
+.uv-polldetail-scope .uv-participants-table-desktop {
+   display: block;
+}
+
+.uv-polldetail-scope .uv-participants-mobile-list {
+   display: none;
+}
+
+.uv-polldetail-scope .uv-participant-mobile-card {
+   border: 1px solid rgba(48, 47, 44, 0.08);
+   border-radius: 14px;
+   background: rgba(255, 255, 255, 0.72);
+   padding: 12px;
+   display: grid;
+   gap: 10px;
+}
+
+.uv-polldetail-scope .uv-participant-mobile-top {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 10px;
+   flex-wrap: wrap;
+}
+
+.uv-polldetail-scope .uv-participant-mobile-index {
+   font-size: 12px;
+   font-weight: 900;
+   color: rgba(48, 47, 44, 0.6);
+}
+
+.uv-polldetail-scope .uv-participant-mobile-mail {
+   font-size: 14px;
+   font-weight: 800;
+   color: #302f2c;
+   line-height: 1.45;
+   word-break: break-word;
+}
+
+@media (max-width: 560px) {
+   .uv-polldetail-scope .uv-admin-panel-head,
+   .uv-polldetail-scope .uv-admin-panel-title-wrap,
+   .uv-polldetail-scope .uv-participants-meta,
+   .uv-polldetail-scope .uv-pagination {
+      flex-direction: column;
+      align-items: stretch;
+   }
+
+   .uv-polldetail-scope .uv-participants-export {
+      display: grid;
+      grid-template-columns: 1fr;
+      width: 100%;
+      gap: 8px;
+   }
+
+   .uv-polldetail-scope .uv-participants-export .uv-btn {
+      width: 100%;
+   }
+
+   .uv-polldetail-scope .uv-admin-kpis {
+      grid-template-columns: 1fr;
+      gap: 10px;
+   }
+
+   .uv-polldetail-scope .uv-admin-kpi {
+      padding: 12px;
+   }
+
+   .uv-polldetail-scope .uv-admin-kpi strong {
+      font-size: 22px;
+   }
+
+   .uv-polldetail-scope .uv-participants-toolbar,
+   .uv-polldetail-scope .uv-participants-toolbar-admin {
+      grid-template-columns: 1fr;
+      gap: 8px;
+   }
+
+   .uv-polldetail-scope .uv-participants-search,
+   .uv-polldetail-scope .uv-participants-select {
+      width: 100%;
+      min-width: 0;
+   }
+
+   .uv-polldetail-scope .uv-pagination-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      width: 100%;
+      gap: 8px;
+   }
+
+   .uv-polldetail-scope .uv-pagination-actions .uv-btn {
+      width: 100%;
+   }
+
+   .uv-polldetail-scope .uv-participants-table-desktop {
+      display: none;
+   }
+
+   .uv-polldetail-scope .uv-participants-mobile-list {
+      display: grid;
+      gap: 10px;
+   }
+
+   .uv-polldetail-scope .uv-participants-table-wrap,
+   .uv-polldetail-scope .uv-participants-table-wrap-admin {
+      overflow: hidden;
+   }
+}
+
+@media (max-width: 430px) {
+   .uv-polldetail-scope .uv-participant-mobile-card {
+      padding: 10px;
+   }
+
+   .uv-polldetail-scope .uv-participant-mobile-mail {
+      font-size: 13px;
+   }
+
+   .uv-polldetail-scope .uv-participants-badges {
+      gap: 6px;
+   }
 }
