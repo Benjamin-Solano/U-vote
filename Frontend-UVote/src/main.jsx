@@ -7,10 +7,15 @@ import "../src/styles/theme.css";
 
 import { AuthProvider } from "./auth/AuthProvider.jsx";
 
+
+// Estadisticas de Vercel
+import { Analytics } from "@vercel/analytics/react"
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
+        <Analytics />
         <App />
       </AuthProvider>
     </BrowserRouter>
