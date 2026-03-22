@@ -1,0 +1,224 @@
+.uv-home {
+   padding: 38px 0 70px;
+}
+
+/* =========================================================
+   Shared containers / cards
+   ========================================================= */
+
+.uv-home-hero-copy,
+.uv-home-hero-preview,
+.uv-home-info-card,
+.uv-home-social-card,
+.uv-home-service-card,
+.uv-home-cta-content,
+.uv-dashboard-panel,
+.uv-stat-card {
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.62);
+   backdrop-filter: blur(10px);
+   border-radius: 24px;
+   box-shadow: 0 18px 42px rgba(48, 47, 44, 0.08);
+}
+
+/* =========================================================
+   Shared labels / pills
+   ========================================================= */
+
+.uv-home-section-kicker,
+.uv-home-eyebrow {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   padding: 8px 12px;
+   border-radius: 999px;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.68);
+   color: #302f2c;
+   font-weight: 800;
+   font-size: 0.85rem;
+}
+
+.uv-home-mini-pill {
+   border-radius: 999px;
+   padding: 7px 11px;
+   font-size: 0.78rem;
+   font-weight: 900;
+   border: 1px solid transparent;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   white-space: nowrap;
+}
+
+
+/* INSIGNIAS DE ESTADO DE VOTACION */
+
+.uv-home-mini-pill--open {
+   background: rgba(46, 125, 90, 0.10);
+   border-color: rgba(46, 125, 90, 0.28);
+   color: #1f6a4a;
+}
+
+.uv-home-mini-pill--pending {
+   background: rgba(176, 125, 38, 0.12);
+   border-color: rgba(176, 125, 38, 0.26);
+   color: #8a6220;
+}
+
+.uv-home-mini-pill--closed {
+   background: rgba(166, 58, 58, 0.12);
+   border-color: rgba(166, 58, 58, 0.34);
+   color: #9d2f2f;
+}
+/* =========================================================
+   Shared states / alerts / skeletons
+   ========================================================= */
+
+.uv-home-empty-box,
+.uv-home-alert {
+   border-radius: 18px;
+   padding: 16px;
+   font-weight: 800;
+}
+
+.uv-home-empty-box {
+   border: 1px dashed rgba(48, 47, 44, 0.16);
+   background: rgba(239, 237, 227, 0.56);
+   color: rgba(48, 47, 44, 0.72);
+   text-align: center;
+}
+
+.uv-home-alert {
+   border: 1px solid rgba(180, 35, 24, 0.28);
+   background: rgba(180, 35, 24, 0.08);
+   color: rgba(140, 20, 12, 0.96);
+}
+
+.uv-home-table-skeleton-wrap {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+}
+
+.uv-home-table-skeleton {
+   height: 58px;
+   border-radius: 14px;
+   background: linear-gradient(
+      90deg,
+      rgba(48, 47, 44, 0.06) 0%,
+      rgba(48, 47, 44, 0.12) 50%,
+      rgba(48, 47, 44, 0.06) 100%
+   );
+   background-size: 200% 100%;
+   animation: uv-home-loading 1.2s infinite linear;
+}
+
+/* =========================================================
+   Shared pagination
+   ========================================================= */
+
+.uv-home-pagination {
+   margin-top: 14px;
+   padding-top: 14px;
+   border-top: 1px solid rgba(48, 47, 44, 0.08);
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 12px;
+   flex-wrap: wrap;
+}
+
+.uv-home-page-btn {
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   background: rgba(255, 255, 255, 0.8);
+   color: #302f2c;
+   border-radius: 12px;
+   padding: 10px 12px;
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   font-weight: 800;
+   cursor: pointer;
+   transition: all 0.18s ease;
+}
+
+.uv-home-page-btn:hover {
+   transform: translateY(-1px);
+   background: rgba(255, 255, 255, 0.96);
+   border-color: rgba(48, 47, 44, 0.24);
+}
+
+.uv-home-page-btn:disabled {
+   opacity: 0.55;
+   cursor: not-allowed;
+   transform: none;
+}
+
+.uv-home-page-info {
+   color: rgba(48, 47, 44, 0.72);
+   font-weight: 800;
+}
+
+/* =========================================================
+   Motion
+   ========================================================= */
+
+@keyframes uv-home-loading {
+   0% {
+      background-position: 200% 0;
+   }
+   100% {
+      background-position: -200% 0;
+   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+   .uv-metrics-bar-fill,
+   .uv-home-page-btn,
+   .uv-dashboard-inline-btn,
+   .uv-metrics-nav-btn,
+   .uv-metrics-dot {
+      transition: none !important;
+   }
+}
+
+/* =========================================================
+   Shared responsive
+   ========================================================= */
+
+@media (max-width: 760px) {
+   .uv-home {
+      padding: 24px 0 48px;
+   }
+
+   .uv-home-hero-copy,
+   .uv-home-hero-preview,
+   .uv-home-info-card,
+   .uv-home-social-card,
+   .uv-home-service-card,
+   .uv-home-cta-content,
+   .uv-dashboard-panel,
+   .uv-stat-card {
+      border-radius: 20px;
+   }
+
+   .uv-home-empty-box,
+   .uv-home-alert {
+      padding: 14px;
+   }
+
+   .uv-home-pagination {
+      flex-direction: column;
+      align-items: stretch;
+   }
+
+   .uv-home-page-btn {
+      justify-content: center;
+      width: 100%;
+   }
+
+   .uv-home-page-info {
+      text-align: center;
+   }
+}

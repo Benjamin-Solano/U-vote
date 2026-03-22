@@ -1,0 +1,386 @@
+/* =========================================================
+   Landing sections
+   ========================================================= */
+
+.uv-home-section,
+.uv-home-cta {
+   margin-top: 84px;
+}
+
+.uv-home-section--alt {
+   margin-top: 96px;
+}
+
+.uv-home-section-head {
+   max-width: 760px;
+   margin: 0 auto 30px;
+   text-align: center;
+}
+
+.uv-home-section-title {
+   margin: 18px 0 12px;
+   font-size: clamp(1.95rem, 3vw, 2.8rem);
+   line-height: 1.14;
+   color: #302f2c;
+}
+
+.uv-home-section-sub {
+   margin: 0;
+   color: rgba(48, 47, 44, 0.72);
+   font-weight: 600;
+   line-height: 1.7;
+}
+
+/* =========================================================
+   Hero
+   ========================================================= */
+
+.uv-home-hero {
+   padding: 24px 0 18px;
+}
+
+.uv-home-hero-grid {
+   display: grid;
+   grid-template-columns: 1.08fr 0.92fr;
+   gap: 28px;
+   align-items: center;
+}
+
+.uv-home-hero-copy {
+   padding: 34px;
+}
+
+.uv-home-main-title {
+   margin: 16px 0 12px;
+   font-size: clamp(2.2rem, 5vw, 4rem);
+   line-height: 1.05;
+   color: #302f2c;
+}
+
+.uv-home-main-sub {
+   margin: 0;
+   max-width: 640px;
+   color: rgba(48, 47, 44, 0.74);
+   font-size: 1.02rem;
+   line-height: 1.8;
+   font-weight: 600;
+}
+
+.uv-home-main-actions {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 12px;
+   margin-top: 24px;
+}
+
+.uv-home-main-actions .btn {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   gap: 8px;
+}
+
+.uv-home-hero-inline {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px;
+   margin-top: 20px;
+}
+
+.uv-home-inline-chip {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   padding: 10px 12px;
+   border-radius: 999px;
+   background: rgba(239, 237, 227, 0.9);
+   border: 1px solid rgba(48, 47, 44, 0.1);
+   font-weight: 700;
+   color: #302f2c;
+}
+
+.uv-home-hero-preview {
+   padding: 18px;
+}
+
+.uv-home-preview-window {
+   border-radius: 22px;
+   overflow: hidden;
+   border: 1px solid rgba(48, 47, 44, 0.12);
+   background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.94) 0%,
+      rgba(239, 237, 227, 0.9) 100%
+   );
+   min-height: 420px;
+}
+
+.uv-home-preview-topbar {
+   height: 52px;
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   padding: 0 16px;
+   border-bottom: 1px solid rgba(48, 47, 44, 0.08);
+   background: rgba(255, 255, 255, 0.72);
+}
+
+.uv-home-preview-topbar span {
+   width: 12px;
+   height: 12px;
+   border-radius: 999px;
+   background: rgba(48, 47, 44, 0.18);
+}
+
+.uv-home-preview-body {
+   padding: 18px;
+   display: flex;
+   flex-direction: column;
+   gap: 14px;
+}
+
+.uv-home-preview-panel {
+   border-radius: 18px;
+   border: 1px dashed rgba(48, 47, 44, 0.12);
+   background: rgba(255, 255, 255, 0.64);
+   padding: 16px;
+}
+
+.uv-home-preview-panel--hero {
+   display: grid;
+   grid-template-columns: 1fr 140px;
+   gap: 14px;
+   align-items: center;
+   min-height: 130px;
+}
+
+.uv-home-preview-line {
+   height: 12px;
+   border-radius: 999px;
+   background: rgba(76, 138, 230, 0.22);
+}
+
+.uv-home-preview-line--lg {
+   width: 72%;
+   height: 16px;
+   margin-bottom: 12px;
+   background: rgba(76, 138, 230, 0.42);
+}
+
+.uv-home-preview-line--sm {
+   width: 48%;
+}
+
+.uv-home-preview-art {
+   height: 92px;
+   border-radius: 18px;
+   background: linear-gradient(
+      135deg,
+      rgba(76, 138, 230, 0.14),
+      rgba(48, 47, 44, 0.08)
+   );
+}
+
+.uv-home-preview-mini-cards {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 12px;
+}
+
+.uv-home-preview-mini-card {
+   height: 70px;
+   border-radius: 14px;
+   background: rgba(76, 138, 230, 0.16);
+}
+
+.uv-home-preview-table {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+}
+
+.uv-home-preview-row {
+   height: 14px;
+   border-radius: 999px;
+   background: rgba(48, 47, 44, 0.1);
+}
+
+/* =========================================================
+   Landing blocks
+   ========================================================= */
+
+.uv-home-benefits-grid,
+.uv-home-services-grid,
+.uv-home-social-grid {
+   display: grid;
+   gap: 22px;
+   grid-template-columns: repeat(3, 1fr);
+}
+
+.uv-home-info-card,
+.uv-home-social-card,
+.uv-home-service-card {
+   padding: 24px;
+}
+
+.uv-home-info-icon,
+.uv-home-service-icon {
+   width: 52px;
+   height: 52px;
+   display: grid;
+   place-items: center;
+   border-radius: 16px;
+   background: #302f2c;
+   color: #efede3;
+   margin-bottom: 14px;
+   box-shadow: 0 12px 24px rgba(48, 47, 44, 0.18);
+}
+
+.uv-home-info-card h3,
+.uv-home-service-card h3 {
+   margin: 0 0 10px;
+   font-size: 1.08rem;
+   color: #302f2c;
+}
+
+.uv-home-info-card p,
+.uv-home-service-card p {
+   margin: 0;
+   color: rgba(48, 47, 44, 0.72);
+   line-height: 1.7;
+   font-weight: 600;
+}
+
+.uv-home-social-card {
+   display: flex;
+   flex-direction: column;
+   gap: 14px;
+   justify-content: space-between;
+}
+
+.uv-home-social-badge {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   width: fit-content;
+   padding: 8px 12px;
+   border-radius: 999px;
+   background: rgba(48, 47, 44, 0.08);
+   font-weight: 800;
+   color: #302f2c;
+}
+
+.uv-home-social-card p {
+   margin: 0;
+   line-height: 1.8;
+   font-weight: 600;
+   color: rgba(48, 47, 44, 0.78);
+}
+
+/* =========================================================
+   CTA
+   ========================================================= */
+
+.uv-home-cta-content {
+   padding: 30px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   gap: 18px;
+   background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.82),
+      rgba(239, 237, 227, 0.96)
+   );
+}
+
+.uv-home-cta-content h2 {
+   margin: 10px 0 8px;
+   color: #302f2c;
+   font-size: clamp(1.7rem, 3vw, 2.4rem);
+}
+
+.uv-home-cta-content p {
+   margin: 0;
+   color: rgba(48, 47, 44, 0.72);
+   font-weight: 600;
+   line-height: 1.8;
+   max-width: 720px;
+}
+
+.uv-home-cta-actions {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+/* =========================================================
+   Landing responsive
+   ========================================================= */
+
+@media (max-width: 980px) {
+   .uv-home-hero-grid,
+   .uv-home-benefits-grid,
+   .uv-home-services-grid,
+   .uv-home-social-grid {
+      grid-template-columns: 1fr;
+   }
+
+   .uv-home-cta-content {
+      flex-direction: column;
+      align-items: stretch;
+   }
+
+   .uv-home-cta-actions {
+      width: 100%;
+   }
+
+   .uv-home-cta-actions .btn {
+      width: 100%;
+      justify-content: center;
+   }
+}
+
+@media (max-width: 760px) {
+   .uv-home-section,
+   .uv-home-cta {
+      margin-top: 64px;
+   }
+
+   .uv-home-section--alt {
+      margin-top: 72px;
+   }
+
+   .uv-home-hero-copy,
+   .uv-home-info-card,
+   .uv-home-social-card,
+   .uv-home-service-card,
+   .uv-home-cta-content {
+      padding: 18px;
+   }
+
+   .uv-home-main-title {
+      font-size: clamp(2rem, 9vw, 2.7rem);
+   }
+
+   .uv-home-main-actions,
+   .uv-home-hero-inline {
+      flex-direction: column;
+      align-items: stretch;
+   }
+
+   .uv-home-main-actions .btn,
+   .uv-home-main-actions a,
+   .uv-home-inline-chip {
+      width: 100%;
+      justify-content: center;
+   }
+
+   .uv-home-preview-panel--hero {
+      grid-template-columns: 1fr;
+   }
+
+   .uv-home-preview-mini-cards {
+      grid-template-columns: 1fr;
+   }
+}
