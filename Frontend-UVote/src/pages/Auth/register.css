@@ -4,11 +4,12 @@
    --uv-muted: rgba(48, 47, 44, 0.72);
    --uv-border: rgba(48, 47, 44, 0.16);
    --uv-card: rgba(239, 237, 227, 0.75);
+   --uv-white: #ffffff;
    --uv-danger: rgba(160, 0, 0, 0.82);
+   --uv-danger-soft: rgba(160, 0, 0, 0.08);
 }
 
-/* PAGE */
-.uv-login-page {
+.uv-register-page {
    min-height: calc(100vh - 90px);
    display: grid;
    place-items: center;
@@ -16,7 +17,7 @@
    padding: 18px;
 }
 
-.uv-login-card {
+.uv-register-card {
    width: min(1040px, 100%);
    display: grid;
    grid-template-columns: 1.05fr 1fr;
@@ -28,7 +29,7 @@
 }
 
 /* LEFT */
-.uv-login-left {
+.uv-register-left {
    position: relative;
    background: linear-gradient(135deg, rgba(48, 47, 44, 0.1), rgba(48, 47, 44, 0.02));
    display: flex;
@@ -37,7 +38,7 @@
    padding: 46px 36px;
 }
 
-.uv-login-left::after {
+.uv-register-left::after {
    content: "";
    position: absolute;
    inset: 18px;
@@ -46,7 +47,7 @@
    pointer-events: none;
 }
 
-.uv-login-left-inner {
+.uv-register-left-inner {
    position: relative;
    z-index: 1;
    display: grid;
@@ -55,14 +56,14 @@
    text-align: center;
 }
 
-.uv-login-logo {
+.uv-register-logo {
    width: min(280px, 80%);
    height: auto;
    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.15));
    user-select: none;
 }
 
-.uv-login-left-sub {
+.uv-register-left-sub {
    max-width: 360px;
    color: var(--uv-muted);
    font-size: 0.98rem;
@@ -70,17 +71,17 @@
 }
 
 /* RIGHT */
-.uv-login-right {
+.uv-register-right {
    padding: 46px 40px;
    background: rgba(255, 255, 255, 0.35);
    backdrop-filter: blur(6px);
 }
 
-.uv-login-header {
+.uv-register-header {
    text-align: center;
 }
 
-.uv-login-header h1 {
+.uv-register-header h1 {
    margin: 0;
    color: var(--uv-ink);
    font-size: 2rem;
@@ -88,13 +89,13 @@
    line-height: 1.1;
 }
 
-.uv-login-header p {
+.uv-register-header p {
    margin: 10px 0 0;
    color: var(--uv-muted);
    line-height: 1.4;
 }
 
-.uv-login-alert {
+.uv-register-alert {
    margin-top: 18px;
    padding: 12px 14px;
    border-radius: 12px;
@@ -104,26 +105,36 @@
    line-height: 1.45;
 }
 
-/* FORM */
-.uv-login-form {
+.uv-register-alert--ok {
+   border-color: rgba(40, 120, 60, 0.25);
+   background: rgba(40, 120, 60, 0.06);
+}
+
+.uv-register-form {
    margin-top: 22px;
    display: grid;
    gap: 16px;
 }
 
-.uv-login-field {
+.uv-register-grid-2 {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 16px;
+}
+
+.uv-register-field {
    display: grid;
    gap: 8px;
 }
 
-.uv-login-field > span {
+.uv-register-field > span {
    color: var(--uv-ink);
    font-size: 0.92rem;
    font-weight: 600;
    line-height: 1.3;
 }
 
-.uv-login-input-wrap {
+.uv-register-input-wrap {
    position: relative;
    display: grid;
    grid-template-columns: 38px 1fr auto auto;
@@ -135,20 +146,21 @@
    min-height: 50px;
 }
 
-.uv-login-input-wrap:focus-within {
+.uv-register-input-wrap:focus-within {
    border-color: rgba(48, 47, 44, 0.35);
    box-shadow: 0 0 0 4px rgba(48, 47, 44, 0.1);
    background: rgba(255, 255, 255, 0.7);
 }
 
-.uv-login-input-icon {
+.uv-register-input-icon {
    margin-left: 12px;
    opacity: 0.75;
    font-size: 1rem;
    flex-shrink: 0;
 }
 
-.uv-login-input-wrap input {
+.uv-register-input-wrap input,
+.uv-register-select-wrap select {
    border: none;
    outline: none;
    padding: 12px 10px 12px 0;
@@ -159,27 +171,37 @@
    min-width: 0;
 }
 
-.uv-login-input-wrap input::placeholder {
+.uv-register-input-wrap input::placeholder {
    color: rgba(48, 47, 44, 0.45);
 }
 
-.uv-login-input-error {
+.uv-register-select-wrap select {
+   appearance: none;
+   cursor: pointer;
+}
+
+.uv-register-select-wrap select:disabled {
+   cursor: not-allowed;
+   color: rgba(48, 47, 44, 0.45);
+}
+
+.uv-register-input-error {
    border-color: rgba(160, 0, 0, 0.55);
    background-color: rgba(160, 0, 0, 0.04);
 }
 
-.uv-login-input-error .uv-login-input-icon {
+.uv-register-input-error .uv-register-input-icon {
    color: rgba(160, 0, 0, 0.7);
    opacity: 1;
 }
 
-.uv-login-input-error:focus-within {
+.uv-register-input-error:focus-within {
    border-color: rgba(160, 0, 0, 0.75);
    box-shadow: 0 0 0 4px rgba(160, 0, 0, 0.1);
 }
 
-/* ERROR HINT */
-.uv-login-hint {
+/* Icono + tooltip */
+.uv-register-hint {
    position: relative;
    width: 34px;
    height: 100%;
@@ -191,11 +213,11 @@
    flex-shrink: 0;
 }
 
-.uv-login-hint svg {
+.uv-register-hint svg {
    font-size: 1rem;
 }
 
-.uv-login-tooltip {
+.uv-register-tooltip {
    position: absolute;
    right: 0;
    bottom: calc(100% + 10px);
@@ -213,13 +235,13 @@
    visibility: hidden;
    transform: translateY(6px);
    transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
-   z-index: 20;
+   z-index: 15;
    pointer-events: none;
    text-align: left;
    white-space: normal;
 }
 
-.uv-login-tooltip::after {
+.uv-register-tooltip::after {
    content: "";
    position: absolute;
    top: 100%;
@@ -229,16 +251,15 @@
    border-color: #302f2c transparent transparent transparent;
 }
 
-.uv-login-hint:hover .uv-login-tooltip,
-.uv-login-hint:focus .uv-login-tooltip,
-.uv-login-hint:focus-visible .uv-login-tooltip {
+.uv-register-hint:hover .uv-register-tooltip,
+.uv-register-hint:focus .uv-register-tooltip,
+.uv-register-hint:focus-visible .uv-register-tooltip {
    opacity: 1;
    visibility: visible;
    transform: translateY(0);
 }
 
-/* PASSWORD TOGGLE */
-.uv-login-password-toggle {
+.uv-register-password-toggle {
    width: 38px;
    height: 100%;
    border: none;
@@ -252,37 +273,15 @@
    flex-shrink: 0;
 }
 
-.uv-login-password-toggle:hover {
+.uv-register-password-toggle:hover {
    color: #302f2c;
 }
 
-.uv-login-password-toggle:active {
+.uv-register-password-toggle:active {
    transform: scale(0.96);
 }
 
-/* CHECKBOX */
-.uv-login-row {
-   display: flex;
-   justify-content: flex-start;
-   align-items: center;
-}
-
-.uv-login-checkbox {
-   display: inline-flex;
-   align-items: center;
-   gap: 10px;
-   color: var(--uv-muted);
-   cursor: pointer;
-   font-size: 0.94rem;
-   line-height: 1.4;
-}
-
-.uv-login-checkbox input {
-   accent-color: #302f2c;
-}
-
-/* BUTTONS */
-.uv-login-primary-btn {
+.uv-register-primary-btn {
    width: 100%;
    border: 1px solid rgba(48, 47, 44, 0.25);
    background: var(--uv-ink);
@@ -295,47 +294,16 @@
    min-height: 48px;
 }
 
-.uv-login-primary-btn:disabled {
+.uv-register-primary-btn:disabled {
    opacity: 0.6;
    cursor: not-allowed;
 }
 
-.uv-login-primary-btn:active {
+.uv-register-primary-btn:active {
    transform: scale(0.99);
 }
 
-.uv-login-secondary-btn {
-   display: inline-flex;
-   align-items: center;
-   justify-content: center;
-   gap: 8px;
-   border: 1px solid rgba(48, 47, 44, 0.2);
-   background: #302f2c;
-   color: #efede3;
-   padding: 10px 14px;
-   border-radius: 10px;
-   cursor: pointer;
-   font-weight: 700;
-   min-height: 44px;
-}
-
-.uv-login-link-btn {
-   border: none;
-   background: transparent;
-   color: #302f2c;
-   font-weight: 700;
-   cursor: pointer;
-   padding: 0;
-   text-decoration: underline;
-}
-
-.uv-login-cta {
-   margin-top: 12px;
-   display: grid;
-   gap: 8px;
-}
-
-.uv-login-footer {
+.uv-register-footer {
    margin-top: 4px;
    display: flex;
    gap: 8px;
@@ -345,145 +313,144 @@
    text-align: center;
 }
 
-.uv-login-link-as-btn {
+.uv-register-link-as-btn {
    border: none;
    background: transparent;
    padding: 0;
    cursor: pointer;
    color: var(--uv-ink);
    font-weight: 700;
+   text-decoration: none;
    border-bottom: 1px solid rgba(48, 47, 44, 0.35);
 }
 
-.uv-login-link-as-btn:hover {
+.uv-register-link-as-btn:hover {
    border-bottom-color: rgba(48, 47, 44, 0.65);
 }
 
 /* TABLET */
 @media (max-width: 900px) {
-   .uv-login-page {
+   .uv-register-page {
       padding: 16px;
    }
 
-   .uv-login-card {
+   .uv-register-card {
       grid-template-columns: 1fr;
    }
 
-   .uv-login-left {
+   .uv-register-left {
       padding: 28px 20px;
       min-height: 220px;
    }
 
-   .uv-login-left::after {
+   .uv-register-left::after {
       inset: 14px;
    }
 
-   .uv-login-logo {
+   .uv-register-logo {
       width: min(180px, 62%);
    }
 
-   .uv-login-left-sub {
+   .uv-register-left-sub {
       font-size: 0.92rem;
    }
 
-   .uv-login-right {
+   .uv-register-right {
       padding: 30px 22px;
+   }
+
+   .uv-register-grid-2 {
+      grid-template-columns: 1fr;
+      gap: 14px;
    }
 }
 
 /* MOBILE */
 @media (max-width: 640px) {
-   .uv-login-page {
+   .uv-register-page {
       padding: 12px;
       min-height: calc(100vh - 70px);
    }
 
-   .uv-login-card {
+   .uv-register-card {
       border-radius: 18px;
    }
 
-   .uv-login-left {
+   .uv-register-left {
       min-height: 180px;
       padding: 20px 16px;
    }
 
-   .uv-login-left::after {
+   .uv-register-left::after {
       inset: 12px;
       border-radius: 14px;
    }
 
-   .uv-login-logo {
+   .uv-register-logo {
       width: min(150px, 58%);
    }
 
-   .uv-login-left-sub {
+   .uv-register-left-sub {
       font-size: 0.88rem;
       max-width: 250px;
    }
 
-   .uv-login-right {
+   .uv-register-right {
       padding: 22px 16px;
    }
 
-   .uv-login-header h1 {
+   .uv-register-header h1 {
       font-size: 1.55rem;
    }
 
-   .uv-login-header p {
+   .uv-register-header p {
       font-size: 0.92rem;
    }
 
-   .uv-login-alert {
+   .uv-register-alert {
       margin-top: 14px;
       padding: 10px 12px;
       font-size: 0.92rem;
    }
 
-   .uv-login-form {
+   .uv-register-form {
       margin-top: 18px;
       gap: 14px;
    }
 
-   .uv-login-field > span {
+   .uv-register-field > span {
       font-size: 0.88rem;
    }
 
-   .uv-login-input-wrap {
+   .uv-register-input-wrap {
       min-height: 46px;
       border-radius: 11px;
       grid-template-columns: 34px 1fr auto auto;
    }
 
-   .uv-login-input-icon {
+   .uv-register-input-icon {
       margin-left: 10px;
       font-size: 0.95rem;
    }
 
-   .uv-login-input-wrap input {
+   .uv-register-input-wrap input,
+   .uv-register-select-wrap select {
       font-size: 0.95rem;
       padding: 11px 8px 11px 0;
    }
 
-   .uv-login-hint,
-   .uv-login-password-toggle {
+   .uv-register-hint,
+   .uv-register-password-toggle {
       width: 32px;
    }
 
-   .uv-login-primary-btn {
+   .uv-register-primary-btn {
       min-height: 46px;
       border-radius: 11px;
       font-size: 0.95rem;
    }
 
-   .uv-login-secondary-btn {
-      width: 100%;
-   }
-
-   .uv-login-checkbox {
-      font-size: 0.88rem;
-   }
-
-   .uv-login-tooltip {
+   .uv-register-tooltip {
       right: -6px;
       left: auto;
       max-width: min(220px, calc(100vw - 52px));
@@ -495,101 +462,105 @@
 
 /* SMALL PHONES */
 @media (max-width: 420px) {
-   .uv-login-page {
+   .uv-register-page {
       padding: 10px;
    }
 
-   .uv-login-card {
+   .uv-register-card {
       border-radius: 16px;
    }
 
-   .uv-login-left {
+   .uv-register-left {
       min-height: 155px;
       padding: 16px 12px;
    }
 
-   .uv-login-left::after {
+   .uv-register-left::after {
       inset: 10px;
    }
 
-   .uv-login-logo {
+   .uv-register-logo {
       width: min(118px, 52%);
    }
 
-   .uv-login-left-sub {
+   .uv-register-left-sub {
       font-size: 0.82rem;
       max-width: 210px;
    }
 
-   .uv-login-right {
+   .uv-register-right {
       padding: 18px 12px;
    }
 
-   .uv-login-header h1 {
+   .uv-register-header h1 {
       font-size: 1.38rem;
    }
 
-   .uv-login-header p {
+   .uv-register-header p {
       margin-top: 8px;
       font-size: 0.86rem;
    }
 
-   .uv-login-alert {
+   .uv-register-alert {
       font-size: 0.86rem;
       border-radius: 10px;
    }
 
-   .uv-login-form {
+   .uv-register-form {
       gap: 12px;
    }
 
-   .uv-login-field {
+   .uv-register-grid-2 {
+      gap: 12px;
+   }
+
+   .uv-register-field {
       gap: 6px;
    }
 
-   .uv-login-field > span {
+   .uv-register-field > span {
       font-size: 0.82rem;
    }
 
-   .uv-login-input-wrap {
+   .uv-register-input-wrap {
       min-height: 44px;
       border-radius: 10px;
       grid-template-columns: 32px 1fr auto auto;
    }
 
-   .uv-login-input-icon {
+   .uv-register-input-icon {
       margin-left: 9px;
       font-size: 0.88rem;
    }
 
-   .uv-login-input-wrap input {
+   .uv-register-input-wrap input,
+   .uv-register-select-wrap select {
       font-size: 0.9rem;
       padding: 10px 6px 10px 0;
    }
 
-   .uv-login-hint,
-   .uv-login-password-toggle {
+   .uv-register-hint,
+   .uv-register-password-toggle {
       width: 30px;
    }
 
-   .uv-login-hint svg,
-   .uv-login-password-toggle svg {
+   .uv-register-hint svg,
+   .uv-register-password-toggle svg {
       font-size: 0.92rem;
    }
 
-   .uv-login-primary-btn,
-   .uv-login-secondary-btn {
+   .uv-register-primary-btn {
       min-height: 44px;
       font-size: 0.9rem;
       border-radius: 10px;
    }
 
-   .uv-login-footer {
+   .uv-register-footer {
       font-size: 0.84rem;
       gap: 6px;
    }
 
-   .uv-login-tooltip {
+   .uv-register-tooltip {
       left: 50%;
       right: auto;
       transform: translate(-50%, 6px);
@@ -598,13 +569,13 @@
       text-align: left;
    }
 
-   .uv-login-hint:hover .uv-login-tooltip,
-   .uv-login-hint:focus .uv-login-tooltip,
-   .uv-login-hint:focus-visible .uv-login-tooltip {
+   .uv-register-hint:hover .uv-register-tooltip,
+   .uv-register-hint:focus .uv-register-tooltip,
+   .uv-register-hint:focus-visible .uv-register-tooltip {
       transform: translate(-50%, 0);
    }
 
-   .uv-login-tooltip::after {
+   .uv-register-tooltip::after {
       left: 50%;
       right: auto;
       transform: translateX(-50%);
@@ -613,38 +584,37 @@
 
 /* EXTRA SMALL */
 @media (max-width: 360px) {
-   .uv-login-page {
+   .uv-register-page {
       padding: 8px;
    }
 
-   .uv-login-right {
+   .uv-register-right {
       padding: 16px 10px;
    }
 
-   .uv-login-header h1 {
+   .uv-register-header h1 {
       font-size: 1.26rem;
    }
 
-   .uv-login-header p,
-   .uv-login-checkbox,
-   .uv-login-footer {
+   .uv-register-header p,
+   .uv-register-footer {
       font-size: 0.8rem;
    }
 
-   .uv-login-field > span {
+   .uv-register-field > span {
       font-size: 0.78rem;
    }
 
-   .uv-login-input-wrap input {
+   .uv-register-input-wrap input,
+   .uv-register-select-wrap select {
       font-size: 0.86rem;
    }
 
-   .uv-login-primary-btn,
-   .uv-login-secondary-btn {
+   .uv-register-primary-btn {
       font-size: 0.86rem;
    }
 
-   .uv-login-tooltip {
+   .uv-register-tooltip {
       max-width: min(190px, calc(100vw - 28px));
       font-size: 0.74rem;
    }

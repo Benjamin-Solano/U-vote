@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { FiMail, FiLock, FiShield } from "react-icons/fi";
+import {
+   FiMail,
+   FiLock,
+   FiShield,
+   FiAlertCircle,
+   FiEye,
+   FiEyeOff,
+} from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 import "./login.css";
@@ -10,6 +17,8 @@ import { useAuth } from "../../auth/useAuth";
 import { authApi } from "../../api/auth.api";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+
+const normalizeEmail = (s) => (s || "").trim().toLowerCase();
 
 const isNotVerifiedMessage = (msg = "") => {
    const m = (msg || "").toLowerCase();
@@ -47,6 +56,7 @@ export default function Login() {
       contrasena: false,
    });
 
+   const [showPassword, setShowPassword] = useState(false);
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState("");
    const [notVerified, setNotVerified] = useState(false);
@@ -57,16 +67,23 @@ export default function Login() {
       }
    }, [isAuthenticated, navigate]);
 
-   const correoNorm = useMemo(() => form.correo.trim().toLowerCase(), [form.correo]);
+   const correoNorm = useMemo(() => normalizeEmail(form.correo), [form.correo]);
 
    const fieldErrors = useMemo(() => {
       const errs = {};
 
-      if (!correoNorm) errs.correo = "El correo es requerido.";
-      else if (!emailRegex.test(correoNorm)) errs.correo = "Formato de correo inválido.";
+      if (!correoNorm) {
+         errs.correo = "Campo obligatorio. Ingresa tu correo institucional.";
+      } else if (!emailRegex.test(correoNorm)) {
+         errs.correo = "Formato de correo inválido.";
+      } else if (!/@est\.una\.ac\.cr$/i.test(correoNorm)) {
+         errs.correo = "Debes usar tu correo institucional @est.una.ac.cr.";
+      } else if (correoNorm.length > 100) {
+         errs.correo = "Máximo 100 caracteres.";
+      }
 
       if (!form.contrasena || form.contrasena.trim().length === 0) {
-         errs.contrasena = "La contraseña es requerida.";
+         errs.contrasena = "Campo obligatorio. Ingresa tu contraseña.";
       }
 
       return errs;
@@ -116,8 +133,10 @@ export default function Login() {
    const onSubmit = async (e) => {
       e.preventDefault();
 
-
-      setTouched({ correo: true, contrasena: true });
+      setTouched({
+         correo: true,
+         contrasena: true,
+      });
 
       if (!canSubmit) return;
 
@@ -139,6 +158,25 @@ export default function Login() {
       } finally {
          setLoading(false);
       }
+   };
+
+   const renderHintIcon = (fieldName) => {
+      const showError = touched[fieldName] && fieldErrors[fieldName];
+      if (!showError) return null;
+
+      return (
+         <div
+            className="uv-login-hint"
+            tabIndex={0}
+            aria-label={fieldErrors[fieldName]}
+            role="button"
+         >
+            <FiAlertCircle />
+            <div className="uv-login-tooltip" role="tooltip">
+               {fieldErrors[fieldName]}
+            </div>
+         </div>
+      );
    };
 
    if (isAuthenticated) return null;
@@ -164,16 +202,14 @@ export default function Login() {
                      whileTap={{ scale: 0.995 }}
                      draggable={false}
                   />
-
                   <p className="uv-login-left-sub">Es tu turno de hacer el cambio.</p>
                </div>
             </div>
 
-
             <div className="uv-login-right">
                <div className="uv-login-header">
                   <h1>Iniciar sesión</h1>
-                  <p>Accede con tu correo institucional o personal.</p>
+                  <p>Accede con tu correo institucional.</p>
                </div>
 
                {error && (
@@ -182,17 +218,16 @@ export default function Login() {
 
                      {notVerified && (
                         <div className="uv-login-cta">
-                           <button type="button" className="uv-secondary-btn" onClick={goVerify}>
+                           <button type="button" className="uv-login-secondary-btn" onClick={goVerify}>
                               <FiShield />
                               Verificar ahora
                            </button>
 
                            <button
                               type="button"
-                              className="uv-link-btn"
+                              className="uv-login-link-btn"
                               onClick={resendFromLogin}
                               disabled={loading || !correoNorm}
-                              style={{ marginTop: 6 }}
                            >
                               Reenviar código
                            </button>
@@ -202,13 +237,14 @@ export default function Login() {
                )}
 
                <form className="uv-login-form" onSubmit={onSubmit}>
-                  <label className="uv-field">
-                     <span>Correo electrónico</span>
+                  <label className="uv-login-field">
+                     <span>Correo electrónico institucional</span>
                      <div
-                        className={`uv-input-wrap ${touched.correo && fieldErrors.correo ? "uv-input-error" : ""
-                           }`}
+                        className={`uv-login-input-wrap ${
+                           touched.correo && fieldErrors.correo ? "uv-login-input-error" : ""
+                        }`}
                      >
-                        <FiMail className="uv-input-icon" />
+                        <FiMail className="uv-login-input-icon" />
                         <input
                            type="email"
                            name="correo"
@@ -218,25 +254,23 @@ export default function Login() {
                            onBlur={onBlur}
                            autoComplete="email"
                            required
-                           pattern="^[a-zA-Z0-9._%+-]+@est\.una\.ac\.cr$"
-                           title="Debe usar su correo institucional @est.una.ac.cr"
-                           className="uv-input"
                         />
+                        {renderHintIcon("correo")}
                      </div>
-                     {touched.correo && fieldErrors.correo && (
-                        <small className="uv-field-error">{fieldErrors.correo}</small>
-                     )}
                   </label>
 
-                  <label className="uv-field">
+                  <label className="uv-login-field">
                      <span>Contraseña</span>
                      <div
-                        className={`uv-input-wrap ${touched.contrasena && fieldErrors.contrasena ? "uv-input-error" : ""
-                           }`}
+                        className={`uv-login-input-wrap ${
+                           touched.contrasena && fieldErrors.contrasena
+                              ? "uv-login-input-error"
+                              : ""
+                        }`}
                      >
-                        <FiLock className="uv-input-icon" />
+                        <FiLock className="uv-login-input-icon" />
                         <input
-                           type="password"
+                           type={showPassword ? "text" : "password"}
                            name="contrasena"
                            placeholder="Tu contraseña"
                            value={form.contrasena}
@@ -245,14 +279,23 @@ export default function Login() {
                            autoComplete="current-password"
                            required
                         />
+
+                        {renderHintIcon("contrasena")}
+
+                        <button
+                           type="button"
+                           className="uv-login-password-toggle"
+                           onClick={() => setShowPassword((prev) => !prev)}
+                           aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                           title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                        >
+                           {showPassword ? <FiEyeOff /> : <FiEye />}
+                        </button>
                      </div>
-                     {touched.contrasena && fieldErrors.contrasena && (
-                        <small className="uv-field-error">{fieldErrors.contrasena}</small>
-                     )}
                   </label>
 
                   <div className="uv-login-row">
-                     <label className="uv-checkbox">
+                     <label className="uv-login-checkbox">
                         <input
                            type="checkbox"
                            name="remember"
@@ -261,20 +304,17 @@ export default function Login() {
                         />
                         <span>Recordarme por 30 días</span>
                      </label>
-
                   </div>
 
-                  <button className="uv-primary-btn" type="submit" disabled={!canSubmit}>
+                  <button className="uv-login-primary-btn" type="submit" disabled={!canSubmit}>
                      {loading ? "Ingresando..." : "Ingresar"}
                   </button>
-
-
 
                   <div className="uv-login-footer">
                      <span>¿Aún no tienes cuenta?</span>
                      <button
                         type="button"
-                        className="uv-link-as-btn"
+                        className="uv-login-link-as-btn"
                         onClick={() => navigate("/register")}
                      >
                         Crear cuenta
