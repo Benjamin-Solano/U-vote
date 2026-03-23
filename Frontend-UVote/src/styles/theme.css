@@ -116,7 +116,7 @@ a {
    min-height: 100vh;
 
    /* aire debajo del navbar */
-   padding-top: 28px;
+   padding-top: 5px;
 
    /* obliga a hacer scroll antes de llegar al footer */
    padding-bottom: 250px;
