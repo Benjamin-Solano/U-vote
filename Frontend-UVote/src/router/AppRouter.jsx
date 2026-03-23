@@ -1,18 +1,18 @@
+import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
-import Home from "../pages/Home/Home";
-import Login from "../pages/Auth/Login";
-import Register from "../pages/Auth/Register";
-import VerifyCode from "../pages/Auth/VerifyCode";
-
-import PollDetail from "../pages/Polls/PollDetail";
-import CreatePoll from "../pages/Polls/CreatePoll";
-import VoteConfirmation from "../pages/Polls/VoteConfirmation";
-import PollExplorer from "../pages/Polls/PollExplorer";
-
 import ProtectedRoute from "../auth/ProtectedRoute";
-import Profile from "../pages/Profile/Profile";
-import About from "../pages/About/About";
+
+const Home            = lazy(() => import("../pages/Home/Home"));
+const Login           = lazy(() => import("../pages/Auth/Login"));
+const Register        = lazy(() => import("../pages/Auth/Register"));
+const VerifyCode      = lazy(() => import("../pages/Auth/VerifyCode"));
+const PollDetail      = lazy(() => import("../pages/Polls/PollDetail"));
+const CreatePoll      = lazy(() => import("../pages/Polls/CreatePoll"));
+const VoteConfirmation = lazy(() => import("../pages/Polls/VoteConfirmation"));
+const PollExplorer    = lazy(() => import("../pages/Polls/PollExplorer"));
+const Profile         = lazy(() => import("../pages/Profile/Profile"));
+const About           = lazy(() => import("../pages/About/About"));
 
 function PollsIdRedirect() {
    const location = useLocation();
@@ -23,31 +23,33 @@ function PollsIdRedirect() {
 
 export default function AppRouter() {
    return (
-      <Routes>
-         <Route path="/" element={<Home />} />
-         <Route path="/about" element={<About />} />
+      <Suspense fallback={<div className="container" style={{ padding: 24 }}>Cargando…</div>}>
+         <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
 
-         <Route path="/login" element={<Login />} />
-         <Route path="/register" element={<Register />} />
-         <Route path="/verify" element={<VerifyCode />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/verify" element={<VerifyCode />} />
 
-         <Route path="/encuestas" element={<Navigate to="/encuestas/buscar" replace />} />
-         <Route path="/encuestas/buscar" element={<PollExplorer />} />
-         <Route path="/encuestas/:id" element={<PollDetail />} />
-         <Route path="/encuestas/:id/confirmacion-voto" element={<VoteConfirmation />} />
+            <Route path="/encuestas" element={<Navigate to="/encuestas/buscar" replace />} />
+            <Route path="/encuestas/buscar" element={<PollExplorer />} />
+            <Route path="/encuestas/:id" element={<PollDetail />} />
+            <Route path="/encuestas/:id/confirmacion-voto" element={<VoteConfirmation />} />
 
-         <Route path="/polls" element={<Navigate to="/encuestas/buscar" replace />} />
-         <Route path="/polls/:id" element={<PollsIdRedirect />} />
+            <Route path="/polls" element={<Navigate to="/encuestas/buscar" replace />} />
+            <Route path="/polls/:id" element={<PollsIdRedirect />} />
 
-         <Route element={<ProtectedRoute />}>
-            <Route path="/encuestas/crear" element={<CreatePoll />} />
-            <Route path="/perfil" element={<Profile />} />
-         </Route>
+            <Route element={<ProtectedRoute />}>
+               <Route path="/encuestas/crear" element={<CreatePoll />} />
+               <Route path="/perfil" element={<Profile />} />
+            </Route>
 
-         <Route
-            path="*"
-            element={<div className="container" style={{ padding: 24 }}>404 - No encontrado</div>}
-         />
-      </Routes>
+            <Route
+               path="*"
+               element={<div className="container" style={{ padding: 24 }}>404 - No encontrado</div>}
+            />
+         </Routes>
+      </Suspense>
    );
 }
