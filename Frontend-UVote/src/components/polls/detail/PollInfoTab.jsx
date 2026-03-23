@@ -47,11 +47,6 @@ export default function PollInfoTab({
          )}
 
          <div className="uv-poll-card uv-flat" style={{ marginTop: 14, cursor: "default" }}>
-            <div className="uv-poll-card-top">
-               <div className="uv-poll-name uv-poll-name-lg">{poll.nombre}</div>
-               <span className={`uv-pills ${status.key}`}>{status.label}</span>
-            </div>
-
             <div className="uv-poll-desc uv-poll-desc-lg">
                {poll.descripcion?.trim() ? poll.descripcion : "Sin descripción."}
             </div>

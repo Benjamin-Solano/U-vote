@@ -478,6 +478,19 @@ export default function PollDetail() {
                )}
             </AnimatePresence>
 
+            {/* ---- Masthead editorial ---- */}
+            <div className="uv-detail-masthead">
+               <div className="uv-detail-mh-rule uv-detail-mh-rule--thick" />
+               <p className="uv-detail-mh-kicker">{campusName} · {carreraName}</p>
+               <h1 className="uv-detail-mh-title">{poll.nombre}</h1>
+               <div className="uv-detail-mh-rule uv-detail-mh-rule--double" />
+               <div className="uv-detail-mh-meta">
+                  <span>Por: {creatorName}</span>
+                  <span className={`uv-detail-badge uv-detail-badge--${status.key}`}>{status.label}</span>
+                  <span>{fechaApertura} — {fechaCierre}</span>
+               </div>
+            </div>
+
             <div className="uv-tabs-shell">
                <div className="uv-tabs" role="tablist" aria-label="Secciones de la votación">
                   <button

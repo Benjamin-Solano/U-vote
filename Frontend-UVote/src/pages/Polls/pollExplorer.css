@@ -1,36 +1,119 @@
+/* =========================================================
+   U-Vote Poll Explorer — Estilo Editorial / Periódico
+   ========================================================= */
+
 .uv-explorer-page {
    width: 100%;
-   padding: 34px 0 48px;
+   padding: 0 0 72px;
 }
+
+/* =========================================================
+   Masthead
+   ========================================================= */
+
+.uv-explorer-masthead {
+   padding: 28px 0 0;
+   margin-bottom: 40px;
+}
+
+.uv-explorer-masthead-inner {
+   max-width: 1260px;
+   margin: 0 auto;
+   padding: 0 16px;
+   text-align: center;
+}
+
+.uv-explorer-mh-rule {
+   width: 100%;
+   border: none;
+   margin: 0;
+}
+
+.uv-explorer-mh-rule--thick {
+   height: 4px;
+   background: #302f2c;
+   margin-bottom: 14px;
+}
+
+.uv-explorer-mh-rule--double {
+   height: 1px;
+   background: #302f2c;
+   box-shadow: 0 3px 0 0 #efede3, 0 4px 0 0 #302f2c;
+   margin: 10px 0 0;
+}
+
+.uv-explorer-mh-kicker {
+   margin: 0 0 6px;
+   font-size: 0.78rem;
+   letter-spacing: 0.16em;
+   text-transform: uppercase;
+   font-weight: 800;
+   color: rgba(48, 47, 44, 0.48);
+}
+
+.uv-explorer-mh-title {
+   margin: 0;
+   font-size: clamp(2.8rem, 6vw, 5rem);
+   font-weight: 900;
+   font-style: italic;
+   letter-spacing: -0.03em;
+   line-height: 0.9;
+   color: #302f2c;
+}
+
+.uv-explorer-mh-sub {
+   margin: 10px 0 0;
+   font-size: 0.9rem;
+   letter-spacing: 0.1em;
+   text-transform: uppercase;
+   font-weight: 700;
+   color: rgba(48, 47, 44, 0.5);
+}
+
+.uv-explorer-mh-meta {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 10px 0 0;
+   margin-top: 14px;
+   font-size: 0.74rem;
+   letter-spacing: 0.1em;
+   text-transform: uppercase;
+   font-weight: 700;
+   color: rgba(48, 47, 44, 0.42);
+   border-top: 1px solid rgba(48, 47, 44, 0.14);
+}
+
+/* =========================================================
+   Shell
+   ========================================================= */
 
 .uv-explorer-shell {
    max-width: 1260px;
    margin: 0 auto;
    padding: 0 16px;
    display: grid;
-   grid-template-columns: 290px 1fr;
-   gap: 20px;
+   grid-template-columns: 268px 1fr;
+   gap: 32px;
 }
 
 @media (max-width: 980px) {
    .uv-explorer-shell {
       grid-template-columns: 1fr;
+      gap: 24px;
    }
 }
 
-.uv-explorer-sidebar,
-.uv-explorer-content {
-   border: 1px solid rgba(48, 47, 44, 0.12);
-   background: rgba(255, 255, 255, 0.5);
-   border-radius: 20px;
-   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
-}
+/* =========================================================
+   Sidebar
+   ========================================================= */
 
 .uv-explorer-sidebar {
-   padding: 18px 16px;
    height: fit-content;
    position: sticky;
    top: 24px;
+   border-top: 4px solid #302f2c;
+   padding-top: 16px;
 }
 
 @media (max-width: 980px) {
@@ -39,16 +122,14 @@
    }
 }
 
-.uv-explorer-content {
-   padding: 20px;
-}
-
 .uv-explorer-sidebar-head {
    display: flex;
    justify-content: space-between;
    align-items: center;
    gap: 12px;
-   margin-bottom: 18px;
+   margin-bottom: 16px;
+   padding-bottom: 12px;
+   border-bottom: 1px solid rgba(48, 47, 44, 0.12);
 }
 
 .uv-explorer-sidebar-head h2 {
@@ -56,32 +137,40 @@
    display: inline-flex;
    align-items: center;
    gap: 8px;
-   font-size: 1.15rem;
+   font-size: 0.76rem;
+   letter-spacing: 0.14em;
+   text-transform: uppercase;
+   font-weight: 900;
    color: #302f2c;
 }
 
 .uv-explorer-clear-btn,
 .uv-explorer-clear-main {
    border: 1px solid rgba(48, 47, 44, 0.16);
-   background: rgba(48, 47, 44, 0.06);
-   color: #302f2c;
-   border-radius: 12px;
-   padding: 10px 12px;
+   background: transparent;
+   color: rgba(48, 47, 44, 0.58);
+   border-radius: 3px;
+   padding: 6px 10px;
    display: inline-flex;
    align-items: center;
-   justify-content: center;
-   gap: 8px;
+   gap: 6px;
+   font-size: 0.74rem;
    font-weight: 800;
+   letter-spacing: 0.06em;
+   text-transform: uppercase;
    cursor: pointer;
-   transition: all 0.18s ease;
+   transition: all 0.16s ease;
+   font-family: inherit;
 }
 
 .uv-explorer-clear-btn:hover,
 .uv-explorer-clear-main:hover {
-   background: rgba(48, 47, 44, 0.1);
-   transform: translateY(-1px);
+   background: rgba(48, 47, 44, 0.05);
+   color: #302f2c;
+   border-color: rgba(48, 47, 44, 0.24);
 }
 
+/* Filter blocks */
 .uv-explorer-filter-block + .uv-explorer-filter-block {
    margin-top: 18px;
    padding-top: 18px;
@@ -91,11 +180,75 @@
 .uv-explorer-label,
 .uv-explorer-side-title {
    display: block;
-   margin-bottom: 8px;
-   color: #302f2c;
-   font-weight: 800;
-   font-size: 0.95rem;
+   margin-bottom: 10px;
+   font-size: 0.7rem;
+   letter-spacing: 0.12em;
+   text-transform: uppercase;
+   font-weight: 900;
+   color: rgba(48, 47, 44, 0.5);
 }
+
+/* ---- Status filter grid ---- */
+
+.uv-explorer-status-grid {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 6px;
+}
+
+.uv-explorer-status-btn {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   gap: 5px;
+   padding: 8px 6px;
+   font-size: 0.74rem;
+   font-weight: 800;
+   letter-spacing: 0.06em;
+   text-transform: uppercase;
+   border-radius: 2px;
+   cursor: pointer;
+   transition: all 0.15s ease;
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   background: rgba(239, 237, 227, 0.4);
+   color: rgba(48, 47, 44, 0.55);
+   font-family: inherit;
+}
+
+.uv-explorer-status-btn:hover {
+   background: rgba(239, 237, 227, 0.8);
+   color: #302f2c;
+}
+
+/* Todas */
+.uv-explorer-status-btn--all.is-active {
+   background: #302f2c;
+   color: #efede3;
+   border-color: #302f2c;
+}
+
+/* Activas */
+.uv-explorer-status-btn--open.is-active {
+   background: rgba(22, 90, 56, 0.09);
+   color: #1a5c3a;
+   border-color: rgba(22, 90, 56, 0.32);
+}
+
+/* Pendientes */
+.uv-explorer-status-btn--pending.is-active {
+   background: rgba(160, 100, 5, 0.09);
+   color: #7a5208;
+   border-color: rgba(160, 100, 5, 0.32);
+}
+
+/* Cerradas */
+.uv-explorer-status-btn--closed.is-active {
+   background: rgba(48, 47, 44, 0.08);
+   color: rgba(48, 47, 44, 0.62);
+   border-color: rgba(48, 47, 44, 0.2);
+}
+
+/* ---- Search & select ---- */
 
 .uv-explorer-search-wrap,
 .uv-explorer-select-wrap {
@@ -105,70 +258,71 @@
 .uv-explorer-search-icon,
 .uv-explorer-select-icon {
    position: absolute;
-   left: 12px;
+   left: 10px;
    top: 50%;
    transform: translateY(-50%);
-   color: rgba(48, 47, 44, 0.62);
+   color: rgba(48, 47, 44, 0.42);
    pointer-events: none;
+   font-size: 0.88rem;
 }
 
 .uv-explorer-input,
 .uv-explorer-select {
    width: 100%;
+   height: 38px;
    border: 1px solid rgba(48, 47, 44, 0.14);
-   background: rgba(255, 255, 255, 0.8);
-   border-radius: 14px;
+   background: rgba(255, 255, 255, 0.5);
+   border-radius: 2px;
    color: #302f2c;
    outline: none;
-   transition: all 0.18s ease;
+   padding: 0 10px 0 32px;
+   font-family: inherit;
+   font-size: 0.88rem;
+   transition: all 0.16s ease;
    box-sizing: border-box;
 }
 
-.uv-explorer-input {
-   height: 46px;
-   padding: 0 14px 0 40px;
-}
-
 .uv-explorer-select {
-   height: 46px;
-   padding: 0 14px 0 40px;
    appearance: none;
    cursor: pointer;
 }
 
 .uv-explorer-input:focus,
 .uv-explorer-select:focus {
-   border-color: rgba(48, 47, 44, 0.28);
-   box-shadow: 0 0 0 3px rgba(48, 47, 44, 0.08);
+   border-color: rgba(48, 47, 44, 0.34);
+   box-shadow: 0 0 0 2px rgba(48, 47, 44, 0.07);
 }
+
+/* ---- Side chips ---- */
 
 .uv-explorer-side-list {
    display: flex;
    flex-direction: column;
-   gap: 8px;
+   gap: 5px;
 }
 
 .uv-explorer-side-chip {
    width: 100%;
-   border: 1px solid rgba(48, 47, 44, 0.12);
-   background: rgba(239, 237, 227, 0.6);
-   color: #302f2c;
-   border-radius: 12px;
-   padding: 10px 12px;
+   border: 1px solid rgba(48, 47, 44, 0.1);
+   background: rgba(239, 237, 227, 0.4);
+   color: rgba(48, 47, 44, 0.72);
+   border-radius: 2px;
+   padding: 7px 10px;
    display: flex;
    align-items: center;
    justify-content: space-between;
-   gap: 12px;
+   gap: 10px;
+   font-size: 0.84rem;
    font-weight: 700;
    cursor: pointer;
-   transition: all 0.18s ease;
+   transition: all 0.14s ease;
    text-align: left;
+   font-family: inherit;
 }
 
 .uv-explorer-side-chip:hover {
-   transform: translateY(-1px);
-   border-color: rgba(48, 47, 44, 0.22);
-   background: rgba(239, 237, 227, 0.88);
+   background: rgba(239, 237, 227, 0.85);
+   border-color: rgba(48, 47, 44, 0.2);
 }
 
 .uv-explorer-side-chip.active {
@@ -178,318 +332,370 @@
 }
 
 .uv-explorer-side-chip strong {
-   font-size: 0.82rem;
-   opacity: 0.9;
+   font-size: 0.76rem;
+   opacity: 0.75;
+   min-width: 18px;
+   text-align: right;
 }
 
 .uv-explorer-side-empty {
-   color: rgba(48, 47, 44, 0.58);
-   font-size: 0.92rem;
-   padding: 6px 0;
+   font-size: 0.84rem;
+   color: rgba(48, 47, 44, 0.42);
+   padding: 4px 0;
 }
 
-.uv-explorer-topbar {
-   display: flex;
-   justify-content: space-between;
-   align-items: flex-start;
-   gap: 18px;
-   margin-bottom: 18px;
+/* =========================================================
+   Content
+   ========================================================= */
+
+.uv-explorer-content {
+   min-width: 0;
 }
 
-@media (max-width: 700px) {
-   .uv-explorer-topbar {
-      flex-direction: column;
-   }
-}
-
-.uv-explorer-topbar h1 {
-   margin: 0 0 6px;
-   color: #302f2c;
-   font-size: 1.9rem;
-}
-
-.uv-explorer-topbar p {
-   margin: 0;
-   color: rgba(48, 47, 44, 0.68);
-   font-weight: 650;
-}
-
-.uv-explorer-count {
-   min-width: fit-content;
-   border: 1px solid rgba(48, 47, 44, 0.12);
-   background: rgba(239, 237, 227, 0.7);
-   color: #302f2c;
-   border-radius: 999px;
-   padding: 10px 14px;
-   font-weight: 800;
-}
-
+/* Applied filters */
 .uv-explorer-applied {
    display: flex;
    align-items: flex-start;
    gap: 10px;
    flex-wrap: wrap;
-   margin-bottom: 18px;
+   margin-bottom: 16px;
+   padding-bottom: 12px;
+   border-bottom: 1px solid rgba(48, 47, 44, 0.1);
 }
 
 .uv-explorer-applied-label {
-   color: rgba(48, 47, 44, 0.68);
-   font-weight: 800;
-   padding-top: 9px;
+   font-size: 0.7rem;
+   letter-spacing: 0.12em;
+   text-transform: uppercase;
+   font-weight: 900;
+   color: rgba(48, 47, 44, 0.42);
+   padding-top: 7px;
 }
 
 .uv-explorer-applied-list {
    display: flex;
    align-items: center;
-   gap: 8px;
+   gap: 6px;
    flex-wrap: wrap;
 }
 
 .uv-explorer-filter-chip {
    border: 1px solid rgba(48, 47, 44, 0.14);
-   background: rgba(255, 255, 255, 0.84);
+   background: rgba(239, 237, 227, 0.6);
    color: #302f2c;
-   border-radius: 999px;
-   padding: 8px 12px;
+   border-radius: 2px;
+   padding: 5px 9px;
    display: inline-flex;
    align-items: center;
-   gap: 8px;
-   font-weight: 750;
+   gap: 6px;
+   font-size: 0.76rem;
+   font-weight: 800;
+   letter-spacing: 0.04em;
    cursor: pointer;
-   transition: all 0.18s ease;
+   transition: all 0.14s ease;
+   font-family: inherit;
 }
 
 .uv-explorer-filter-chip:hover {
-   transform: translateY(-1px);
    background: #302f2c;
    color: #efede3;
 }
 
 .uv-explorer-alert {
-   margin-bottom: 18px;
-   padding: 12px 14px;
-   border-radius: 14px;
-   border: 1px solid rgba(180, 35, 24, 0.28);
-   background: rgba(180, 35, 24, 0.08);
-   color: rgba(140, 20, 12, 0.96);
-   font-weight: 800;
+   margin-bottom: 16px;
+   padding: 10px 14px;
+   border-left: 3px solid rgba(160, 30, 20, 0.55);
+   background: rgba(160, 30, 20, 0.05);
+   color: rgba(120, 15, 10, 0.9);
+   font-weight: 700;
+   font-size: 0.88rem;
 }
+
+/* =========================================================
+   Grid — collapsed newspaper columns
+   ========================================================= */
 
 .uv-explorer-grid {
    display: grid;
    grid-template-columns: repeat(3, 1fr);
-   gap: 18px;
+   /* Border collapse technique */
+   border-top: 1px solid rgba(48, 47, 44, 0.16);
+   border-left: 1px solid rgba(48, 47, 44, 0.16);
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1060px) {
    .uv-explorer-grid {
       grid-template-columns: repeat(2, 1fr);
    }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 620px) {
    .uv-explorer-grid {
       grid-template-columns: 1fr;
    }
 }
 
+/* =========================================================
+   Card — editorial article column
+   ========================================================= */
+
 .uv-explorer-card {
-   border: 1px solid rgba(48, 47, 44, 0.12);
-   background: rgba(255, 255, 255, 0.72);
-   border-radius: 18px;
-   overflow: hidden;
-   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.05);
-   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+   /* Collapse with grid borders */
+   border-right: 1px solid rgba(48, 47, 44, 0.16);
+   border-bottom: 1px solid rgba(48, 47, 44, 0.16);
+   padding: 16px 14px 12px;
+   background: transparent;
+   display: flex;
+   flex-direction: column;
+   transition: background 0.15s ease;
+   cursor: default;
 }
 
 .uv-explorer-card:hover {
-   transform: translateY(-3px);
-   border-color: rgba(48, 47, 44, 0.22);
-   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+   background: rgba(239, 237, 227, 0.45);
 }
 
-.uv-explorer-cover {
-   position: relative;
-   height: 180px;
-   background: rgba(239, 237, 227, 0.72);
-   border-bottom: 1px solid rgba(48, 47, 44, 0.08);
+/* Card top — kicker row */
+.uv-explorer-card-top {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 8px;
+   margin-bottom: 8px;
+}
+
+.uv-explorer-card-campus {
+   font-size: 0.68rem;
+   font-weight: 800;
+   letter-spacing: 0.1em;
+   text-transform: uppercase;
+   color: rgba(48, 47, 44, 0.38);
    overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   max-width: 55%;
+   text-align: right;
 }
 
-.uv-explorer-cover-img {
-   width: 100%;
-   height: 100%;
-   object-fit: cover;
-   display: block;
+/* Thick rule under kicker */
+.uv-explorer-card-rule {
+   height: 2px;
+   background: #302f2c;
+   margin-bottom: 12px;
 }
 
-.uv-explorer-cover-fallback {
-   width: 100%;
-   height: 100%;
-   display: grid;
-   place-items: center;
-   color: rgba(48, 47, 44, 0.42);
-   font-size: 2.2rem;
+.uv-explorer-card--closed .uv-explorer-card-rule {
+   background: rgba(48, 47, 44, 0.22);
 }
 
-.uv-explorer-status {
-   position: absolute;
-   top: 12px;
-   left: 12px;
-   border-radius: 999px;
-   padding: 7px 11px;
-   font-size: 0.78rem;
-   font-weight: 900;
-   border: 1px solid transparent;
-   backdrop-filter: blur(8px);
-}
-
-.uv-explorer-status--open {
-   background: rgba(60, 170, 120, 0.14);
-   border-color: rgba(60, 170, 120, 0.34);
-   color: rgba(25, 110, 70, 0.96);
-}
-
-.uv-explorer-status--pending {
-   background: rgba(245, 180, 60, 0.18);
-   border-color: rgba(245, 180, 60, 0.4);
-   color: rgba(140, 95, 15, 0.98);
-}
-
-.uv-explorer-status--closed {
-   background: rgba(48, 47, 44, 0.12);
-   border-color: rgba(48, 47, 44, 0.18);
-   color: rgba(48, 47, 44, 0.88);
-}
-
+/* Card body */
 .uv-explorer-card-body {
-   padding: 16px;
+   flex: 1;
 }
 
 .uv-explorer-card-body h3 {
    margin: 0 0 8px;
-   color: #302f2c;
    font-size: 1.08rem;
-   line-height: 1.3;
+   font-weight: 900;
+   font-style: italic;
+   line-height: 1.22;
+   color: #302f2c;
+}
+
+.uv-explorer-card--closed .uv-explorer-card-body h3 {
+   color: rgba(48, 47, 44, 0.48);
 }
 
 .uv-explorer-card-body p {
-   margin: 0 0 12px;
-   color: rgba(48, 47, 44, 0.72);
-   line-height: 1.45;
-   min-height: 44px;
+   margin: 0 0 10px;
+   font-size: 0.87rem;
+   line-height: 1.68;
+   color: rgba(48, 47, 44, 0.65);
+   text-align: justify;
+   hyphens: auto;
    display: -webkit-box;
-   -webkit-line-clamp: 2;
+   -webkit-line-clamp: 3;
    -webkit-box-orient: vertical;
    overflow: hidden;
 }
 
-.uv-explorer-meta {
+.uv-explorer-card-meta {
    display: flex;
    flex-direction: column;
-   gap: 8px;
-   margin-bottom: 14px;
+   gap: 4px;
+   margin-bottom: 10px;
 }
 
-.uv-explorer-meta span {
+.uv-explorer-card-meta span {
    display: inline-flex;
    align-items: center;
-   gap: 8px;
-   color: rgba(48, 47, 44, 0.82);
+   gap: 5px;
+   font-size: 0.78rem;
    font-weight: 700;
-   font-size: 0.94rem;
+   color: rgba(48, 47, 44, 0.48);
+   letter-spacing: 0.02em;
 }
 
-.uv-explorer-footer {
+/* Card footer */
+.uv-explorer-card-footer {
    display: flex;
    justify-content: space-between;
    align-items: center;
-   gap: 12px;
+   gap: 10px;
+   padding-top: 10px;
+   border-top: 1px solid rgba(48, 47, 44, 0.1);
+   margin-top: auto;
 }
 
-.uv-explorer-footer small {
-   color: rgba(48, 47, 44, 0.58);
+.uv-explorer-card-footer small {
+   font-size: 0.72rem;
    font-weight: 700;
+   color: rgba(48, 47, 44, 0.4);
+   letter-spacing: 0.02em;
 }
 
 .uv-explorer-open-btn {
-   border: 1px solid rgba(48, 47, 44, 0.14);
+   border: 1px solid rgba(48, 47, 44, 0.18);
    background: #302f2c;
    color: #efede3;
-   border-radius: 12px;
-   padding: 10px 12px;
+   border-radius: 2px;
+   padding: 6px 10px;
    display: inline-flex;
    align-items: center;
-   gap: 8px;
-   font-weight: 800;
+   gap: 6px;
+   font-size: 0.72rem;
+   font-weight: 900;
+   letter-spacing: 0.06em;
+   text-transform: uppercase;
    cursor: pointer;
-   transition: all 0.18s ease;
+   transition: all 0.15s ease;
+   font-family: inherit;
 }
 
 .uv-explorer-open-btn:hover {
-   background: #242321;
+   background: #1a1918;
    transform: translateY(-1px);
 }
 
+/* =========================================================
+   Status badges — stamp style
+   ========================================================= */
+
+.uv-explorer-badge {
+   display: inline-block;
+   padding: 3px 7px;
+   font-size: 0.66rem;
+   font-weight: 900;
+   letter-spacing: 0.12em;
+   text-transform: uppercase;
+   border-radius: 2px;
+   flex-shrink: 0;
+   font-family: inherit;
+}
+
+/* ACTIVA — tinta verde sobre fondo */
+.uv-explorer-badge--open {
+   background: rgba(22, 90, 56, 0.1);
+   border: 1px solid rgba(22, 90, 56, 0.32);
+   color: #1a5c3a;
+}
+
+/* PENDIENTE — sello punteado ámbar */
+.uv-explorer-badge--pending {
+   background: transparent;
+   border: 1.5px dashed rgba(160, 100, 5, 0.5);
+   color: #7a5208;
+}
+
+/* CERRADA — sello desvanecido */
+.uv-explorer-badge--closed {
+   background: rgba(48, 47, 44, 0.05);
+   border: 1px solid rgba(48, 47, 44, 0.15);
+   color: rgba(48, 47, 44, 0.42);
+}
+
+/* =========================================================
+   Empty state
+   ========================================================= */
+
 .uv-explorer-empty {
    border: 1px dashed rgba(48, 47, 44, 0.18);
-   background: rgba(239, 237, 227, 0.44);
-   border-radius: 18px;
-   padding: 38px 24px;
+   padding: 56px 24px;
    text-align: center;
 }
 
 .uv-explorer-empty h3 {
-   margin: 0 0 8px;
+   margin: 0 0 10px;
+   font-size: 1.5rem;
+   font-weight: 900;
+   font-style: italic;
    color: #302f2c;
 }
 
 .uv-explorer-empty p {
-   margin: 0 0 18px;
-   color: rgba(48, 47, 44, 0.68);
+   margin: 0 0 22px;
+   color: rgba(48, 47, 44, 0.58);
+   font-size: 0.95rem;
 }
+
+/* =========================================================
+   Skeletons
+   ========================================================= */
 
 .uv-explorer-card--skeleton {
    pointer-events: none;
 }
 
-.uv-explorer-cover-skeleton,
-.uv-explorer-line-skeleton {
+.uv-explorer-sk-badge,
+.uv-explorer-sk-line {
    background: linear-gradient(
       90deg,
-      rgba(48, 47, 44, 0.06) 0%,
-      rgba(48, 47, 44, 0.12) 50%,
-      rgba(48, 47, 44, 0.06) 100%
+      rgba(48, 47, 44, 0.05) 0%,
+      rgba(48, 47, 44, 0.1) 50%,
+      rgba(48, 47, 44, 0.05) 100%
    );
    background-size: 200% 100%;
-   animation: uv-explorer-loading 1.2s infinite linear;
-   border-radius: 12px;
+   animation: uvExplorerShimmer 1.4s infinite linear;
+   border-radius: 2px;
 }
 
-.uv-explorer-cover-skeleton {
-   height: 180px;
-   border-radius: 0;
+.uv-explorer-sk-badge {
+   width: 58px;
+   height: 16px;
 }
 
-.uv-explorer-line-skeleton {
-   margin: 14px 16px 0;
-   height: 14px;
+.uv-explorer-sk-line {
+   height: 12px;
+   margin-bottom: 8px;
 }
 
-.uv-explorer-line-skeleton.short {
-   width: 62%;
+.uv-explorer-sk-line--short { width: 65%; }
+.uv-explorer-sk-line--tiny  { width: 38%; }
+
+@keyframes uvExplorerShimmer {
+   0%   { background-position:  200% 0; }
+   100% { background-position: -200% 0; }
 }
 
-.uv-explorer-line-skeleton.tiny {
-   width: 42%;
-   margin-bottom: 16px;
-}
+/* =========================================================
+   Responsive
+   ========================================================= */
 
-@keyframes uv-explorer-loading {
-   0% {
-      background-position: 200% 0;
+@media (max-width: 860px) {
+   .uv-explorer-mh-meta {
+      flex-direction: column;
+      gap: 4px;
+      text-align: center;
    }
-   100% {
-      background-position: -200% 0;
-   }
+}
+
+@media (max-width: 560px) {
+   .uv-explorer-mh-title { font-size: clamp(2.2rem, 11vw, 3rem); }
+   .uv-explorer-status-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+   .uv-explorer-open-btn { transition: none; }
+   .uv-explorer-sk-badge,
+   .uv-explorer-sk-line { animation: none; }
 }
