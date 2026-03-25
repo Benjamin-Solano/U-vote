@@ -1,8 +1,8 @@
 /* =========================================================
-   Profile - U-Vote
-   Paleta:
-   - Fondo predominante: #efede3
-   - Matices/Texto: #302f2c
+   Profile — Estilo Editorial / Periódico
+   =========================================================
+   Paleta: crema #efede3, tinta #302f2c, sin radios grandes,
+   sin sombras flotantes, sin gradientes.
    ========================================================= */
 
 /* Contenedor de página */
@@ -12,28 +12,32 @@
 
 /* Card principal */
 .uv-profile-card {
-   border: 1px solid rgba(48, 47, 44, 0.12);
-   background: rgba(239, 237, 227, 0.72);
-   backdrop-filter: blur(10px);
-   border-radius: 18px;
-   box-shadow: 0 16px 46px rgba(48, 47, 44, 0.10);
+   border: 1px solid rgba(48, 47, 44, 0.1);
+   border-top: 3px solid #302f2c;
+   background: #f5f3ec;
+   border-radius: 0;
    padding: 18px;
+   box-shadow: 0 2px 8px rgba(48, 47, 44, 0.07), 0 6px 20px rgba(48, 47, 44, 0.05);
 }
 
-/* Header */
+/* =========================================================
+   Header — masthead editorial
+   ========================================================= */
 .uv-profile-header {
    display: flex;
    align-items: flex-start;
    justify-content: space-between;
    gap: 12px;
-   padding-bottom: 12px;
-   border-bottom: 1px solid rgba(48, 47, 44, 0.10);
+   padding-bottom: 14px;
+   border-bottom: 2px solid #302f2c;
+   margin-bottom: 2px;
 }
 
 .uv-profile-header h1 {
    margin: 0;
-   font-size: 26px;
-   letter-spacing: 0.2px;
+   font-size: 1.6rem;
+   font-style: italic;
+   letter-spacing: -0.02em;
    color: #302f2c;
    display: inline-flex;
    align-items: center;
@@ -42,78 +46,94 @@
 
 .uv-profile-header p {
    margin: 6px 0 0;
-   color: rgba(48, 47, 44, 0.70);
-   font-weight: 650;
+   color: rgba(48, 47, 44, 0.58);
+   font-weight: 600;
+   font-size: 0.9rem;
 }
 
-/* Botón logout en rojo */
+/* Botón cerrar sesión */
 .uv-profile-logout {
    border: 1px solid rgba(180, 35, 24, 0.35);
-   background: rgba(180, 35, 24, 0.12);
-   color: rgba(140, 20, 12, 0.95);
+   background: transparent;
+   color: rgba(140, 20, 12, 0.9);
    font-weight: 900;
-   border-radius: 999px;
-   padding: 10px 14px;
+   border-radius: 3px;
+   padding: 8px 12px;
    cursor: pointer;
-   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+   transition: background 120ms ease, border-color 120ms ease;
    display: inline-flex;
    align-items: center;
    gap: 8px;
+   font-size: 0.84rem;
+   font-family: inherit;
 }
 
 .uv-profile-logout:hover {
-   transform: translateY(-1px);
-   background: rgba(180, 35, 24, 0.18);
-   border-color: rgba(180, 35, 24, 0.45);
-   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+   background: rgba(180, 35, 24, 0.08);
+   border-color: rgba(180, 35, 24, 0.5);
 }
 
-/* Alertas */
+/* Alertas — borde izquierdo editorial */
 .uv-profile-alert {
    margin-top: 12px;
-   border: 1px solid rgba(180, 35, 24, 0.35);
-   background: rgba(180, 35, 24, 0.12);
-   color: rgba(140, 20, 12, 0.95);
-   border-radius: 14px;
-   padding: 12px 14px;
+   border-left: 3px solid rgba(180, 35, 24, 0.5);
+   border-top: none;
+   border-right: none;
+   border-bottom: none;
+   background: rgba(180, 35, 24, 0.05);
+   color: rgba(140, 20, 12, 0.9);
+   border-radius: 0;
+   padding: 10px 12px;
    font-weight: 750;
+   font-size: 0.9rem;
 }
 
 /* Mensaje OK */
 .uv-profile-advice {
    margin-top: 12px;
-   background: rgba(0, 135, 90, 0.14);
-   border: 1px solid rgba(0, 135, 90, 0.50);
-   color: rgba(48, 47, 44, 0.65);
-   border-radius: 14px;
-   padding: 12px 14px;
+   border-left: 3px solid rgba(22, 90, 56, 0.45);
+   border-top: none;
+   border-right: none;
+   border-bottom: none;
+   background: rgba(22, 90, 56, 0.05);
+   color: rgba(22, 90, 56, 0.9);
+   border-radius: 0;
+   padding: 10px 12px;
    font-weight: 750;
+   font-size: 0.9rem;
 }
 
 /* Texto muted */
 .uv-muted {
-   color: rgba(48, 47, 44, 0.65);
+   color: rgba(48, 47, 44, 0.58);
    font-weight: 650;
 }
 
 /* =========================================================
-   Boxes
+   Boxes — secciones editoriales
    ========================================================= */
 .uv-profile-box {
-   border: 1px solid rgba(48, 47, 44, 0.12);
-   background: rgba(255, 255, 255, 0.35);
-   border-radius: 16px;
-   padding: 14px;
+   border: 1px solid rgba(48, 47, 44, 0.1);
+   border-top: 3px solid rgba(48, 47, 44, 0.25);
+   background: #f8f7f2;
+   border-radius: 0;
+   padding: 16px;
+   box-shadow: 0 1px 4px rgba(48, 47, 44, 0.06), 0 3px 10px rgba(48, 47, 44, 0.04);
 }
 
 .uv-profile-box h2 {
-   margin: 0 0 12px;
+   margin: 0 0 14px;
    color: #302f2c;
-   font-size: 16px;
-   letter-spacing: 0.2px;
+   font-size: 0.72rem;
+   font-weight: 900;
+   letter-spacing: 0.14em;
+   text-transform: uppercase;
    display: inline-flex;
    align-items: center;
-   gap: 10px;
+   gap: 8px;
+   padding-bottom: 8px;
+   border-bottom: 1px solid rgba(48, 47, 44, 0.1);
+   width: 100%;
 }
 
 /* =========================================================
@@ -121,9 +141,9 @@
    ========================================================= */
 .uv-profile-top {
    display: grid;
-   grid-template-columns: 360px 1fr;
+   grid-template-columns: 320px 1fr;
    gap: 16px;
-   margin-top: 14px;
+   margin-top: 16px;
 }
 
 @media (max-width: 980px) {
@@ -133,7 +153,7 @@
 }
 
 /* =========================================================
-   Foto
+   Foto — avatar cuadrado editorial
    ========================================================= */
 .uv-photo-stack {
    display: flex;
@@ -145,95 +165,107 @@
 /* Avatar base */
 .uv-avatar {
    border: 1px solid rgba(48, 47, 44, 0.16);
-   background: rgba(255, 255, 255, 0.55);
+   background: rgba(239, 237, 227, 0.5);
    overflow: hidden;
    display: grid;
    place-items: center;
 }
 
-/* Avatar grande y circular */
+/* Avatar grande cuadrado */
 .uv-avatar-xl {
-   width: 325px;
-   height: 325px;
-   border-radius: 999px;
-   box-shadow: 0 16px 36px rgba(48, 47, 44, 0.12);
+   width: 290px;
+   height: 290px;
+   border-radius: 0;
+   border-top: 3px solid #302f2c;
 }
 
 .uv-avatar img {
    width: 100%;
    height: 100%;
    object-fit: cover;
-   border-radius: inherit;
 }
 
 /* Fallback */
 .uv-avatar-fallback {
    font-weight: 900;
-   font-size: 44px;
-   color: #302f2c;
+   font-size: 4rem;
+   font-style: italic;
+   color: rgba(48, 47, 44, 0.35);
 }
 
 /* Acciones */
 .uv-photo-actions {
    display: flex;
-   gap: 10px;
+   gap: 8px;
    align-items: center;
    flex-wrap: wrap;
 }
 
 .uv-photo-hint {
    width: 100%;
-   margin: 6px 0 0;
+   margin: 4px 0 0;
+   font-size: 0.76rem;
 }
 
 /* Botón file */
 .uv-file-btn {
    border: 1px solid rgba(48, 47, 44, 0.18);
-   border-radius: 12px;
-   padding: 10px 12px;
+   border-radius: 3px;
+   padding: 8px 12px;
    cursor: pointer;
-   font-weight: 800;
-   background: rgba(48, 47, 44, 0.08);
+   font-weight: 900;
+   font-size: 0.84rem;
+   background: rgba(239, 237, 227, 0.6);
    color: #302f2c;
    display: inline-flex;
    align-items: center;
    gap: 8px;
+   font-family: inherit;
+   transition: background 120ms ease;
 }
 
 .uv-file-btn:hover {
-   background: rgba(48, 47, 44, 0.10);
+   background: rgba(239, 237, 227, 0.9);
 }
 
 .uv-file-btn input {
    display: none;
 }
 
-/* Botón genérico usado en tu UI */
+/* Botón editar / guardar */
 .uv-edit-btn {
    border: 1px solid rgba(48, 47, 44, 0.16);
    background: #302f2c;
    color: #efede3;
-   font-weight: 850;
-   border-radius: 12px;
-   padding: 10px 12px;
+   font-weight: 900;
+   font-size: 0.84rem;
+   border-radius: 3px;
+   padding: 8px 12px;
    cursor: pointer;
    display: inline-flex;
    align-items: center;
    gap: 8px;
+   font-family: inherit;
+   transition: background 120ms ease;
 }
 
 .uv-edit-btn:hover {
-   filter: brightness(1.05);
+   background: #1a1918;
 }
 
 .uv-edit-btn:disabled {
-   opacity: 0.55;
+   opacity: 0.5;
    cursor: not-allowed;
 }
 
 .uv-edit-cancel {
-   background: rgba(48, 47, 44, 0.08);
+   background: rgba(239, 237, 227, 0.6);
    color: #302f2c;
+   border-color: rgba(48, 47, 44, 0.16);
+}
+
+.uv-edit-cancel:hover {
+   background: rgba(239, 237, 227, 0.9);
 }
 
 /* =========================================================
@@ -254,13 +286,16 @@
 }
 
 .uv-k {
-   color: rgba(48, 47, 44, 0.70);
-   font-weight: 800;
+   color: rgba(48, 47, 44, 0.55);
+   font-weight: 900;
+   font-size: 0.72rem;
+   text-transform: uppercase;
+   letter-spacing: 0.1em;
 }
 
 .uv-v {
-   color: rgba(48, 47, 44, 0.92);
-   font-weight: 850;
+   color: #4a4745;
+   font-weight: 700;
 }
 
 .uv-inline {
@@ -269,26 +304,28 @@
    gap: 10px;
 }
 
+/* Botón inline (editar) */
 .uv-inline-btn {
    border: 1px solid rgba(48, 47, 44, 0.16);
-   background: rgba(255, 255, 255, 0.40);
+   background: rgba(239, 237, 227, 0.5);
    color: #302f2c;
-   border-radius: 10px;
-   padding: 8px 9px;
+   border-radius: 2px;
+   padding: 6px 8px;
    cursor: pointer;
    display: inline-flex;
    align-items: center;
    justify-content: center;
+   transition: background 120ms ease;
 }
 
 .uv-inline-btn:hover {
-   background: rgba(48, 47, 44, 0.06);
+   background: rgba(48, 47, 44, 0.08);
 }
 
 /* Modo edición */
 .uv-edit {
    display: flex;
-   gap: 10px;
+   gap: 8px;
    align-items: center;
    flex-wrap: wrap;
    width: 100%;
@@ -299,20 +336,28 @@
    flex: 1;
    min-width: 220px;
    border: 1px solid rgba(48, 47, 44, 0.16);
-   background: rgba(255, 255, 255, 0.55);
-   border-radius: 12px;
-   padding: 10px 12px;
+   background: #faf9f4;
+   border-radius: 3px;
+   padding: 8px 10px;
    outline: none;
-   font-weight: 750;
-   color: rgba(48, 47, 44, 0.90);
+   font-weight: 700;
+   font-size: 0.9rem;
+   color: #4a4745;
+   font-family: inherit;
+   transition: border-color 120ms ease;
+   box-shadow: inset 0 1px 3px rgba(48, 47, 44, 0.05);
+}
+
+.uv-edit-input:focus {
+   border-color: #302f2c;
 }
 
 .uv-edit-input::placeholder {
-   color: rgba(48, 47, 44, 0.55);
+   color: rgba(48, 47, 44, 0.45);
 }
 
 /* =========================================================
-   Encuestas - Buscador + Lista
+   Encuestas — buscador + lista
    ========================================================= */
 .uv-polls-box {
    margin-top: 16px;
@@ -333,17 +378,22 @@
    }
 }
 
-/* Search */
+/* Buscador */
 .uv-search {
    position: relative;
    display: flex;
    align-items: center;
    gap: 8px;
-   border: 1px solid rgba(48, 47, 44, 0.12);
-   background: rgba(255, 255, 255, 0.50);
-   border-radius: 14px;
-   padding: 10px 12px;
-   min-width: 320px;
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   background: rgba(239, 237, 227, 0.45);
+   border-radius: 3px;
+   padding: 8px 12px;
+   min-width: 300px;
+   transition: border-color 120ms ease;
+}
+
+.uv-search:focus-within {
+   border-color: #302f2c;
 }
 
 @media (max-width: 980px) {
@@ -354,7 +404,8 @@
 }
 
 .uv-search-ico {
-   opacity: 0.75;
+   opacity: 0.5;
+   flex-shrink: 0;
 }
 
 .uv-search-input {
@@ -362,13 +413,15 @@
    border: none;
    outline: none;
    background: transparent;
-   font-weight: 750;
-   color: rgba(48, 47, 44, 0.90);
+   font-weight: 700;
+   font-size: 0.9rem;
+   color: #302f2c;
    min-width: 0;
+   font-family: inherit;
 }
 
 .uv-search-input::placeholder {
-   color: rgba(48, 47, 44, 0.55);
+   color: rgba(48, 47, 44, 0.42);
    font-weight: 700;
 }
 
@@ -376,9 +429,11 @@
    border: none;
    background: transparent;
    cursor: pointer;
-   opacity: 0.75;
+   opacity: 0.55;
    display: grid;
    place-items: center;
+   padding: 0;
+   transition: opacity 120ms ease;
 }
 
 .uv-search-clear:hover {
@@ -387,25 +442,37 @@
 
 /* Lista de encuestas */
 .uv-polls-list {
-   display: grid;
-   gap: 10px;
+   display: flex;
+   flex-direction: column;
+   gap: 1px;
+   background: rgba(48, 47, 44, 0.1);
+   border: 1px solid rgba(48, 47, 44, 0.1);
+   box-shadow: 0 1px 4px rgba(48, 47, 44, 0.06), 0 3px 10px rgba(48, 47, 44, 0.04);
 }
 
 .uv-poll-item {
-   border: 1px solid rgba(48, 47, 44, 0.12);
-   background: rgba(255, 255, 255, 0.40);
-   border-radius: 14px;
-   padding: 12px 12px;
+   border: none;
+   background: #f8f7f2;
+   border-radius: 0;
+   padding: 12px 14px;
    display: flex;
    align-items: center;
    justify-content: space-between;
    gap: 12px;
    cursor: pointer;
+   transition: background 120ms ease;
+   text-align: left;
+   width: 100%;
+}
+
+.uv-poll-item:hover {
+   background: #f2f0e8;
 }
 
 .uv-poll-title {
-   font-weight: 900;
-   color: #302f2c;
+   font-weight: 700;
+   color: #4a4745;
+   font-size: 0.92rem;
 }
 
 .uv-poll-meta {
@@ -414,67 +481,64 @@
    gap: 10px;
 }
 
-/* Badge de estado (base) */
+/* Badges de estado — stamp style editorial */
 .uv-pill {
-   border: 1px solid rgba(48, 47, 44, 0.14);
-   background: rgba(48, 47, 44, 0.07);
-   border-radius: 999px;
-   padding: 6px 10px;
+   border: 1px solid rgba(48, 47, 44, 0.16);
+   background: rgba(239, 237, 227, 0.5);
+   border-radius: 2px;
+   padding: 3px 7px;
    font-weight: 900;
-   color: rgba(48, 47, 44, 0.90);
-   font-size: 13px;
+   color: rgba(48, 47, 44, 0.7);
+   font-size: 0.68rem;
+   letter-spacing: 0.1em;
+   text-transform: uppercase;
+   flex-shrink: 0;
 }
 
-/* Activa = verde */
 .uv-pill.is-open {
-   border-color: rgba(0, 135, 90, 0.35);
-   background: rgba(0, 135, 90, 0.10);
-   color: rgba(5, 105, 70, 0.95);
+   border-color: rgba(22, 90, 56, 0.3);
+   background: rgba(22, 90, 56, 0.08);
+   color: #1a5c3a;
 }
 
-/* Cerrada = rojo */
 .uv-pill.is-closed {
-   border-color: rgba(180, 35, 24, 0.40);
-   background: rgba(180, 35, 24, 0.10);
-   color: rgba(140, 20, 12, 0.95);
+   border-color: rgba(48, 47, 44, 0.15);
+   background: rgba(48, 47, 44, 0.05);
+   color: rgba(48, 47, 44, 0.5);
 }
 
-/* Pendiente = amarillo */
 .uv-pill.is-pending {
-   border-color: rgba(245, 180, 60, 0.45);
-   background: rgba(245, 180, 60, 0.14);
-   color: rgba(140, 95, 15, 0.98);
+   border: 1.5px dashed rgba(160, 100, 5, 0.45);
+   background: transparent;
+   color: #7a5208;
 }
 
 /* Lista de encuestas con scroll interno */
 .uv-polls-scroll {
-   max-height: 280px;
+   max-height: 340px;
    overflow-y: auto;
-   padding-right: 6px;
 }
 
 .uv-polls-scroll {
    scrollbar-width: thin;
-   scrollbar-color: rgba(48, 47, 44, 0.28) rgba(48, 47, 44, 0.06);
+   scrollbar-color: rgba(48, 47, 44, 0.22) rgba(48, 47, 44, 0.04);
 }
 
 .uv-polls-scroll::-webkit-scrollbar {
-   width: 10px;
+   width: 8px;
 }
 
 .uv-polls-scroll::-webkit-scrollbar-track {
-   background: rgba(48, 47, 44, 0.06);
-   border-radius: 999px;
+   background: rgba(48, 47, 44, 0.04);
 }
 
 .uv-polls-scroll::-webkit-scrollbar-thumb {
-   background: rgba(48, 47, 44, 0.28);
-   border-radius: 999px;
-   border: 2px solid rgba(48, 47, 44, 0.06);
+   background: rgba(48, 47, 44, 0.22);
+   border-radius: 0;
 }
 
 .uv-polls-scroll::-webkit-scrollbar-thumb:hover {
-   background: rgba(48, 47, 44, 0.38);
+   background: rgba(48, 47, 44, 0.32);
 }
 
 /* Paginación */
@@ -485,34 +549,40 @@
    gap: 12px;
    margin-top: 12px;
    padding-top: 12px;
-   border-top: 1px solid rgba(48, 47, 44, 0.10);
+   border-top: 1px solid rgba(48, 47, 44, 0.1);
 }
 
 .uv-page-btn {
    border: 1px solid rgba(48, 47, 44, 0.16);
-   background: rgba(255, 255, 255, 0.45);
+   background: rgba(239, 237, 227, 0.5);
    color: #302f2c;
-   font-weight: 850;
-   border-radius: 12px;
-   padding: 9px 12px;
+   font-weight: 900;
+   font-size: 0.82rem;
+   border-radius: 3px;
+   padding: 7px 12px;
    cursor: pointer;
+   font-family: inherit;
+   transition: background 120ms ease;
 }
 
 .uv-page-btn:hover {
-   background: rgba(48, 47, 44, 0.06);
+   background: #302f2c;
+   color: #efede3;
+   border-color: #302f2c;
 }
 
 .uv-page-btn:disabled {
-   opacity: 0.55;
+   opacity: 0.45;
    cursor: not-allowed;
 }
 
 .uv-page-info {
-   color: rgba(48, 47, 44, 0.70);
-   font-weight: 750;
+   color: rgba(48, 47, 44, 0.6);
+   font-weight: 700;
+   font-size: 0.84rem;
 }
 
-/* wrapper del botón cerrar sesión + fecha */
+/* Wrapper del botón cerrar sesión + fecha */
 .uv-logout-wrap {
    display: flex;
    flex-direction: column;
@@ -521,13 +591,15 @@
 }
 
 .uv-created-at {
-   font-size: 12px;
-   color: rgba(48, 47, 44, 0.62);
-   font-weight: 750;
+   font-size: 0.72rem;
+   color: rgba(48, 47, 44, 0.5);
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.06em;
 }
 
 .uv-created-at strong {
-   color: rgba(48, 47, 44, 0.82);
+   color: rgba(48, 47, 44, 0.75);
 }
 
 /* Descripción en columna */
@@ -539,22 +611,21 @@
    padding-top: 12px;
 }
 
-/* Centrar el subtítulo/label "Descripción" */
 .uv-profile-row-desc-vertical .uv-k {
    width: 100%;
-   text-align: center;
 }
 
 /* Bloque de descripción */
 .uv-desc-box {
    width: 100%;
-   height: 250px;
-   border: 1px solid rgba(48, 47, 44, 0.16);
-   background: rgba(255, 255, 255, 0.55);
-   border-radius: 12px;
+   height: 220px;
+   border: 1px solid rgba(48, 47, 44, 0.14);
+   background: #faf9f4;
+   border-radius: 0;
    padding: 12px;
    position: relative;
    overflow: hidden;
+   box-shadow: inset 0 1px 3px rgba(48, 47, 44, 0.05);
 }
 
 /* Botón editar flotante */
@@ -571,12 +642,13 @@
    overflow-y: auto;
    padding-right: 36px;
    white-space: pre-wrap;
-   color: rgba(48, 47, 44, 0.86);
-   font-weight: 750;
-   line-height: 1.4;
+   color: #5a5753;
+   font-weight: 700;
+   line-height: 1.5;
+   font-size: 0.9rem;
 }
 
-/* Textarea fijo, no redimensionable */
+/* Textarea fijo */
 .uv-desc-textarea {
    width: 100%;
    height: 100%;
@@ -585,75 +657,50 @@
    outline: none;
    background: transparent;
    padding: 0;
-   font-weight: 750;
-   line-height: 1.4;
-   color: rgba(48, 47, 44, 0.90);
+   font-weight: 700;
+   line-height: 1.5;
+   font-size: 0.9rem;
+   color: #302f2c;
+   font-family: inherit;
 }
 
 .uv-edit-textarea {
    width: 100%;
-   height: 170px;
+   height: 160px;
    resize: none;
    border: 1px solid rgba(48, 47, 44, 0.16);
-   background: rgba(255, 255, 255, 0.55);
-   border-radius: 12px;
+   background: #faf9f4;
+   border-radius: 3px;
    padding: 10px 12px;
    outline: none;
-   font-weight: 750;
-   color: rgba(48, 47, 44, 0.90);
-   line-height: 1.35;
+   font-weight: 700;
+   font-size: 0.9rem;
+   color: #4a4745;
+   line-height: 1.45;
+   font-family: inherit;
+   transition: border-color 120ms ease;
+   box-shadow: inset 0 1px 3px rgba(48, 47, 44, 0.05);
+}
+
+.uv-edit-textarea:focus {
+   border-color: #302f2c;
 }
 
 .uv-edit-textarea::placeholder {
-   color: rgba(48, 47, 44, 0.55);
+   color: rgba(48, 47, 44, 0.42);
    font-weight: 700;
 }
 
 .uv-edit-actions {
    margin-top: 10px;
    display: flex;
-   gap: 10px;
+   gap: 8px;
    justify-content: flex-end;
 }
 
 /* =========================================================
-   Micro-interacciones
+   Metadatos usuario
    ========================================================= */
-.uv-pill.is-open,
-.uv-pill.is-closed,
-.uv-pill.is-pending {
-   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease, filter 120ms ease;
-}
-
-.uv-poll-item:hover .uv-pill.is-open,
-.uv-poll-item:focus-visible .uv-pill.is-open {
-   transform: translateY(-1px);
-   filter: brightness(1.05);
-   background: rgba(0, 135, 90, 0.14);
-   border-color: rgba(0, 135, 90, 0.50);
-}
-
-.uv-poll-item:hover .uv-pill.is-closed,
-.uv-poll-item:focus-visible .uv-pill.is-closed {
-   transform: translateY(-1px);
-   filter: brightness(1.05);
-   background: rgba(180, 35, 24, 0.14);
-   border-color: rgba(180, 35, 24, 0.52);
-}
-
-.uv-poll-item:hover .uv-pill.is-pending,
-.uv-poll-item:focus-visible .uv-pill.is-pending {
-   transform: translateY(-1px);
-   filter: brightness(1.05);
-   background: rgba(245, 180, 60, 0.18);
-   border-color: rgba(245, 180, 60, 0.62);
-}
-
-.uv-poll-item:focus-visible {
-   outline: none;
-   box-shadow: 0 0 0 3px rgba(48, 47, 44, 0.14);
-}
-
 .uv-user-meta {
    display: flex;
    flex-direction: column;
@@ -668,16 +715,16 @@
 }
 
 .uv-user-meta-sub {
-   font-size: 0.92rem;
-   font-weight: 750;
-   color: rgba(48, 47, 44, 0.68);
+   font-size: 0.84rem;
+   font-weight: 700;
+   color: rgba(48, 47, 44, 0.58);
    text-align: left;
    max-width: 420px;
-   line-height: 1.25;
+   line-height: 1.3;
 }
 
 /* =========================================================
-   Responsive - Tablet pequeña / móvil
+   Responsive — Tablet
    ========================================================= */
 @media (max-width: 768px) {
    .uv-profile {
@@ -686,7 +733,6 @@
 
    .uv-profile-card {
       padding: 14px;
-      border-radius: 16px;
    }
 
    .uv-profile-header {
@@ -696,13 +742,7 @@
    }
 
    .uv-profile-header h1 {
-      font-size: 22px;
-      line-height: 1.2;
-   }
-
-   .uv-profile-header p {
-      font-size: 0.95rem;
-      line-height: 1.35;
+      font-size: 1.3rem;
    }
 
    .uv-logout-wrap {
@@ -769,7 +809,6 @@
 
    .uv-user-meta-sub {
       max-width: 100%;
-      text-align: left;
    }
 
    .uv-edit {
@@ -795,11 +834,11 @@
    }
 
    .uv-desc-box {
-      height: 220px;
+      height: 200px;
    }
 
    .uv-edit-textarea {
-      height: 150px;
+      height: 140px;
    }
 
    .uv-polls-header {
@@ -824,6 +863,7 @@
 
    .uv-page-btn {
       width: 100%;
+      justify-content: center;
    }
 
    .uv-page-info {
@@ -832,7 +872,7 @@
 }
 
 /* =========================================================
-   Responsive - Celular pequeño
+   Responsive — Móvil pequeño
    ========================================================= */
 @media (max-width: 520px) {
    .uv-profile-card {
@@ -840,76 +880,64 @@
    }
 
    .uv-profile-header h1 {
-      font-size: 20px;
-      gap: 8px;
-   }
-
-   .uv-profile-header p {
-      font-size: 0.9rem;
-   }
-
-   .uv-profile-box h2 {
-      font-size: 15px;
+      font-size: 1.1rem;
    }
 
    .uv-avatar-xl {
-      width: 170px;
-      height: 170px;
+      width: 160px;
+      height: 160px;
    }
 
    .uv-avatar-fallback {
-      font-size: 34px;
+      font-size: 2.8rem;
    }
 
    .uv-file-btn,
    .uv-edit-btn,
    .uv-page-btn,
    .uv-profile-logout {
-      padding: 10px;
-      font-size: 0.95rem;
+      padding: 8px 10px;
+      font-size: 0.88rem;
    }
 
    .uv-search {
-      padding: 10px 10px;
-      border-radius: 12px;
+      padding: 8px 10px;
    }
 
    .uv-search-input {
-      font-size: 0.95rem;
+      font-size: 0.88rem;
    }
 
    .uv-poll-item {
-      padding: 11px;
+      padding: 10px;
    }
 
    .uv-poll-title {
-      font-size: 0.95rem;
-      line-height: 1.3;
+      font-size: 0.88rem;
    }
 
    .uv-pill {
-      font-size: 12px;
-      padding: 5px 9px;
+      font-size: 0.62rem;
+      padding: 2px 6px;
    }
 
    .uv-desc-box {
-      height: 200px;
+      height: 180px;
       padding: 10px;
    }
 
    .uv-desc-text {
       padding-right: 30px;
-      font-size: 0.95rem;
+      font-size: 0.88rem;
    }
 
    .uv-edit-textarea {
-      height: 135px;
-      padding: 10px;
-      font-size: 0.95rem;
+      height: 125px;
+      padding: 8px;
+      font-size: 0.88rem;
    }
 
    .uv-created-at {
-      font-size: 11px;
-      line-height: 1.3;
+      font-size: 0.65rem;
    }
 }

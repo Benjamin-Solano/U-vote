@@ -11,8 +11,23 @@ export function AuthProvider({ children }) {
       const storedToken = localStorage.getItem("token");
       const storedUser = localStorage.getItem("usuario");
 
-      if (storedToken) setToken(storedToken);
-      if (storedUser) setUsuario(JSON.parse(storedUser));
+      if (storedToken && typeof storedToken === "string" && storedToken.length > 0) {
+         setToken(storedToken);
+      }
+
+      if (storedUser) {
+         try {
+            const parsed = JSON.parse(storedUser);
+            if (parsed && typeof parsed === "object") {
+               setUsuario(parsed);
+            } else {
+               localStorage.removeItem("usuario");
+            }
+         } catch {
+            localStorage.removeItem("token");
+            localStorage.removeItem("usuario");
+         }
+      }
 
       setLoading(false);
    }, []);

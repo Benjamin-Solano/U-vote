@@ -500,7 +500,11 @@ export default function CreatePoll() {
 
             setOptionsListKey((k) => k + 1);
          } catch (e) {
-            console.error(e);
+            const msg =
+               e?.response?.data?.message ||
+               e?.response?.data?.error ||
+               "No se pudo cargar la votación. Intenta de nuevo.";
+            if (mounted) setErrorMsg(msg);
          } finally {
             if (mounted) setLoading(false);
          }
@@ -552,9 +556,8 @@ export default function CreatePoll() {
          setCoverBlob(blob);
          setCoverPreview(previewUrl);
          setCropOpen(false);
-      } catch (e) {
-         console.error(e);
-         setCoverError("No se pudo recortar la portada.");
+      } catch {
+         setCoverError("No se pudo recortar la portada. Intenta con otra imagen.");
          setCropOpen(false);
       }
    }
@@ -795,7 +798,6 @@ export default function CreatePoll() {
                : "Cambios guardados correctamente."
          );
       } catch (e) {
-         console.error("CREATE/EDIT POLL ERROR:", e?.response?.data ?? e);
          const msg =
             e?.response?.data?.message ||
             e?.response?.data?.error ||

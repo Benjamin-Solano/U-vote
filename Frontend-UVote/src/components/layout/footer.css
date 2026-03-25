@@ -1,118 +1,169 @@
-.uv-footer {
+/* =========================================================
+   U-Vote Footer — Estilo Editorial / Periódico
+   Fondo oscuro tinta con tipografía invertida
+   ========================================================= */
 
+.uv-footer {
    background: #302f2c;
-   color: rgba(239, 237, 227, 0.92);
+   color: rgba(239, 237, 227, 0.88);
+   border-top: 4px solid rgba(239, 237, 227, 0.22);
 }
 
+/* =========================================================
+   Cuerpo principal
+   ========================================================= */
+
 .uv-footer-inner {
-   padding: 36px 0;
+   padding: 40px 0 36px;
    display: flex;
-   gap: 24px;
+   gap: 32px;
    justify-content: space-between;
    flex-wrap: wrap;
+   align-items: flex-start;
+}
+
+/* ---- Brand ---- */
+.uv-footer-brand {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
 }
 
 .uv-footer-title {
    display: inline-flex;
    align-items: center;
    gap: 10px;
-   font-size: 18px;
-   font-weight: 800;
-   letter-spacing: 0.2px;
+   font-size: 1.1rem;
+   font-weight: 900;
+   font-style: italic;
+   letter-spacing: -0.01em;
+   color: #efede3;
 }
 
 .uv-footer-sub {
-   margin-top: 8px;
-   max-width: 360px;
-   color: rgba(239, 237, 227, 0.72);
-   line-height: 1.5;
-   font-size: 14px;
+   margin-top: 6px;
+   max-width: 320px;
+   color: rgba(239, 237, 227, 0.52);
+   line-height: 1.55;
+   font-size: 0.86rem;
 }
+
+/* =========================================================
+   Columnas de enlaces
+   ========================================================= */
 
 .uv-footer-cols {
    display: flex;
-   gap: 42px;
+   gap: 48px;
    flex-wrap: wrap;
+   align-items: flex-start;
 }
 
+/* Títulos de columna — kicker invertido */
 .uv-footer-h {
-   font-weight: 800;
-   margin-bottom: 10px;
-   letter-spacing: 0.2px;
+   margin-bottom: 14px;
+   padding-bottom: 8px;
+   border-bottom: 1px solid rgba(239, 237, 227, 0.12);
+   font-size: 0.68rem;
+   font-weight: 900;
+   letter-spacing: 0.16em;
+   text-transform: uppercase;
+   color: rgba(239, 237, 227, 0.42);
 }
 
+/* Links de navegación */
 .uv-footer-link {
    display: block;
-   padding: 6px 0;
-   color: rgba(239, 237, 227, 0.72);
+   padding: 5px 0;
+   color: rgba(239, 237, 227, 0.68);
+   font-size: 0.9rem;
+   font-weight: 600;
+   text-decoration: none;
+   text-underline-offset: 3px;
+   transition: color 140ms ease;
 }
 
 .uv-footer-link:hover {
-   color: rgba(239, 237, 227, 0.95);
+   color: #efede3;
+   text-decoration: underline;
 }
 
-.uv-social {
+/* =========================================================
+   Botones sociales — sellos cuadrados en tinta inversa
+   ========================================================= */
+
+.uv-footer .uv-social {
    display: flex;
-   gap: 10px;
+   gap: 8px;
    align-items: center;
 }
 
-.uv-social-btn {
+.uv-footer .uv-social-btn {
    width: 36px;
    height: 36px;
-   border-radius: 10px;
+   border-radius: 2px;
    display: grid;
    place-items: center;
-   border: 1px solid rgba(239, 237, 227, 0.18);
-   color: rgba(239, 237, 227, 0.92);
-   font-weight: 800;
-   text-transform: uppercase;
+   border: 1.5px solid rgba(239, 237, 227, 0.2);
+   background: transparent;
+   color: rgba(239, 237, 227, 0.72);
+   transition: background 140ms ease, color 140ms ease, border-color 140ms ease, transform 120ms ease;
 }
 
-.uv-social-btn:hover {
-   background: rgba(239, 237, 227, 0.08);
-}
-
-.uv-footer-bottom {
-   border-top: 1px solid rgba(239, 237, 227, 0.14);
-   padding: 14px 0;
-   color: rgba(239, 237, 227, 0.68);
-   font-size: 13px;
-}
-
-.uv-footer-bottom-inner {
-   display: flex;
-   justify-content: space-between;
-   gap: 10px;
-   flex-wrap: wrap;
-}
-
-.uv-footer-dot {
-   opacity: 0.6;
-}
-
-.uv-social-btn svg {
+.uv-footer .uv-social-btn svg {
    width: 16px;
    height: 16px;
+   display: block;
 }
 
-.uv-social-btn {
-   transition: transform 120ms ease, background 120ms ease;
-}
-
-.uv-social-btn:hover {
+.uv-footer .uv-social-btn:hover {
+   background: rgba(239, 237, 227, 0.1);
+   border-color: rgba(239, 237, 227, 0.38);
+   color: #efede3;
    transform: translateY(-1px);
 }
 
-.uv-footer-logo {
-   width: 32px;
-   height: 32px;
-   margin-left: 12px;
+/* =========================================================
+   Barra inferior — colofón editorial
+   ========================================================= */
+
+.uv-footer-bottom {
+   border-top: 2px solid rgba(239, 237, 227, 0.1);
+   padding: 14px 0;
 }
 
 .uv-footer-bottom-inner {
    display: flex;
    justify-content: center;
+   align-items: center;
    gap: 10px;
    flex-wrap: wrap;
+   color: rgba(239, 237, 227, 0.38);
+   font-size: 0.78rem;
+   font-weight: 600;
+   letter-spacing: 0.04em;
+}
+
+.uv-footer-dot {
+   opacity: 0.5;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 640px) {
+   .uv-footer-inner {
+      padding: 28px 0 24px;
+      gap: 24px;
+   }
+
+   .uv-footer-cols {
+      gap: 28px;
+      width: 100%;
+   }
+
+   .uv-footer-bottom-inner {
+      font-size: 0.74rem;
+   }
 }

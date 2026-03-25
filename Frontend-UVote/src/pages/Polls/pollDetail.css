@@ -339,11 +339,12 @@
 
 .uv-polldetail-scope .uv-poll-card {
    text-align: left;
-   border: 1px solid rgba(48, 47, 44, 0.12);
+   border: 1px solid rgba(48, 47, 44, 0.1);
    border-radius: 0;
-   background: rgba(239, 237, 227, 0.2);
+   background: #f5f3ec;
    padding: 14px;
    cursor: default;
+   box-shadow: 0 2px 8px rgba(48, 47, 44, 0.07), 0 6px 20px rgba(48, 47, 44, 0.05);
 }
 
 .uv-polldetail-scope .uv-poll-card-top {
@@ -405,7 +406,7 @@
 .uv-polldetail-scope .uv-detail-meta-item {
    border: none;
    border-radius: 0;
-   background: rgba(239, 237, 227, 0.3);
+   background: #f8f7f2;
    padding: 10px 12px;
    display: flex;
    flex-direction: column;
@@ -485,8 +486,9 @@
 
 .uv-polldetail-scope .uv-detail-grid-2 .uv-poll-card {
    border: none;
-   background: rgba(239, 237, 227, 0.2);
+   background: #f8f7f2;
    padding: 20px 18px 22px;
+   box-shadow: 0 1px 4px rgba(48, 47, 44, 0.06), 0 3px 10px rgba(48, 47, 44, 0.04);
 }
 
 .uv-polldetail-scope .uv-option-media {
@@ -639,9 +641,10 @@
 
 .uv-polldetail-scope .uv-chart-box {
    margin-top: 10px;
-   border: 1px dashed rgba(48, 47, 44, 0.14);
-   background: rgba(239, 237, 227, 0.2);
+   border: 1px solid rgba(48, 47, 44, 0.1);
+   background: #f8f7f2;
    padding: 14px;
+   box-shadow: 0 1px 4px rgba(48, 47, 44, 0.06), 0 3px 10px rgba(48, 47, 44, 0.04);
 }
 
 .uv-polldetail-scope .uv-chart-empty {

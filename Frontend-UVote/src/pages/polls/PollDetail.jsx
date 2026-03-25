@@ -140,14 +140,14 @@ export default function PollDetail() {
 
    const PASTELS = useMemo(
       () => [
-         "rgba(186, 220, 255, 0.95)",
-         "rgba(199, 232, 213, 0.95)",
-         "rgba(255, 221, 193, 0.95)",
-         "rgba(255, 199, 223, 0.95)",
-         "rgba(226, 211, 255, 0.95)",
-         "rgba(255, 245, 179, 0.95)",
-         "rgba(202, 233, 255, 0.95)",
-         "rgba(216, 245, 227, 0.95)",
+         "#3d6b59",
+         "#7c5c38",
+         "#3a5478",
+         "#6e3d5a",
+         "#5a6e3a",
+         "#783a3a",
+         "#3a6e70",
+         "#70503a",
       ],
       []
    );
@@ -180,13 +180,13 @@ export default function PollDetail() {
             name: "Ya votaron",
             votos: totalYaVotaron,
             pct: totalAutorizados > 0 ? Math.round((totalYaVotaron * 100) / totalAutorizados) : 0,
-            color: "rgba(199, 232, 213, 0.95)",
+            color: "#3d6b59",
          },
          {
             name: "Pendientes",
             votos: totalPendientes,
             pct: totalAutorizados > 0 ? Math.round((totalPendientes * 100) / totalAutorizados) : 0,
-            color: "rgba(255, 221, 193, 0.95)",
+            color: "#7c5c38",
          },
       ];
    }, [participation]);

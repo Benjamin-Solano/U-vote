@@ -7,6 +7,15 @@ function About() {
    return (
       <section className="uv-about-page">
          <div className="uv-about-wrapper">
+
+            {/* Masthead editorial */}
+            <header className="uv-about-masthead">
+               <hr className="uv-about-mh-rule--thick" />
+               <p className="uv-about-mh-kicker">U-Vote · Equipo de desarrollo</p>
+               <h1 className="uv-about-mh-title">Sobre el desarrollador</h1>
+               <hr className="uv-about-mh-rule--double" />
+            </header>
+
             <article className="uv-about-card">
                <div className="uv-about-left">
                   <div className="uv-about-photo-shell">
@@ -21,7 +30,7 @@ function About() {
                <div className="uv-about-right">
                   <span className="uv-about-badge">Desarrollador</span>
 
-                  <h1 className="uv-about-name">Benjamín Solano Ortega</h1>
+                  <h2 className="uv-about-name">Benjamín Solano Ortega</h2>
 
                   <p className="uv-about-role">
                      Estudiante de Ingeniería en Sistemas · Full Stack Developer
@@ -46,9 +55,9 @@ function About() {
                   </div>
 
                   <blockquote className="uv-about-quote">
-                     “El minimalismo no es la falta de algo. Es simplemente la cantidad
-                     perfecta de algo.”
-                     <span>– Nicholas Burroughs</span>
+                     "El minimalismo no es la falta de algo. Es simplemente la cantidad
+                     perfecta de algo."
+                     <span>— Nicholas Burroughs</span>
                   </blockquote>
 
                   <div className="uv-about-socials">
@@ -82,7 +91,7 @@ function About() {
                         aria-label="LinkedIn del desarrollador"
                      >
                         <FaLinkedinIn />
-                     
+                        
                      </a>
                   </div>
                </div>

@@ -125,7 +125,7 @@ export default function HomeLanding() {
             </motion.div>
 
             <motion.div className="uv-paper-meta-row" variants={heroFade}>
-               <span>V.2.0.5 · N.º 2</span>
+               <span>V.2.0.9 · N.º 404</span>
                <span>San José, Costa Rica</span>
                <span>Voto Estudiantil</span>
             </motion.div>
