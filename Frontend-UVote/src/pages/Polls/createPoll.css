@@ -24,7 +24,7 @@
    font-size: 1.6rem;
    font-weight: 900;
    font-style: italic;
-   color: #302f2c;
+   color: var(--uv-ink);
    text-align: center;
    letter-spacing: -0.02em;
 }
@@ -43,12 +43,12 @@
    Card
    ========================================================= */
 .uv-polls-scope .uv-card {
-   background: #f5f3ec;
-   border: 1px solid rgba(48, 47, 44, 0.1);
-   border-top: 3px solid #302f2c;
+   background: var(--uv-bg-l1);
+   border: 1px solid var(--uv-border-sm);
+   border-top: 3px solid var(--uv-ink);
    border-radius: 0;
    padding: 22px;
-   box-shadow: 0 2px 8px rgba(48, 47, 44, 0.07), 0 6px 20px rgba(48, 47, 44, 0.05);
+   box-shadow: var(--uv-shadow-l1);
 }
 
 /* =========================================================
@@ -96,9 +96,9 @@
    height: 38px;
    padding: 0 14px;
    border-radius: 3px;
-   border: 1px solid rgba(48, 47, 44, 0.18);
-   background: rgba(239, 237, 227, 0.6);
-   color: #302f2c;
+   border: 1px solid var(--uv-border);
+   background: var(--uv-input-glass);
+   color: var(--uv-ink);
    font-weight: 800;
    font-family: inherit;
    cursor: pointer;
@@ -106,8 +106,8 @@
 }
 
 .uv-polls-scope .uv-btn:hover {
-   background: rgba(239, 237, 227, 0.9);
-   border-color: rgba(48, 47, 44, 0.28);
+   background: var(--uv-input-glass-focus);
+   border-color: var(--uv-border-strong);
 }
 
 .uv-polls-scope .uv-btn:disabled {
@@ -121,33 +121,32 @@
 }
 
 .uv-polls-scope .uv-btn-primary {
-   background: #302f2c;
-   border-color: #302f2c;
-   color: #efede3;
+   background: var(--uv-ink);
+   border-color: var(--uv-ink);
+   color: var(--uv-bg-page);
 }
 
 .uv-polls-scope .uv-btn-primary:hover {
-   background: #1a1918;
-   border-color: #1a1918;
+   opacity: 0.88;
 }
 
 .uv-polls-scope .uv-icon-btn {
    width: 34px;
    height: 34px;
    border-radius: 2px;
-   border: 1px solid rgba(48, 47, 44, 0.14);
-   background: rgba(239, 237, 227, 0.5);
+   border: 1px solid var(--uv-border);
+   background: var(--uv-input-glass);
    display: inline-flex;
    align-items: center;
    justify-content: center;
    cursor: pointer;
    transition: background 120ms ease, color 120ms ease;
-   color: #302f2c;
+   color: var(--uv-ink);
 }
 
 .uv-polls-scope .uv-icon-btn:hover {
-   background: #302f2c;
-   color: #efede3;
+   background: var(--uv-ink);
+   color: var(--uv-bg-page);
 }
 
 .uv-polls-scope .uv-icon-btn-danger {
@@ -198,17 +197,17 @@
 .uv-polls-scope .uv-textarea,
 .uv-polls-scope .uv-select {
    width: 100%;
-   border: 1px solid rgba(48, 47, 44, 0.16);
-   background: #faf9f4;
+   border: 1px solid var(--uv-border);
+   background: var(--uv-input-glass-focus);
    border-radius: 3px;
    padding: 12px;
    outline: none;
-   color: #4a4745;
+   color: var(--uv-ink-body);
    font-size: 0.92rem;
    font-family: inherit;
    box-sizing: border-box;
    transition: border-color 120ms ease;
-   box-shadow: inset 0 1px 3px rgba(48, 47, 44, 0.05);
+   box-shadow: var(--uv-shadow-inset);
 }
 
 .uv-polls-scope .uv-input,
@@ -225,7 +224,7 @@
 .uv-polls-scope .uv-input:focus,
 .uv-polls-scope .uv-textarea:focus,
 .uv-polls-scope .uv-select:focus {
-   border-color: #302f2c;
+   border-color: var(--uv-ink);
    border-width: 1.5px;
 }
 
@@ -356,15 +355,15 @@
    height: 26px;
    min-width: 26px;
    border-radius: 0;
-   background: rgba(48, 47, 44, 0.08);
-   color: #302f2c;
+   background: var(--uv-hover-bg-md);
+   color: var(--uv-ink);
    margin-top: 1px;
 }
 
 .uv-polls-scope .uv-academic-note-content {
    font-size: 0.84rem;
    line-height: 1.45;
-   color: #5a5753;
+   color: var(--uv-ink-muted);
 }
 
 /* =========================================================
@@ -394,9 +393,9 @@
    font-weight: 900;
    letter-spacing: 0.1em;
    text-transform: uppercase;
-   border: 1px solid rgba(48, 47, 44, 0.18);
-   background: rgba(239, 237, 227, 0.6);
-   color: #302f2c;
+   border: 1px solid var(--uv-border);
+   background: var(--uv-input-glass);
+   color: var(--uv-ink);
    line-height: 1;
 }
 
@@ -425,25 +424,25 @@
    margin-top: 10px;
    border-radius: 0;
    padding: 10px 12px;
-   border-left: 3px solid rgba(48, 47, 44, 0.2);
+   border-left: 3px solid var(--uv-border-md);
    border-top: none;
    border-right: none;
    border-bottom: none;
-   background: rgba(239, 237, 227, 0.4);
+   background: var(--uv-bg-l2);
 }
 
 .uv-polls-scope .uv-alert-title {
    font-weight: 900;
    font-size: 0.84rem;
    margin-bottom: 4px;
-   color: #302f2c;
+   color: var(--uv-ink);
    text-transform: uppercase;
    letter-spacing: 0.06em;
 }
 
 .uv-polls-scope .uv-alert-text {
    font-size: 0.84rem;
-   color: #5a5753;
+   color: var(--uv-ink-muted);
    line-height: 1.4;
 }
 
@@ -478,9 +477,9 @@
    ========================================================= */
 .uv-polls-scope .uv-cover {
    border-radius: 0;
-   border: 1px solid rgba(48, 47, 44, 0.12);
-   border-top: 3px solid #302f2c;
-   background: rgba(239, 237, 227, 0.3);
+   border: 1px solid var(--uv-border);
+   border-top: 3px solid var(--uv-ink);
+   background: var(--uv-bg-l2);
    overflow: hidden;
 }
 
@@ -519,7 +518,7 @@
    align-items: center;
    justify-content: center;
    padding: 18px;
-   color: #302f2c;
+   color: var(--uv-ink);
 }
 
 .uv-polls-scope .uv-cover-title {
@@ -535,12 +534,12 @@
    text-align: center;
    font-size: 0.72rem;
    font-weight: 900;
-   color: #302f2c;
+   color: var(--uv-ink);
    text-transform: uppercase;
    letter-spacing: 0.14em;
    padding-bottom: 8px;
-   border-bottom: 3px solid #302f2c;
-   box-shadow: 0 4px 0 0 #efede3, 0 5px 0 0 rgba(48, 47, 44, 0.15);
+   border-bottom: 3px solid var(--uv-ink);
+   box-shadow: var(--uv-rule-double);
 }
 
 .uv-polls-scope .uv-section-title-left {
@@ -555,10 +554,10 @@
    margin-top: 18px;
    padding: 16px;
    border-radius: 0;
-   border: 1px solid rgba(48, 47, 44, 0.1);
-   border-top: 3px solid rgba(48, 47, 44, 0.3);
-   background: #f8f7f2;
-   box-shadow: 0 1px 4px rgba(48, 47, 44, 0.06), 0 3px 10px rgba(48, 47, 44, 0.04);
+   border: 1px solid var(--uv-border-sm);
+   border-top: 3px solid var(--uv-border-strong);
+   background: var(--uv-bg-l2);
+   box-shadow: var(--uv-shadow-l2);
 }
 
 .uv-polls-scope .uv-file-section-head {
@@ -576,15 +575,15 @@
    display: inline-flex;
    align-items: center;
    justify-content: center;
-   background: rgba(48, 47, 44, 0.08);
-   color: #302f2c;
+   background: var(--uv-hover-bg-md);
+   color: var(--uv-ink);
    font-size: 18px;
-   border: 1px solid rgba(48, 47, 44, 0.1);
+   border: 1px solid var(--uv-border-sm);
 }
 
 .uv-polls-scope .uv-file-section-text {
    margin: 0;
-   color: #5a5753;
+   color: var(--uv-ink-muted);
    font-size: 0.84rem;
    line-height: 1.45;
 }
@@ -594,8 +593,8 @@
    width: 100%;
    min-height: 140px;
    border-radius: 0;
-   border: 1px dashed rgba(48, 47, 44, 0.25);
-   background: rgba(239, 237, 227, 0.2);
+   border: 1px dashed var(--uv-border-md);
+   background: var(--uv-bg-l2);
    display: grid;
    align-items: center;
    cursor: pointer;
@@ -604,13 +603,13 @@
 }
 
 .uv-polls-scope .uv-excel-dropzone:hover {
-   background: rgba(239, 237, 227, 0.35);
-   border-color: rgba(48, 47, 44, 0.4);
+   background: var(--uv-hover-bg);
+   border-color: var(--uv-border-strong);
 }
 
 .uv-polls-scope .uv-excel-dropzone.is-drag {
-   border-color: #302f2c;
-   background: rgba(239, 237, 227, 0.5);
+   border-color: var(--uv-ink);
+   background: var(--uv-input-glass-focus);
 }
 
 .uv-polls-scope .uv-excel-empty {
@@ -625,7 +624,7 @@
 .uv-polls-scope .uv-excel-title {
    font-size: 0.92rem;
    font-weight: 900;
-   color: #302f2c;
+   color: var(--uv-ink);
 }
 
 .uv-polls-scope .uv-excel-sub {
@@ -665,9 +664,9 @@
    display: inline-flex;
    align-items: center;
    justify-content: center;
-   background: rgba(48, 47, 44, 0.08);
-   border: 1px solid rgba(48, 47, 44, 0.1);
-   color: #302f2c;
+   background: var(--uv-hover-bg-md);
+   border: 1px solid var(--uv-border-sm);
+   color: var(--uv-ink);
    font-size: 20px;
 }
 
@@ -678,7 +677,7 @@
 .uv-polls-scope .uv-excel-file-name {
    font-size: 0.9rem;
    font-weight: 900;
-   color: #302f2c;
+   color: var(--uv-ink);
    word-break: break-word;
 }
 
@@ -723,8 +722,8 @@
    display: grid;
    grid-template-columns: repeat(5, minmax(0, 1fr));
    gap: 1px;
-   background: rgba(48, 47, 44, 0.1);
-   border: 1px solid rgba(48, 47, 44, 0.1);
+   background: var(--uv-border-sm);
+   border: 1px solid var(--uv-border-sm);
 }
 
 @media (max-width: 900px) {
@@ -743,7 +742,7 @@
    padding: 12px;
    border-radius: 0;
    border: none;
-   background: rgba(239, 237, 227, 0.6);
+   background: var(--uv-input-glass);
    display: flex;
    flex-direction: column;
    gap: 4px;
@@ -759,7 +758,7 @@
 
 .uv-polls-scope .uv-upload-chip strong {
    font-size: 1.1rem;
-   color: #302f2c;
+   color: var(--uv-ink);
    font-weight: 900;
 }
 
@@ -811,17 +810,17 @@
    gap: 16px;
    padding: 16px;
    border-radius: 0;
-   border: 1px solid rgba(48, 47, 44, 0.1);
-   border-top: 3px solid rgba(48, 47, 44, 0.22);
-   background: #f8f7f2;
+   border: 1px solid var(--uv-border-sm);
+   border-top: 3px solid var(--uv-border-strong);
+   background: var(--uv-bg-l2);
    box-sizing: border-box;
    transition: border-top-color 120ms ease, box-shadow 120ms ease;
-   box-shadow: 0 1px 4px rgba(48, 47, 44, 0.06), 0 3px 10px rgba(48, 47, 44, 0.04);
+   box-shadow: var(--uv-shadow-l2);
 }
 
 .uv-polls-scope .uv-option-card:hover {
-   border-top-color: #302f2c;
-   box-shadow: 0 2px 8px rgba(48, 47, 44, 0.09), 0 5px 16px rgba(48, 47, 44, 0.06);
+   border-top-color: var(--uv-ink);
+   box-shadow: var(--uv-shadow-l1);
 }
 
 .uv-polls-scope .uv-option-card.uv-flat {
@@ -876,8 +875,8 @@
    width: 100%;
    height: 220px;
    border-radius: 0;
-   border: 1px dashed rgba(48, 47, 44, 0.25);
-   background: rgba(239, 237, 227, 0.2);
+   border: 1px dashed var(--uv-border-md);
+   background: var(--uv-bg-l2);
    display: grid;
    place-items: center;
    cursor: pointer;
@@ -886,13 +885,13 @@
 }
 
 .uv-polls-scope .uv-dropzone:hover {
-   background: rgba(239, 237, 227, 0.35);
-   border-color: rgba(48, 47, 44, 0.4);
+   background: var(--uv-hover-bg);
+   border-color: var(--uv-border-strong);
 }
 
 .uv-polls-scope .uv-dropzone.is-drag {
-   border-color: #302f2c;
-   background: rgba(239, 237, 227, 0.5);
+   border-color: var(--uv-ink);
+   background: var(--uv-input-glass-focus);
 }
 
 .uv-polls-scope .uv-dropzone-empty {
@@ -906,7 +905,7 @@
 
 .uv-polls-scope .uv-dropzone-title {
    font-weight: 900;
-   color: #302f2c;
+   color: var(--uv-ink);
    font-size: 0.84rem;
 }
 
@@ -937,8 +936,8 @@
    width: 30px;
    height: 30px;
    border-radius: 2px;
-   border: 1px solid rgba(48, 47, 44, 0.2);
-   background: rgba(239, 237, 227, 0.92);
+   border: 1px solid var(--uv-border-md);
+   background: var(--uv-input-glass-focus);
    display: grid;
    place-items: center;
    cursor: pointer;
@@ -947,7 +946,7 @@
 }
 
 .uv-polls-scope .uv-dropzone-clear:hover {
-   background: rgba(239, 237, 227, 1);
+   background: var(--uv-bg-page);
 }
 
 /* =========================================================
@@ -960,7 +959,7 @@
    flex-wrap: wrap;
    margin-top: 18px;
    padding-top: 14px;
-   border-top: 2px solid #302f2c;
+   border-top: 2px solid var(--uv-ink);
 }
 
 /* =========================================================
@@ -995,10 +994,10 @@
 
 .uv-polls-scope .uv-modal {
    width: min(860px, 100%);
-   background: #efede3;
+   background: var(--uv-bg-page);
    border-radius: 0;
-   border: 1px solid rgba(48, 47, 44, 0.18);
-   border-top: 3px solid #302f2c;
+   border: 1px solid var(--uv-border);
+   border-top: 3px solid var(--uv-ink);
    overflow: hidden;
 }
 
@@ -1007,15 +1006,15 @@
    align-items: center;
    justify-content: space-between;
    padding: 12px 14px;
-   border-bottom: 2px solid #302f2c;
-   background: rgba(239, 237, 227, 0.8);
+   border-bottom: 2px solid var(--uv-ink);
+   background: var(--uv-input-glass-focus);
 }
 
 .uv-polls-scope .uv-modal-title {
    margin: 0;
    font-size: 0.84rem;
    font-weight: 900;
-   color: #302f2c;
+   color: var(--uv-ink);
    text-transform: uppercase;
    letter-spacing: 0.08em;
 }
@@ -1032,8 +1031,8 @@
    justify-content: flex-end;
    gap: 10px;
    padding: 12px 14px;
-   border-top: 1px solid rgba(48, 47, 44, 0.12);
-   background: rgba(239, 237, 227, 0.6);
+   border-top: 1px solid var(--uv-border);
+   background: var(--uv-input-glass);
 }
 
 .uv-hidden {
@@ -1044,4 +1043,36 @@
 .uv-polls-scope .uv-option-card {
    opacity: 1 !important;
    transform: none !important;
+}
+
+/* =========================================================
+   Dark mode overrides
+   ========================================================= */
+
+/* "Define la votación..." subtitle — higher specificity wins */
+[data-theme="dark"] .uv-polls-scope .uv-muted {
+   color: rgba(232, 227, 214, 0.58);
+}
+
+/* Cover/background image dropzone — some children don't inherit */
+[data-theme="dark"] .uv-polls-scope .uv-cover-drop {
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-cover-title {
+   color: var(--uv-ink);
+}
+
+/* Trash/delete buttons — danger neon style like "Cerrar Sesión" */
+[data-theme="dark"] .uv-polls-scope .uv-icon-btn-danger {
+   border-color: var(--uv-danger-border);
+   background: var(--uv-danger-bg);
+   color: var(--uv-danger-color);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-icon-btn-danger:hover {
+   background: rgba(240, 90, 80, 0.20);
+   border-color: var(--uv-danger-color);
+   color: var(--uv-danger-color);
+   box-shadow: 0 0 0 1px var(--uv-danger-border), 0 0 14px rgba(240, 90, 80, 0.40);
 }

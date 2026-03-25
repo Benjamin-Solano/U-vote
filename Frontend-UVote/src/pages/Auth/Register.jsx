@@ -15,8 +15,10 @@ import { useNavigate } from "react-router-dom";
 
 import "./register.css";
 import logo from "../../assets/U-VoteLogo.png";
+import logoW from "../../assets/U-VoteLogoW.png";
 
 import { useAuth } from "../../auth/useAuth";
+import { useTheme } from "../../context/ThemeContext";
 import { usersApi } from "../../api/users.api";
 import { campusApi } from "../../api/campus.api";
 
@@ -47,6 +49,7 @@ const getOptionsErrorMessage = (err) => {
 export default function Register() {
    const { isAuthenticated } = useAuth();
    const navigate = useNavigate();
+   const { theme } = useTheme();
 
    const [form, setForm] = useState({
       nombreUsuario: "",
@@ -303,7 +306,7 @@ export default function Register() {
                <div className="uv-register-left-inner">
                   <motion.img
                      className="uv-register-logo"
-                     src={logo}
+                     src={theme === "dark" ? logoW : logo}
                      alt="U-Vote"
                      initial={{ y: 0, scale: 1 }}
                      animate={{ y: [0, -6, 0], scale: [1, 1.012, 1] }}

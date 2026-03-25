@@ -4,7 +4,7 @@
    ========================================================= */
 
 .uv-footer {
-   background: #302f2c;
+   background: var(--uv-footer-bg);
    color: rgba(239, 237, 227, 0.88);
    border-top: 4px solid rgba(239, 237, 227, 0.22);
 }
@@ -37,7 +37,7 @@
    font-weight: 900;
    font-style: italic;
    letter-spacing: -0.01em;
-   color: #efede3;
+   color: var(--uv-bg-page);
 }
 
 .uv-footer-sub {
@@ -84,7 +84,7 @@
 }
 
 .uv-footer-link:hover {
-   color: #efede3;
+   color: var(--uv-bg-page);
    text-decoration: underline;
 }
 
@@ -119,7 +119,7 @@
 .uv-footer .uv-social-btn:hover {
    background: rgba(239, 237, 227, 0.1);
    border-color: rgba(239, 237, 227, 0.38);
-   color: #efede3;
+   color: var(--uv-bg-page);
    transform: translateY(-1px);
 }
 
@@ -166,4 +166,20 @@
    .uv-footer-bottom-inner {
       font-size: 0.74rem;
    }
+}
+
+/* =========================================================
+   Dark mode — footer is always dark, keep cream palette
+   ========================================================= */
+
+[data-theme="dark"] .uv-footer-title {
+   color: rgba(239, 237, 227, 0.92);
+}
+
+[data-theme="dark"] .uv-footer-link:hover {
+   color: rgba(239, 237, 227, 0.96);
+}
+
+[data-theme="dark"] .uv-footer .uv-social-btn:hover {
+   color: rgba(239, 237, 227, 0.96);
 }

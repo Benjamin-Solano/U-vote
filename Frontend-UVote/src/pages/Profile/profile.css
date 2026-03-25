@@ -12,12 +12,12 @@
 
 /* Card principal */
 .uv-profile-card {
-   border: 1px solid rgba(48, 47, 44, 0.1);
-   border-top: 3px solid #302f2c;
-   background: #f5f3ec;
+   border: 1px solid var(--uv-border-sm);
+   border-top: 3px solid var(--uv-ink);
+   background: var(--uv-bg-l1);
    border-radius: 0;
    padding: 18px;
-   box-shadow: 0 2px 8px rgba(48, 47, 44, 0.07), 0 6px 20px rgba(48, 47, 44, 0.05);
+   box-shadow: var(--uv-shadow-l1);
 }
 
 /* =========================================================
@@ -29,7 +29,7 @@
    justify-content: space-between;
    gap: 12px;
    padding-bottom: 14px;
-   border-bottom: 2px solid #302f2c;
+   border-bottom: 2px solid var(--uv-ink);
    margin-bottom: 2px;
 }
 
@@ -38,7 +38,7 @@
    font-size: 1.6rem;
    font-style: italic;
    letter-spacing: -0.02em;
-   color: #302f2c;
+   color: var(--uv-ink);
    display: inline-flex;
    align-items: center;
    gap: 10px;
@@ -53,24 +53,27 @@
 
 /* Botón cerrar sesión */
 .uv-profile-logout {
-   border: 1px solid rgba(180, 35, 24, 0.35);
-   background: transparent;
-   color: rgba(140, 20, 12, 0.9);
+   border: 1.5px solid var(--uv-danger-border);
+   background: var(--uv-danger-bg);
+   color: var(--uv-danger-color);
    font-weight: 900;
    border-radius: 3px;
-   padding: 8px 12px;
+   padding: 8px 14px;
    cursor: pointer;
-   transition: background 120ms ease, border-color 120ms ease;
+   transition: background 120ms ease, border-color 120ms ease, opacity 120ms ease;
    display: inline-flex;
    align-items: center;
    gap: 8px;
    font-size: 0.84rem;
    font-family: inherit;
+   letter-spacing: 0.02em;
 }
 
 .uv-profile-logout:hover {
-   background: rgba(180, 35, 24, 0.08);
-   border-color: rgba(180, 35, 24, 0.5);
+   background: var(--uv-danger-border);
+   border-color: var(--uv-danger-color);
+   color: var(--uv-danger-color);
+   opacity: 0.92;
 }
 
 /* Alertas — borde izquierdo editorial */
@@ -113,17 +116,17 @@
    Boxes — secciones editoriales
    ========================================================= */
 .uv-profile-box {
-   border: 1px solid rgba(48, 47, 44, 0.1);
-   border-top: 3px solid rgba(48, 47, 44, 0.25);
-   background: #f8f7f2;
+   border: 1px solid var(--uv-border-sm);
+   border-top: 3px solid var(--uv-border-strong);
+   background: var(--uv-bg-l2);
    border-radius: 0;
    padding: 16px;
-   box-shadow: 0 1px 4px rgba(48, 47, 44, 0.06), 0 3px 10px rgba(48, 47, 44, 0.04);
+   box-shadow: var(--uv-shadow-l2);
 }
 
 .uv-profile-box h2 {
    margin: 0 0 14px;
-   color: #302f2c;
+   color: var(--uv-ink);
    font-size: 0.72rem;
    font-weight: 900;
    letter-spacing: 0.14em;
@@ -176,7 +179,7 @@
    width: 290px;
    height: 290px;
    border-radius: 0;
-   border-top: 3px solid #302f2c;
+   border-top: 3px solid var(--uv-ink);
 }
 
 .uv-avatar img {
@@ -215,8 +218,8 @@
    cursor: pointer;
    font-weight: 900;
    font-size: 0.84rem;
-   background: rgba(239, 237, 227, 0.6);
-   color: #302f2c;
+   background: var(--uv-input-glass);
+   color: var(--uv-ink);
    display: inline-flex;
    align-items: center;
    gap: 8px;
@@ -225,7 +228,7 @@
 }
 
 .uv-file-btn:hover {
-   background: rgba(239, 237, 227, 0.9);
+   background: var(--uv-input-glass-focus);
 }
 
 .uv-file-btn input {
@@ -234,9 +237,9 @@
 
 /* Botón editar / guardar */
 .uv-edit-btn {
-   border: 1px solid rgba(48, 47, 44, 0.16);
-   background: #302f2c;
-   color: #efede3;
+   border: 1px solid var(--uv-border-strong);
+   background: var(--uv-ink);
+   color: var(--uv-bg-page);
    font-weight: 900;
    font-size: 0.84rem;
    border-radius: 3px;
@@ -246,11 +249,11 @@
    align-items: center;
    gap: 8px;
    font-family: inherit;
-   transition: background 120ms ease;
+   transition: opacity 120ms ease;
 }
 
 .uv-edit-btn:hover {
-   background: #1a1918;
+   opacity: 0.88;
 }
 
 .uv-edit-btn:disabled {
@@ -259,13 +262,13 @@
 }
 
 .uv-edit-cancel {
-   background: rgba(239, 237, 227, 0.6);
-   color: #302f2c;
-   border-color: rgba(48, 47, 44, 0.16);
+   background: var(--uv-input-glass);
+   color: var(--uv-ink);
+   border-color: var(--uv-border);
 }
 
 .uv-edit-cancel:hover {
-   background: rgba(239, 237, 227, 0.9);
+   background: var(--uv-input-glass-focus);
 }
 
 /* =========================================================
@@ -294,7 +297,7 @@
 }
 
 .uv-v {
-   color: #4a4745;
+   color: var(--uv-ink-body);
    font-weight: 700;
 }
 
@@ -306,9 +309,9 @@
 
 /* Botón inline (editar) */
 .uv-inline-btn {
-   border: 1px solid rgba(48, 47, 44, 0.16);
-   background: rgba(239, 237, 227, 0.5);
-   color: #302f2c;
+   border: 1px solid var(--uv-border);
+   background: var(--uv-input-glass);
+   color: var(--uv-ink);
    border-radius: 2px;
    padding: 6px 8px;
    cursor: pointer;
@@ -335,21 +338,21 @@
 .uv-edit-input {
    flex: 1;
    min-width: 220px;
-   border: 1px solid rgba(48, 47, 44, 0.16);
-   background: #faf9f4;
+   border: 1px solid var(--uv-border);
+   background: var(--uv-input-glass-focus);
    border-radius: 3px;
    padding: 8px 10px;
    outline: none;
    font-weight: 700;
    font-size: 0.9rem;
-   color: #4a4745;
+   color: var(--uv-ink-body);
    font-family: inherit;
    transition: border-color 120ms ease;
-   box-shadow: inset 0 1px 3px rgba(48, 47, 44, 0.05);
+   box-shadow: var(--uv-shadow-inset);
 }
 
 .uv-edit-input:focus {
-   border-color: #302f2c;
+   border-color: var(--uv-ink);
 }
 
 .uv-edit-input::placeholder {
@@ -384,8 +387,8 @@
    display: flex;
    align-items: center;
    gap: 8px;
-   border: 1px solid rgba(48, 47, 44, 0.14);
-   background: rgba(239, 237, 227, 0.45);
+   border: 1px solid var(--uv-border);
+   background: var(--uv-input-glass);
    border-radius: 3px;
    padding: 8px 12px;
    min-width: 300px;
@@ -393,7 +396,7 @@
 }
 
 .uv-search:focus-within {
-   border-color: #302f2c;
+   border-color: var(--uv-ink);
 }
 
 @media (max-width: 980px) {
@@ -415,7 +418,7 @@
    background: transparent;
    font-weight: 700;
    font-size: 0.9rem;
-   color: #302f2c;
+   color: var(--uv-ink);
    min-width: 0;
    font-family: inherit;
 }
@@ -445,14 +448,14 @@
    display: flex;
    flex-direction: column;
    gap: 1px;
-   background: rgba(48, 47, 44, 0.1);
-   border: 1px solid rgba(48, 47, 44, 0.1);
-   box-shadow: 0 1px 4px rgba(48, 47, 44, 0.06), 0 3px 10px rgba(48, 47, 44, 0.04);
+   background: var(--uv-border-sm);
+   border: 1px solid var(--uv-border-sm);
+   box-shadow: var(--uv-shadow-l2);
 }
 
 .uv-poll-item {
    border: none;
-   background: #f8f7f2;
+   background: var(--uv-bg-l2);
    border-radius: 0;
    padding: 12px 14px;
    display: flex;
@@ -466,12 +469,12 @@
 }
 
 .uv-poll-item:hover {
-   background: #f2f0e8;
+   background: var(--uv-hover-bg);
 }
 
 .uv-poll-title {
    font-weight: 700;
-   color: #4a4745;
+   color: var(--uv-ink-body);
    font-size: 0.92rem;
 }
 
@@ -553,22 +556,22 @@
 }
 
 .uv-page-btn {
-   border: 1px solid rgba(48, 47, 44, 0.16);
-   background: rgba(239, 237, 227, 0.5);
-   color: #302f2c;
+   border: 1px solid var(--uv-border);
+   background: var(--uv-input-glass);
+   color: var(--uv-ink);
    font-weight: 900;
    font-size: 0.82rem;
    border-radius: 3px;
    padding: 7px 12px;
    cursor: pointer;
    font-family: inherit;
-   transition: background 120ms ease;
+   transition: background 120ms ease, color 120ms ease;
 }
 
 .uv-page-btn:hover {
-   background: #302f2c;
-   color: #efede3;
-   border-color: #302f2c;
+   background: var(--uv-ink);
+   color: var(--uv-bg-page);
+   border-color: var(--uv-ink);
 }
 
 .uv-page-btn:disabled {
@@ -619,13 +622,13 @@
 .uv-desc-box {
    width: 100%;
    height: 220px;
-   border: 1px solid rgba(48, 47, 44, 0.14);
-   background: #faf9f4;
+   border: 1px solid var(--uv-border);
+   background: var(--uv-input-glass-focus);
    border-radius: 0;
    padding: 12px;
    position: relative;
    overflow: hidden;
-   box-shadow: inset 0 1px 3px rgba(48, 47, 44, 0.05);
+   box-shadow: var(--uv-shadow-inset);
 }
 
 /* Botón editar flotante */
@@ -642,7 +645,7 @@
    overflow-y: auto;
    padding-right: 36px;
    white-space: pre-wrap;
-   color: #5a5753;
+   color: var(--uv-ink-muted);
    font-weight: 700;
    line-height: 1.5;
    font-size: 0.9rem;
@@ -660,7 +663,7 @@
    font-weight: 700;
    line-height: 1.5;
    font-size: 0.9rem;
-   color: #302f2c;
+   color: var(--uv-ink);
    font-family: inherit;
 }
 
@@ -668,22 +671,22 @@
    width: 100%;
    height: 160px;
    resize: none;
-   border: 1px solid rgba(48, 47, 44, 0.16);
-   background: #faf9f4;
+   border: 1px solid var(--uv-border);
+   background: var(--uv-input-glass-focus);
    border-radius: 3px;
    padding: 10px 12px;
    outline: none;
    font-weight: 700;
    font-size: 0.9rem;
-   color: #4a4745;
+   color: var(--uv-ink-body);
    line-height: 1.45;
    font-family: inherit;
    transition: border-color 120ms ease;
-   box-shadow: inset 0 1px 3px rgba(48, 47, 44, 0.05);
+   box-shadow: var(--uv-shadow-inset);
 }
 
 .uv-edit-textarea:focus {
-   border-color: #302f2c;
+   border-color: var(--uv-ink);
 }
 
 .uv-edit-textarea::placeholder {
@@ -869,6 +872,90 @@
    .uv-page-info {
       text-align: center;
    }
+}
+
+/* =========================================================
+   Dark mode overrides
+   ========================================================= */
+
+[data-theme="dark"] .uv-k {
+   color: rgba(232, 227, 214, 0.55);
+}
+
+[data-theme="dark"] .uv-created-at {
+   color: rgba(232, 227, 214, 0.50);
+}
+
+[data-theme="dark"] .uv-created-at strong {
+   color: rgba(232, 227, 214, 0.76);
+}
+
+[data-theme="dark"] .uv-profile-row {
+   border-color: rgba(232, 227, 214, 0.08);
+}
+
+[data-theme="dark"] .uv-profile-row-desc-vertical {
+   border-color: rgba(232, 227, 214, 0.08);
+}
+
+[data-theme="dark"] .uv-avatar {
+   border-color: rgba(232, 227, 214, 0.14);
+   background: rgba(232, 227, 214, 0.04);
+}
+
+[data-theme="dark"] .uv-avatar-fallback {
+   color: rgba(232, 227, 214, 0.35);
+}
+
+[data-theme="dark"] .uv-search-input::placeholder {
+   color: rgba(232, 227, 214, 0.38);
+}
+
+[data-theme="dark"] .uv-edit-input::placeholder {
+   color: rgba(232, 227, 214, 0.38);
+}
+
+[data-theme="dark"] .uv-edit-textarea::placeholder {
+   color: rgba(232, 227, 214, 0.38);
+}
+
+[data-theme="dark"] .uv-user-meta-sub {
+   color: rgba(232, 227, 214, 0.58);
+}
+
+[data-theme="dark"] .uv-pagination {
+   border-color: rgba(232, 227, 214, 0.10);
+}
+
+[data-theme="dark"] .uv-page-info {
+   color: rgba(232, 227, 214, 0.60);
+}
+
+/* Poll status badges — neon glow in dark mode */
+[data-theme="dark"] .uv-pill {
+   border-color: rgba(232, 227, 214, 0.16);
+   background: rgba(232, 227, 214, 0.06);
+   color: rgba(232, 227, 214, 0.65);
+}
+
+[data-theme="dark"] .uv-pill.is-open {
+   background: var(--uv-badge-open-bg);
+   border-color: var(--uv-badge-open-border);
+   color: var(--uv-badge-open-color);
+   box-shadow: 0 0 0 1px var(--uv-badge-open-border), 0 0 10px rgba(82, 200, 130, 0.30);
+}
+
+[data-theme="dark"] .uv-pill.is-pending {
+   border-color: var(--uv-badge-pending-border);
+   background: rgba(240, 184, 67, 0.08);
+   color: var(--uv-badge-pending-color);
+   box-shadow: 0 0 0 1px var(--uv-badge-pending-border), 0 0 10px rgba(240, 184, 67, 0.28);
+}
+
+[data-theme="dark"] .uv-pill.is-closed {
+   border-color: var(--uv-badge-closed-border);
+   background: var(--uv-badge-closed-bg);
+   color: var(--uv-badge-closed-color);
 }
 
 /* =========================================================

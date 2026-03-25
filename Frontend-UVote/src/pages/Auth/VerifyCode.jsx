@@ -5,8 +5,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import "./verify.css";
 import logo from "../../assets/U-VoteLogo.png";
+import logoW from "../../assets/U-VoteLogoW.png";
 
 import { authApi } from "../../api/auth.api";
+import { useTheme } from "../../context/ThemeContext";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
@@ -43,6 +45,7 @@ const getResendErrorMessage = (err) => {
 export default function VerifyCode() {
    const location = useLocation();
    const navigate = useNavigate();
+   const { theme } = useTheme();
 
    const q = useMemo(() => getQuery(location.search), [location.search]);
    const correoInicial = useMemo(() => normalizeEmail(q.get("correo") || ""), [q]);
@@ -262,7 +265,7 @@ export default function VerifyCode() {
                <div className="uv-login-left-inner">
                   <motion.img
                      className="uv-login-logo"
-                     src={logo}
+                     src={theme === "dark" ? logoW : logo}
                      alt="U-Vote"
                      initial={{ y: 0, scale: 1 }}
                      animate={{ y: [0, -6, 0], scale: [1, 1.012, 1] }}

@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FiCompass, FiHome, FiLogIn, FiLogOut, FiPlusCircle, FiUser } from "react-icons/fi";
+import { FiCompass, FiHome, FiLogIn, FiLogOut, FiMoon, FiPlusCircle, FiSun, FiUser } from "react-icons/fi";
 import "./navbar.css";
 
 import { useAuth } from "../../auth/useAuth";
+import { useTheme } from "../../context/ThemeContext";
 import logo from "../../assets/U-VoteLogo.png";
+import logoW from "../../assets/U-VoteLogoW.png";
 
 export default function Navbar() {
    const { isAuthenticated, usuario, logout } = useAuth();
+   const { theme, toggle: toggleTheme } = useTheme();
    const navigate = useNavigate();
 
    const [open, setOpen] = useState(false);
@@ -54,7 +57,7 @@ export default function Navbar() {
       <header className="uv-nav">
          <div className="container uv-nav-inner">
             <NavLink to="/" className="uv-brand" aria-label="Ir al inicio">
-               <img src={logo} alt="U-Vote" className="uv-brand-logo" />
+               <img src={theme === "dark" ? logoW : logo} alt="U-Vote" className="uv-brand-logo" />
             </NavLink>
 
             <nav className="uv-links" aria-label="Navegación principal">
@@ -119,6 +122,21 @@ export default function Navbar() {
                            >
                               <FiUser />
                               <span>Perfil</span>
+                           </button>
+
+                           <div className="uv-user-sep" />
+
+                           <button
+                              type="button"
+                              className="uv-user-item"
+                              onClick={toggleTheme}
+                              role="menuitem"
+                           >
+                              {theme === "dark" ? <FiSun /> : <FiMoon />}
+                              <span>{theme === "dark" ? "Modo claro" : "Modo oscuro"}</span>
+                              <span className="uv-theme-toggle-track" aria-hidden="true">
+                                 <span className={`uv-theme-toggle-thumb ${theme === "dark" ? "on" : ""}`} />
+                              </span>
                            </button>
 
                            <div className="uv-user-sep" />

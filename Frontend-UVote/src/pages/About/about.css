@@ -4,7 +4,7 @@
 
 .uv-about-page {
    min-height: calc(100vh - 140px);
-   background: #efede3;
+   background: var(--uv-bg-page);
    padding: 48px 16px 72px;
 }
 
@@ -24,7 +24,7 @@
 
 .uv-about-mh-rule--thick {
    height: 4px;
-   background: #302f2c;
+   background: var(--uv-ink);
    border: none;
    margin: 0 0 12px;
 }
@@ -45,15 +45,15 @@
    font-style: italic;
    letter-spacing: -0.03em;
    line-height: 0.95;
-   color: #302f2c;
+   color: var(--uv-ink);
 }
 
 .uv-about-mh-rule--double {
    height: 1px;
-   background: #302f2c;
+   background: var(--uv-ink);
    border: none;
    margin: 10px 0 0;
-   box-shadow: 0 3px 0 0 #efede3, 0 4px 0 0 #302f2c;
+   box-shadow: var(--uv-rule-double);
 }
 
 /* =========================================================
@@ -64,12 +64,12 @@
    display: grid;
    grid-template-columns: 260px 1fr;
    width: 100%;
-   border: 1px solid rgba(48, 47, 44, 0.1);
-   border-top: 4px solid #302f2c;
+   border: 1px solid var(--uv-border-sm);
+   border-top: 4px solid var(--uv-ink);
    border-radius: 0;
    overflow: hidden;
-   background: #f5f3ec;
-   box-shadow: 0 2px 8px rgba(48, 47, 44, 0.07), 0 6px 20px rgba(48, 47, 44, 0.05);
+   background: var(--uv-bg-l1);
+   box-shadow: var(--uv-shadow-l1);
 }
 
 /* ---- Columna izquierda — retrato editorial ---- */
@@ -78,7 +78,7 @@
    align-items: center;
    justify-content: center;
    padding: 32px 22px;
-   background: #302f2c;
+   background: var(--uv-ink-panel);
    border-right: none;
 }
 
@@ -106,8 +106,8 @@
    flex-direction: column;
    justify-content: center;
    padding: 32px 36px;
-   color: #302f2c;
-   background: #f5f3ec;
+   color: var(--uv-ink);
+   background: var(--uv-bg-l1);
 }
 
 /* Kicker / sello sección */
@@ -135,13 +135,13 @@
    font-weight: 900;
    font-style: italic;
    letter-spacing: -0.02em;
-   color: #302f2c;
+   color: var(--uv-ink);
 }
 
 .uv-about-role {
    margin: 10px 0 0;
    font-size: 0.96rem;
-   color: #4a4745;
+   color: var(--uv-ink-body);
    line-height: 1.6;
    font-weight: 600;
 }
@@ -151,7 +151,7 @@
    width: 56px;
    height: 3px;
    border-radius: 0;
-   background: #302f2c;
+   background: var(--uv-ink);
    margin: 20px 0 22px;
 }
 
@@ -163,7 +163,7 @@
 
 .uv-about-description p {
    margin: 0;
-   color: #4a4745;
+   color: var(--uv-ink-body);
    font-size: 0.95rem;
    line-height: 1.85;
    text-align: justify;
@@ -174,9 +174,9 @@
 .uv-about-quote {
    margin: 22px 0 0;
    padding: 14px 16px;
-   border-left: 4px solid #302f2c;
-   background: #f8f7f2;
-   color: #302f2c;
+   border-left: 4px solid var(--uv-ink);
+   background: var(--uv-bg-l2);
+   color: var(--uv-ink);
    font-size: 0.93rem;
    font-style: italic;
    line-height: 1.75;
@@ -209,9 +209,9 @@
    height: 40px;
    padding: 0 16px;
    border-radius: 2px;
-   border: 1.5px solid #302f2c;
-   background: #302f2c;
-   color: #efede3;
+   border: 1.5px solid var(--uv-ink);
+   background: var(--uv-ink);
+   color: var(--uv-bg-page);
    text-decoration: none;
    display: inline-flex;
    align-items: center;
@@ -242,8 +242,8 @@
 }
 
 .uv-about-socials .uv-social-btn:hover {
-   background: #efede3;
-   color: #302f2c;
+   background: var(--uv-bg-page);
+   color: var(--uv-ink);
    transform: translateY(-1px);
 }
 
@@ -288,6 +288,39 @@
    .uv-about-socials {
       justify-content: center;
    }
+}
+
+/* =========================================================
+   Dark mode overrides
+   ========================================================= */
+
+[data-theme="dark"] .uv-about-mh-kicker {
+   color: rgba(232, 227, 214, 0.52);
+}
+
+[data-theme="dark"] .uv-about-badge {
+   border-color: rgba(232, 227, 214, 0.22);
+   color: rgba(232, 227, 214, 0.65);
+}
+
+[data-theme="dark"] .uv-about-quote span {
+   color: rgba(232, 227, 214, 0.55);
+}
+
+[data-theme="dark"] .uv-about-quote {
+   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30);
+}
+
+[data-theme="dark"] .uv-about-socials .uv-social-btn {
+   background: transparent;
+   border-color: rgba(232, 227, 214, 0.25);
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-about-socials .uv-social-btn:hover {
+   background: rgba(232, 227, 214, 0.08);
+   border-color: rgba(232, 227, 214, 0.45);
+   box-shadow: 0 0 14px rgba(232, 227, 214, 0.12);
 }
 
 @media (max-width: 560px) {

@@ -6,7 +6,7 @@
    position: sticky;
    top: 0;
    z-index: 20;
-   background: #efede3;
+   background: var(--uv-bg-page);
 
 }
 
@@ -38,7 +38,7 @@
 
 .uv-brand-text {
    font-size: 18px;
-   color: #302f2c;
+   color: var(--uv-ink);
    font-weight: 900;
    letter-spacing: -0.01em;
 }
@@ -64,9 +64,9 @@
    min-height: 38px;
    padding: 0 16px;
    border-radius: 2px;
-   border: 1.5px solid #302f2c;
-   background: #302f2c;
-   color: #efede3 !important;
+   border: 1.5px solid var(--uv-ink);
+   background: var(--uv-ink);
+   color: var(--uv-bg-page) !important;
    text-decoration: none;
    font-weight: 800;
    font-size: 0.88rem;
@@ -82,20 +82,20 @@
 .uv-link:visited,
 .uv-link:focus,
 .uv-link:active {
-   color: #efede3 !important;
+   color: var(--uv-bg-page) !important;
    text-decoration: none;
 }
 
 .uv-link svg {
    flex-shrink: 0;
-   color: #efede3 !important;
+   color: var(--uv-bg-page) !important;
    font-size: 1rem;
    transition: color 160ms ease;
 }
 
 .uv-link-label {
    display: inline-block;
-   color: #efede3 !important;
+   color: var(--uv-bg-page) !important;
    font-weight: 800;
    line-height: 1;
    white-space: nowrap;
@@ -104,29 +104,29 @@
 
 /* Hover — papel sobre tinta */
 .uv-link:hover {
-   background: #efede3;
-   color: #302f2c !important;
-   border-color: #302f2c;
+   background: var(--uv-bg-page);
+   color: var(--uv-ink) !important;
+   border-color: var(--uv-ink);
    transform: translateY(-1px);
 }
 
 .uv-link:hover svg,
 .uv-link:hover .uv-link-label {
-   color: #302f2c !important;
+   color: var(--uv-ink) !important;
 }
 
 /* Active / ruta actual — blanco papel con regla superior */
 .uv-link.active {
-   background: #efede3;
-   color: #302f2c !important;
-   border-color: #302f2c;
-   border-top: 3px solid #302f2c;
-   box-shadow: inset 0 -2px 0 0 #302f2c;
+   background: var(--uv-bg-page);
+   color: var(--uv-ink) !important;
+   border-color: var(--uv-ink);
+   border-top: 3px solid var(--uv-ink);
+   box-shadow: inset 0 -2px 0 0 var(--uv-ink);
 }
 
 .uv-link.active svg,
 .uv-link.active .uv-link-label {
-   color: #302f2c !important;
+   color: var(--uv-ink) !important;
 }
 
 /* =========================================================
@@ -144,9 +144,9 @@
    min-height: 38px;
    padding: 0 14px 0 8px;
    border-radius: 2px;
-   border: 1.5px solid #302f2c;
-   background: #302f2c;
-   color: #efede3;
+   border: 1.5px solid var(--uv-ink);
+   background: var(--uv-ink);
+   color: var(--uv-bg-page);
    cursor: pointer;
    font-family: inherit;
    font-weight: 800;
@@ -159,13 +159,13 @@
 
 .uv-user-btn:hover,
 .uv-user-btn.open {
-   background: #efede3;
-   color: #302f2c;
+   background: var(--uv-bg-page);
+   color: var(--uv-ink);
    transform: translateY(-1px);
 }
 
 .uv-user-name {
-   color: #efede3;
+   color: var(--uv-bg-page);
    font-weight: 800;
    line-height: 1;
    white-space: nowrap;
@@ -174,7 +174,7 @@
 
 .uv-user-btn:hover .uv-user-name,
 .uv-user-btn.open .uv-user-name {
-   color: #302f2c;
+   color: var(--uv-ink);
 }
 
 /* Avatar cuadrado */
@@ -205,13 +205,13 @@
 .uv-avatar-fallback {
    font-weight: 900;
    font-size: 12px;
-   color: #efede3;
+   color: var(--uv-bg-page);
    transition: color 160ms ease;
 }
 
 .uv-user-btn:hover .uv-avatar-fallback,
 .uv-user-btn.open .uv-avatar-fallback {
-   color: #302f2c;
+   color: var(--uv-ink);
 }
 
 /* =========================================================
@@ -225,11 +225,11 @@
    width: 210px;
    padding: 6px;
    border-radius: 0;
-   border: 1px solid rgba(48, 47, 44, 0.12);
-   border-top: 3px solid #302f2c;
-   background: #f5f3ec;
-   box-shadow: 0 4px 16px rgba(48, 47, 44, 0.12), 0 8px 32px rgba(48, 47, 44, 0.08);
-   color: #302f2c;
+   border: 1px solid var(--uv-border);
+   border-top: 3px solid var(--uv-ink);
+   background: var(--uv-bg-l1);
+   box-shadow: var(--uv-shadow-menu);
+   color: var(--uv-ink);
 }
 
 .uv-user-item {
@@ -241,7 +241,7 @@
    border-radius: 0;
    border: 1px solid transparent;
    background: transparent;
-   color: #302f2c;
+   color: var(--uv-ink);
    font-weight: 700;
    font-size: 0.9rem;
    font-family: inherit;
@@ -250,23 +250,140 @@
 }
 
 .uv-user-item:hover {
-   background: rgba(48, 47, 44, 0.06);
-   border-color: rgba(48, 47, 44, 0.08);
+   background: var(--uv-hover-bg-md);
+   border-color: var(--uv-hover-bg-md);
 }
 
 .uv-user-item.danger {
-   color: rgba(160, 30, 20, 0.88);
+   color: var(--uv-danger-color);
 }
 
 .uv-user-item.danger:hover {
-   background: rgba(160, 30, 20, 0.07);
-   border-color: rgba(160, 30, 20, 0.16);
+   background: var(--uv-danger-bg);
+   border-color: var(--uv-danger-border);
 }
 
 .uv-user-sep {
    height: 1px;
    margin: 6px 4px;
-   background: rgba(48, 47, 44, 0.1);
+   background: var(--uv-border-sm);
+}
+
+/* Theme toggle switch inside dropdown */
+.uv-theme-toggle-track {
+   margin-left: auto;
+   display: inline-flex;
+   align-items: center;
+   width: 32px;
+   height: 18px;
+   border-radius: 999px;
+   background: rgba(48, 47, 44, 0.15);
+   border: 1px solid var(--uv-border-md);
+   flex-shrink: 0;
+   position: relative;
+   transition: background 160ms ease;
+}
+
+.uv-theme-toggle-thumb {
+   position: absolute;
+   left: 2px;
+   width: 12px;
+   height: 12px;
+   border-radius: 50%;
+   background: var(--uv-ink);
+   transition: transform 160ms ease, background 160ms ease;
+}
+
+.uv-theme-toggle-thumb.on {
+   transform: translateX(14px);
+   background: var(--uv-ink);
+}
+
+/* =========================================================
+   Dark mode — ghost buttons for harmony
+   ========================================================= */
+
+[data-theme="dark"] .uv-link,
+[data-theme="dark"] .uv-link:visited,
+[data-theme="dark"] .uv-link:focus,
+[data-theme="dark"] .uv-link:active {
+   background: transparent;
+   border-color: rgba(232, 227, 214, 0.20);
+   color: var(--uv-ink) !important;
+}
+
+[data-theme="dark"] .uv-link svg {
+   color: var(--uv-ink) !important;
+}
+
+[data-theme="dark"] .uv-link-label {
+   color: var(--uv-ink) !important;
+}
+
+[data-theme="dark"] .uv-link:hover {
+   background: rgba(232, 227, 214, 0.07);
+   border-color: rgba(232, 227, 214, 0.45);
+   color: var(--uv-ink) !important;
+   text-shadow: 0 0 10px rgba(232, 227, 214, 0.45);
+   box-shadow: 0 0 0 1px rgba(232, 227, 214, 0.20), 0 0 12px rgba(232, 227, 214, 0.07);
+}
+
+[data-theme="dark"] .uv-link:hover svg,
+[data-theme="dark"] .uv-link:hover .uv-link-label {
+   color: var(--uv-ink) !important;
+   text-shadow: 0 0 10px rgba(232, 227, 214, 0.45);
+}
+
+[data-theme="dark"] .uv-link.active {
+   background: rgba(232, 227, 214, 0.06);
+   border-color: rgba(232, 227, 214, 0.35);
+   border-top: 3px solid var(--uv-ink);
+   color: var(--uv-ink) !important;
+}
+
+[data-theme="dark"] .uv-link.active svg,
+[data-theme="dark"] .uv-link.active .uv-link-label {
+   color: var(--uv-ink) !important;
+}
+
+[data-theme="dark"] .uv-user-btn {
+   background: transparent;
+   border-color: rgba(232, 227, 214, 0.20);
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-user-name {
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-avatar-fallback {
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-user-btn:hover,
+[data-theme="dark"] .uv-user-btn.open {
+   background: rgba(232, 227, 214, 0.07);
+   border-color: rgba(232, 227, 214, 0.45);
+   box-shadow: 0 0 0 1px rgba(232, 227, 214, 0.20), 0 0 12px rgba(232, 227, 214, 0.07);
+}
+
+[data-theme="dark"] .uv-user-btn:hover .uv-user-name,
+[data-theme="dark"] .uv-user-btn.open .uv-user-name {
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-avatar-nav {
+   border-color: rgba(232, 227, 214, 0.18);
+   background: rgba(232, 227, 214, 0.06);
+}
+
+[data-theme="dark"] .uv-user-btn:hover .uv-avatar-nav,
+[data-theme="dark"] .uv-user-btn.open .uv-avatar-nav {
+   border-color: rgba(232, 227, 214, 0.35);
+}
+
+[data-theme="dark"] .uv-theme-toggle-track {
+   background: rgba(232, 227, 214, 0.10);
 }
 
 /* =========================================================

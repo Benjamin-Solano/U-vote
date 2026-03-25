@@ -14,6 +14,7 @@ import { optionsApi } from "../../api/options.api";
 import { votesApi } from "../../api/votes.api";
 import { pollAuthorizedEmailsApi } from "../../api/pollAuthorizedEmails.api";
 import { useAuth } from "../../auth/useAuth";
+import { useTheme } from "../../context/ThemeContext";
 
 import PollInfoTab from "../../components/polls/detail/PollInfoTab";
 import PollStatsTab from "../../components/polls/detail/PollStatsTab";
@@ -107,6 +108,7 @@ export default function PollDetail() {
    const navigate = useNavigate();
 
    const { isAuthenticated, usuario } = useAuth();
+   const { theme } = useTheme();
 
    const [poll, setPoll] = useState(null);
    const [options, setOptions] = useState([]);
@@ -138,18 +140,13 @@ export default function PollDetail() {
       return results.reduce((acc, r) => acc + Number(r.votos || 0), 0);
    }, [results]);
 
-   const PASTELS = useMemo(
-      () => [
-         "#3d6b59",
-         "#7c5c38",
-         "#3a5478",
-         "#6e3d5a",
-         "#5a6e3a",
-         "#783a3a",
-         "#3a6e70",
-         "#70503a",
-      ],
-      []
+   // Dark mode: cream/paper shades · Light mode: earthy ink tones
+   const CHART_COLORS = useMemo(
+      () =>
+         theme === "dark"
+            ? ["#c8c2ae", "#a89e8e", "#d4c8b4", "#b4a896", "#9e9282", "#c2b8a2", "#8e8478", "#bab0a0"]
+            : ["#3d6b59", "#7c5c38", "#3a5478", "#6e3d5a", "#5a6e3a", "#783a3a", "#3a6e70", "#70503a"],
+      [theme]
    );
 
    const chartData = useMemo(() => {
@@ -163,9 +160,9 @@ export default function PollDetail() {
       return base.map((d, i) => ({
          ...d,
          pct: totalVotes > 0 ? Math.round((d.votos * 100) / totalVotes) : 0,
-         color: PASTELS[i % PASTELS.length],
+         color: CHART_COLORS[i % CHART_COLORS.length],
       }));
-   }, [results, totalVotes, PASTELS]);
+   }, [results, totalVotes, CHART_COLORS]);
 
    const participationData = useMemo(() => {
       const totalAutorizados = Number(participation?.totalAutorizados || 0);
@@ -175,21 +172,22 @@ export default function PollDetail() {
 
       if (totalAutorizados <= 0) return [];
 
+      const [c1, c2] = CHART_COLORS;
       return [
          {
             name: "Ya votaron",
             votos: totalYaVotaron,
             pct: totalAutorizados > 0 ? Math.round((totalYaVotaron * 100) / totalAutorizados) : 0,
-            color: "#3d6b59",
+            color: c1,
          },
          {
             name: "Pendientes",
             votos: totalPendientes,
             pct: totalAutorizados > 0 ? Math.round((totalPendientes * 100) / totalAutorizados) : 0,
-            color: "#7c5c38",
+            color: c2,
          },
       ];
-   }, [participation]);
+   }, [participation, CHART_COLORS]);
 
    const status = useMemo(() => getPollStatus(poll), [poll]);
 

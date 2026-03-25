@@ -1,19 +1,8 @@
-:root {
-   --uv-bg: #efede3;
-   --uv-ink: #302f2c;
-   --uv-muted: rgba(48, 47, 44, 0.72);
-   --uv-border: rgba(48, 47, 44, 0.16);
-   --uv-card: rgba(239, 237, 227, 0.75);
-   --uv-white: #ffffff;
-   --uv-danger: rgba(160, 0, 0, 0.82);
-   --uv-danger-soft: rgba(160, 0, 0, 0.08);
-}
-
 .uv-register-page {
    min-height: calc(100vh - 90px);
    display: grid;
    place-items: center;
-   background: var(--uv-bg);
+   background: var(--uv-bg-page);
    padding: 18px;
 }
 
@@ -24,7 +13,7 @@
    border: 1px solid var(--uv-border);
    border-radius: 22px;
    overflow: hidden;
-   background: var(--uv-card);
+   background: var(--uv-bg-l1);
    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
 }
 
@@ -65,7 +54,7 @@
 
 .uv-register-left-sub {
    max-width: 360px;
-   color: var(--uv-muted);
+   color: var(--uv-ink-muted);
    font-size: 0.98rem;
    line-height: 1.4;
 }
@@ -91,7 +80,7 @@
 
 .uv-register-header p {
    margin: 10px 0 0;
-   color: var(--uv-muted);
+   color: var(--uv-ink-muted);
    line-height: 1.4;
 }
 
@@ -141,7 +130,7 @@
    align-items: center;
    border: 1px solid var(--uv-border);
    border-radius: 12px;
-   background: rgba(255, 255, 255, 0.55);
+   background: var(--uv-input-glass);
    transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
    min-height: 50px;
 }
@@ -149,7 +138,7 @@
 .uv-register-input-wrap:focus-within {
    border-color: rgba(48, 47, 44, 0.35);
    box-shadow: 0 0 0 4px rgba(48, 47, 44, 0.1);
-   background: rgba(255, 255, 255, 0.7);
+   background: var(--uv-input-glass-focus);
 }
 
 .uv-register-input-icon {
@@ -186,18 +175,18 @@
 }
 
 .uv-register-input-error {
-   border-color: rgba(160, 0, 0, 0.55);
-   background-color: rgba(160, 0, 0, 0.04);
+   border-color: rgba(210, 30, 20, 0.55);
+   background-color: rgba(210, 30, 20, 0.04);
 }
 
 .uv-register-input-error .uv-register-input-icon {
-   color: rgba(160, 0, 0, 0.7);
+   color: rgba(210, 30, 20, 0.75);
    opacity: 1;
 }
 
 .uv-register-input-error:focus-within {
-   border-color: rgba(160, 0, 0, 0.75);
-   box-shadow: 0 0 0 4px rgba(160, 0, 0, 0.1);
+   border-color: rgba(210, 30, 20, 0.75);
+   box-shadow: 0 0 0 4px rgba(210, 30, 20, 0.1);
 }
 
 /* Icono + tooltip */
@@ -207,7 +196,7 @@
    height: 100%;
    display: grid;
    place-items: center;
-   color: var(--uv-danger);
+   color: var(--uv-danger-color);
    cursor: help;
    outline: none;
    flex-shrink: 0;
@@ -226,8 +215,8 @@
    min-width: 180px;
    padding: 10px 12px;
    border-radius: 12px;
-   background: #302f2c;
-   color: #efede3;
+   background: var(--uv-ink-panel);
+   color: var(--uv-bg-page);
    font-size: 0.84rem;
    line-height: 1.35;
    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
@@ -248,7 +237,7 @@
    right: 14px;
    border-width: 7px;
    border-style: solid;
-   border-color: #302f2c transparent transparent transparent;
+   border-color: var(--uv-ink-panel) transparent transparent transparent;
 }
 
 .uv-register-hint:hover .uv-register-tooltip,
@@ -274,7 +263,7 @@
 }
 
 .uv-register-password-toggle:hover {
-   color: #302f2c;
+   color: var(--uv-ink);
 }
 
 .uv-register-password-toggle:active {
@@ -285,7 +274,7 @@
    width: 100%;
    border: 1px solid rgba(48, 47, 44, 0.25);
    background: var(--uv-ink);
-   color: var(--uv-bg);
+   color: var(--uv-bg-page);
    padding: 12px 14px;
    border-radius: 12px;
    font-weight: 700;
@@ -308,7 +297,7 @@
    display: flex;
    gap: 8px;
    justify-content: center;
-   color: var(--uv-muted);
+   color: var(--uv-ink-muted);
    flex-wrap: wrap;
    text-align: center;
 }
@@ -618,4 +607,89 @@
       max-width: min(190px, calc(100vw - 28px));
       font-size: 0.74rem;
    }
+}
+
+/* DARK MODE */
+[data-theme="dark"] .uv-register-left::after {
+   border-color: rgba(232, 227, 214, 0.35);
+}
+
+[data-theme="dark"] .uv-register-right {
+   background: var(--uv-bg-l1);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-input-wrap {
+   border-color: rgba(232, 227, 214, 0.18);
+   background: rgba(232, 227, 214, 0.06);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-select-wrap select {
+   border-color: rgba(232, 227, 214, 0.18);
+   background: rgba(232, 227, 214, 0.06);
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-input-wrap:focus-within {
+   border-color: rgba(232, 227, 214, 0.38);
+   box-shadow: 0 0 0 4px rgba(232, 227, 214, 0.08);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-input-wrap input {
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-input-wrap input::placeholder {
+   color: rgba(232, 227, 214, 0.38);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-password-toggle {
+   color: rgba(232, 227, 214, 0.70);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-password-toggle:hover {
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-alert {
+   background: rgba(232, 227, 214, 0.06);
+   border-color: rgba(232, 227, 214, 0.18);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-link-as-btn {
+   border-bottom-color: rgba(232, 227, 214, 0.35);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-link-as-btn:hover {
+   border-bottom-color: rgba(232, 227, 214, 0.65);
+}
+
+[data-theme="dark"] .uv-register-primary-btn:hover {
+   opacity: 0.88;
+   box-shadow: 0 0 0 1px rgba(232, 227, 214, 0.28), 0 0 14px rgba(232, 227, 214, 0.12);
+}
+
+/* Neon red errors in dark mode */
+[data-theme="dark"] .uv-register-right .uv-register-input-error {
+   border-color: rgba(255, 60, 60, 0.55);
+   background-color: rgba(255, 60, 60, 0.06);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-input-error .uv-register-input-icon {
+   color: #ff4444;
+   opacity: 1;
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-input-error:focus-within {
+   border-color: rgba(255, 60, 60, 0.75);
+   box-shadow: 0 0 0 4px rgba(255, 60, 60, 0.12);
+}
+
+[data-theme="dark"] .uv-register-right .uv-register-hint {
+   color: #ff4444;
+   text-shadow: 0 0 8px rgba(255, 60, 60, 0.50);
+}
+
+/* Fix tooltip: ink-panel bg is always dark, so text must be cream in dark mode */
+[data-theme="dark"] .uv-register-tooltip {
+   color: rgba(232, 227, 214, 0.92);
 }

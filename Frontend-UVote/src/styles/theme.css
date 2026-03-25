@@ -1,143 +1,420 @@
+/* =========================================================
+   U-Vote — Design Tokens
+   Light (default) + Dark (data-theme="dark")
+   ========================================================= */
+
 :root {
-   --bg: #efede3;
-   --ink: #302f2c;
-   --muted: rgba(48, 47, 44, 0.75);
-   --card: rgba(255, 255, 255, 0.55);
-   --border: rgba(48, 47, 44, 0.12);
-   --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+   /* --- Fondos / Elevación (papel editorial) --- */
+   --uv-bg-page: #efede3;
+   --uv-bg-l1:   #f5f3ec;
+   --uv-bg-l2:   #f8f7f2;
+   --uv-bg-l3:   #faf9f4;
+
+   /* --- Tinta / Texto --- */
+   --uv-ink:        #302f2c;
+   --uv-ink-body:   #4a4745;
+   --uv-ink-muted:  #5a5753;
+
+   /* --- Paneles siempre-oscuros (login panel, about left, footer) --- */
+   --uv-ink-panel:  #302f2c;
+   --uv-footer-bg:  #302f2c;
+
+   /* --- Bordes --- */
+   --uv-border-sm:     rgba(48, 47, 44, 0.10);
+   --uv-border:        rgba(48, 47, 44, 0.12);
+   --uv-border-md:     rgba(48, 47, 44, 0.18);
+   --uv-border-strong: rgba(48, 47, 44, 0.28);
+
+   /* --- Superficies hover / interactivas --- */
+   --uv-hover-bg:    rgba(48, 47, 44, 0.05);
+   --uv-hover-bg-md: rgba(48, 47, 44, 0.08);
+
+   /* --- Inputs (glass en login/register, plano en resto) --- */
+   --uv-input-glass:       rgba(255, 255, 255, 0.55);
+   --uv-input-glass-focus: rgba(255, 255, 255, 0.70);
+   --uv-input-glass-focus-shadow: 0 0 0 4px rgba(48, 47, 44, 0.10);
+
+   /* --- Sombras --- */
+   --uv-shadow-l1:    0 2px 8px rgba(48,47,44,0.07), 0 6px 20px rgba(48,47,44,0.05);
+   --uv-shadow-l2:    0 1px 4px rgba(48,47,44,0.06), 0 3px 10px rgba(48,47,44,0.04);
+   --uv-shadow-inset: inset 0 1px 3px rgba(48,47,44,0.05);
+   --uv-shadow-menu:  0 4px 16px rgba(48,47,44,0.12), 0 8px 32px rgba(48,47,44,0.08);
+
+   /* --- Regla doble (box-shadow trick — gap = bg-page) --- */
+   --uv-rule-double: 0 3px 0 0 var(--uv-bg-page), 0 4px 0 0 var(--uv-ink);
+
+   /* --- Badges / Estado de encuesta --- */
+   --uv-badge-open-color:     #1a5c3a;
+   --uv-badge-open-bg:        rgba(22, 90, 56, 0.08);
+   --uv-badge-open-border:    rgba(22, 90, 56, 0.28);
+
+   --uv-badge-pending-color:  #7a5208;
+   --uv-badge-pending-bg:     rgba(160, 100, 5, 0.09);
+   --uv-badge-pending-border: rgba(160, 100, 5, 0.45);
+
+   --uv-badge-closed-color:   rgba(48, 47, 44, 0.48);
+   --uv-badge-closed-bg:      rgba(48, 47, 44, 0.06);
+   --uv-badge-closed-border:  rgba(48, 47, 44, 0.18);
+
+   /* --- Alertas / Peligro --- */
+   --uv-danger-color:  rgba(160, 0, 0, 0.82);
+   --uv-danger-bg:     rgba(160, 0, 0, 0.05);
+   --uv-danger-border: rgba(160, 0, 0, 0.45);
+
+   /* --- Legado (usados en theme.css base) --- */
+   --bg:        var(--uv-bg-page);
+   --ink:       var(--uv-ink);
+   --muted:     var(--uv-ink-muted);
+   --card:      var(--uv-bg-l1);
+   --border:    var(--uv-border);
+   --shadow:    var(--uv-shadow-l1);
    --font-base: "Times New Roman", Times, serif;
+}
+
+/* =========================================================
+   Dark mode overrides
+   ========================================================= */
+
+[data-theme="dark"] {
+   /* --- Fondos / Elevación --- */
+   --uv-bg-page: #1a1917;
+   --uv-bg-l1:   #222120;
+   --uv-bg-l2:   #2a2927;
+   --uv-bg-l3:   #312f2d;
+
+   /* --- Tinta / Texto --- */
+   --uv-ink:        #e8e3d6;
+   --uv-ink-body:   #c5bfb0;
+   --uv-ink-muted:  #9e9888;
+
+   /* --- Paneles siempre-oscuros --- */
+   --uv-ink-panel:  #141412;
+   --uv-footer-bg:  #141412;
+
+   /* --- Bordes --- */
+   --uv-border-sm:     rgba(232, 227, 214, 0.08);
+   --uv-border:        rgba(232, 227, 214, 0.10);
+   --uv-border-md:     rgba(232, 227, 214, 0.16);
+   --uv-border-strong: rgba(232, 227, 214, 0.24);
+
+   /* --- Superficies hover --- */
+   --uv-hover-bg:    rgba(232, 227, 214, 0.05);
+   --uv-hover-bg-md: rgba(232, 227, 214, 0.09);
+
+   /* --- Inputs --- */
+   --uv-input-glass:       rgba(255, 255, 255, 0.06);
+   --uv-input-glass-focus: rgba(255, 255, 255, 0.10);
+   --uv-input-glass-focus-shadow: 0 0 0 3px rgba(232, 227, 214, 0.10);
+
+   /* --- Sombras --- */
+   --uv-shadow-l1:    0 2px 8px rgba(0,0,0,0.38), 0 6px 20px rgba(0,0,0,0.28);
+   --uv-shadow-l2:    0 1px 4px rgba(0,0,0,0.30), 0 3px 10px rgba(0,0,0,0.22);
+   --uv-shadow-inset: inset 0 1px 3px rgba(0,0,0,0.22);
+   --uv-shadow-menu:  0 4px 16px rgba(0,0,0,0.45), 0 8px 32px rgba(0,0,0,0.35);
+
+   /* --- Regla doble --- */
+   --uv-rule-double: 0 3px 0 0 var(--uv-bg-page), 0 4px 0 0 var(--uv-ink);
+
+   /* --- Badges — más vistosos en oscuro --- */
+   --uv-badge-open-color:     #52c98a;
+   --uv-badge-open-bg:        rgba(82, 201, 138, 0.14);
+   --uv-badge-open-border:    rgba(82, 201, 138, 0.42);
+
+   --uv-badge-pending-color:  #f0b843;
+   --uv-badge-pending-bg:     rgba(240, 184, 67, 0.14);
+   --uv-badge-pending-border: rgba(240, 184, 67, 0.55);
+
+   --uv-badge-closed-color:   rgba(232, 227, 214, 0.38);
+   --uv-badge-closed-bg:      rgba(232, 227, 214, 0.06);
+   --uv-badge-closed-border:  rgba(232, 227, 214, 0.14);
+
+   /* --- Alertas --- */
+   --uv-danger-color:  rgba(240, 90, 80, 0.92);
+   --uv-danger-bg:     rgba(240, 90, 80, 0.10);
+   --uv-danger-border: rgba(240, 90, 80, 0.40);
 }
 
 /* =========================================================
    Reset / Base
    ========================================================= */
-* {
-   box-sizing: border-box;
-}
 
-html,
-body,
-#root {
+* { box-sizing: border-box; }
+
+html, body, #root {
    height: 100%;
    margin: 0;
-
    font-family: var(--font-base);
-   color: var(--ink);
-   background-color: var(--bg);
+   color: var(--uv-ink);
+   background-color: var(--uv-bg-page);
+   transition: background-color 220ms ease, color 220ms ease;
 }
 
-/* =========================================================
-   Elementos base
-   ========================================================= */
 a {
    color: inherit;
    text-decoration: none;
 }
+
+/* =========================================================
+   Layout base
+   ========================================================= */
 
 .container {
    width: min(1500px, 92vw);
    margin: 0 auto;
 }
 
-/* =========================================================
-   Botones
-   ========================================================= */
-.btn {
-   display: inline-flex;
-   align-items: center;
-   gap: 8px;
-   padding: 10px 14px;
-   border-radius: 10px;
-   border: 1px solid var(--border);
-   background: transparent;
-   color: var(--ink);
-   font-weight: 600;
-   cursor: pointer;
-
-   transition:
-      transform 120ms ease,
-      background 120ms ease,
-      border-color 120ms ease;
-}
-
-.btn:hover {
-   background: rgba(48, 47, 44, 0.06);
-   border-color: rgba(48, 47, 44, 0.22);
-   transform: translateY(-1px);
-}
-
-.btn:active {
-   transform: translateY(0px) scale(0.98);
-}
-
-.btn-primary {
-   background: var(--ink);
-   color: var(--bg);
-   border-color: var(--ink);
-}
-
-.btn-primary:hover {
-   background: #272622;
-   border-color: #272622;
-}
-
-.pill {
-   border-radius: 999px;
-}
-
-/* =========================================================
-   Cards
-   ========================================================= */
-.card {
-   background: var(--card);
-   border: 1px solid var(--border);
-   border-radius: 16px;
-   box-shadow: var(--shadow);
-}
-
-/* =========================================================
-   App Layout (CLAVE DEL FOOTER)
-   ========================================================= */
 .app-layout {
    min-height: 100vh;
    display: flex;
    flex-direction: column;
 }
 
-/*
-   🔑 AJUSTE DEFINITIVO
-   - El footer SIEMPRE queda fuera del primer pantallazo
-   - Da aire debajo del navbar
-*/
 .app-content {
    flex: 1;
-
-   /* garantiza al menos una pantalla completa */
    min-height: 100vh;
-
-   /* aire debajo del navbar */
    padding-top: 5px;
-
-   /* obliga a hacer scroll antes de llegar al footer */
    padding-bottom: 250px;
 }
 
 /* =========================================================
-   Footer
+   Botones base
    ========================================================= */
-.uv-footer {
-   margin-top: 0;
-   background: #302f2c;
-   color: rgba(239, 237, 227, 0.92);
+
+.btn {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   padding: 10px 14px;
+   border-radius: 10px;
+   border: 1px solid var(--uv-border);
+   background: transparent;
+   color: var(--uv-ink);
+   font-weight: 600;
+   cursor: pointer;
+   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.btn:hover {
+   background: var(--uv-hover-bg-md);
+   border-color: var(--uv-border-md);
+   transform: translateY(-1px);
+}
+
+.btn:active {
+   transform: translateY(0) scale(0.98);
+}
+
+.btn-primary {
+   background: var(--uv-ink);
+   color: var(--uv-bg-page);
+   border-color: var(--uv-ink);
+}
+
+.btn-primary:hover {
+   opacity: 0.88;
+}
+
+.pill { border-radius: 999px; }
+
+/* =========================================================
+   Cards base
+   ========================================================= */
+
+.card {
+   background: var(--uv-bg-l1);
+   border: 1px solid var(--uv-border);
+   border-radius: 16px;
+   box-shadow: var(--uv-shadow-l1);
 }
 
 /* =========================================================
    Helpers
    ========================================================= */
-.hidden {
-   display: none !important;
+
+.hidden  { display: none !important; }
+.muted   { color: var(--uv-ink-muted); }
+
+/* =========================================================
+   Dark mode — component-level color corrections
+   Fixes hardcoded rgba(48,47,44,X) opacity text/border values
+   ========================================================= */
+
+/* --- Stronger shadows in dark mode for 3D depth --- */
+[data-theme="dark"] {
+   --uv-shadow-l1: 0 2px 8px rgba(0,0,0,0.60), 0 6px 24px rgba(0,0,0,0.45), 0 0 0 1px rgba(232,227,214,0.04);
+   --uv-shadow-l2: 0 1px 4px rgba(0,0,0,0.50), 0 3px 12px rgba(0,0,0,0.35), 0 0 0 1px rgba(232,227,214,0.03);
+   --uv-shadow-menu: 0 4px 20px rgba(0,0,0,0.60), 0 8px 36px rgba(0,0,0,0.48);
 }
 
-.muted {
-   color: var(--muted);
+/* --- Calendar cells --- */
+[data-theme="dark"] .uv-calendar-cell {
+   color: rgba(232, 227, 214, 0.72);
+   background: rgba(232, 227, 214, 0.04);
 }
+[data-theme="dark"] .uv-calendar-cell--empty { background: transparent; }
+[data-theme="dark"] .uv-calendar-cell.is-in-range {
+   background: rgba(232, 227, 214, 0.09);
+   color: var(--uv-ink);
+}
+[data-theme="dark"] .uv-calendar-cell.is-in-range:hover { background: rgba(232, 227, 214, 0.16); }
+[data-theme="dark"] .uv-calendar-cell.is-today:not(.is-start):not(.is-end) {
+   border-color: rgba(232, 227, 214, 0.32);
+}
+[data-theme="dark"] .uv-calendar-weekdays span { color: rgba(232, 227, 214, 0.50); }
+
+/* --- Dashboard muted text & inner borders --- */
+[data-theme="dark"] .uv-dashboard-info-card-head {
+   color: rgba(232, 227, 214, 0.52);
+   border-color: rgba(232, 227, 214, 0.10);
+}
+[data-theme="dark"] .uv-dashboard-info-card small { color: rgba(232, 227, 214, 0.52); }
+[data-theme="dark"] .uv-dashboard-welcome-badge { color: rgba(232, 227, 214, 0.52); border-color: rgba(232, 227, 214, 0.16); }
+[data-theme="dark"] .uv-dashboard-welcome-main p { color: rgba(232, 227, 214, 0.65); }
+[data-theme="dark"] .uv-stat-card-label { color: rgba(232, 227, 214, 0.55); }
+[data-theme="dark"] .uv-stat-card-hint  { color: rgba(232, 227, 214, 0.45); }
+[data-theme="dark"] .uv-dashboard-panel-head { border-color: rgba(232, 227, 214, 0.10); }
+[data-theme="dark"] .uv-dashboard-panel-head p { color: rgba(232, 227, 214, 0.60); }
+[data-theme="dark"] .uv-dashboard-panel-head--dark .uv-title-icon,
+[data-theme="dark"] .uv-dashboard-panel-head--dark p { color: rgba(232, 227, 214, 0.55); }
+[data-theme="dark"] .uv-metrics-chart-type-btn { color: rgba(232, 227, 214, 0.55); }
+[data-theme="dark"] .uv-metrics-visual-kicker { color: rgba(232, 227, 214, 0.50); }
+[data-theme="dark"] .uv-metrics-hero-main p { color: rgba(232, 227, 214, 0.62); }
+[data-theme="dark"] .uv-metrics-mini-stat span { color: rgba(232, 227, 214, 0.50); }
+[data-theme="dark"] .uv-vbar-percent { color: rgba(232, 227, 214, 0.50); }
+[data-theme="dark"] .uv-metrics-pie-hole span { color: rgba(232, 227, 214, 0.52); }
+[data-theme="dark"] .uv-metrics-legend-copy small { color: rgba(232, 227, 214, 0.52); }
+[data-theme="dark"] .uv-metrics-dot { border-color: rgba(232, 227, 214, 0.28); }
+[data-theme="dark"] .uv-dashboard-table thead th { color: rgba(232, 227, 214, 0.52); }
+[data-theme="dark"] .uv-dashboard-table tbody tr:hover { background: rgba(232, 227, 214, 0.04); }
+[data-theme="dark"] .uv-dashboard-table-main span { color: rgba(232, 227, 214, 0.55); }
+[data-theme="dark"] .uv-home-page-info { color: rgba(232, 227, 214, 0.55); }
+[data-theme="dark"] .uv-home-empty-box { color: rgba(232, 227, 214, 0.60); background: var(--uv-bg-l2); }
+
+/* --- Explorer muted text & interactive elements --- */
+[data-theme="dark"] .uv-explorer-mh-kicker,
+[data-theme="dark"] .uv-explorer-mh-sub { color: rgba(232, 227, 214, 0.52); }
+[data-theme="dark"] .uv-explorer-mh-meta {
+   color: rgba(232, 227, 214, 0.45);
+   border-color: rgba(232, 227, 214, 0.12);
+}
+[data-theme="dark"] .uv-explorer-label,
+[data-theme="dark"] .uv-explorer-side-title { color: rgba(232, 227, 214, 0.52); }
+[data-theme="dark"] .uv-explorer-card-body p { color: rgba(232, 227, 214, 0.65); }
+[data-theme="dark"] .uv-explorer-card-meta span { color: rgba(232, 227, 214, 0.50); }
+[data-theme="dark"] .uv-explorer-card-footer small { color: rgba(232, 227, 214, 0.42); }
+[data-theme="dark"] .uv-explorer-card-footer { border-color: rgba(232, 227, 214, 0.10); }
+[data-theme="dark"] .uv-explorer-applied-label { color: rgba(232, 227, 214, 0.45); }
+[data-theme="dark"] .uv-explorer-card-campus { color: rgba(232, 227, 214, 0.40); }
+[data-theme="dark"] .uv-explorer-sidebar-head { border-color: rgba(232, 227, 214, 0.10); }
+[data-theme="dark"] .uv-explorer-filter-block + .uv-explorer-filter-block { border-color: rgba(232, 227, 214, 0.08); }
+[data-theme="dark"] .uv-explorer-applied { border-color: rgba(232, 227, 214, 0.10); }
+[data-theme="dark"] .uv-explorer-status-btn {
+   background: rgba(232, 227, 214, 0.06);
+   color: rgba(232, 227, 214, 0.58);
+   border-color: rgba(232, 227, 214, 0.14);
+}
+[data-theme="dark"] .uv-explorer-status-btn:hover {
+   background: rgba(232, 227, 214, 0.12);
+   color: var(--uv-ink);
+}
+[data-theme="dark"] .uv-explorer-side-chip {
+   background: rgba(232, 227, 214, 0.05);
+   color: rgba(232, 227, 214, 0.72);
+   border-color: rgba(232, 227, 214, 0.10);
+}
+[data-theme="dark"] .uv-explorer-side-chip:hover {
+   background: rgba(232, 227, 214, 0.10);
+   border-color: rgba(232, 227, 214, 0.20);
+}
+[data-theme="dark"] .uv-explorer-filter-chip {
+   background: rgba(232, 227, 214, 0.08);
+   border-color: rgba(232, 227, 214, 0.14);
+}
+[data-theme="dark"] .uv-explorer-input,
+[data-theme="dark"] .uv-explorer-select {
+   background: rgba(232, 227, 214, 0.06);
+   border-color: rgba(232, 227, 214, 0.14);
+   color: var(--uv-ink);
+}
+[data-theme="dark"] .uv-explorer-search-icon,
+[data-theme="dark"] .uv-explorer-select-icon { color: rgba(232, 227, 214, 0.45); }
+[data-theme="dark"] .uv-explorer-clear-btn,
+[data-theme="dark"] .uv-explorer-clear-main {
+   color: rgba(232, 227, 214, 0.58);
+   border-color: rgba(232, 227, 214, 0.14);
+}
+[data-theme="dark"] .uv-explorer-clear-btn:hover,
+[data-theme="dark"] .uv-explorer-clear-main:hover {
+   background: rgba(232, 227, 214, 0.07);
+   color: var(--uv-ink);
+}
+[data-theme="dark"] .uv-explorer-side-empty { color: rgba(232, 227, 214, 0.45); }
+[data-theme="dark"] .uv-explorer-card-rule { background: var(--uv-ink); }
+[data-theme="dark"] .uv-explorer-card--closed .uv-explorer-card-rule {
+   background: rgba(232, 227, 214, 0.18);
+}
+
+/* --- PollDetail muted text --- */
+[data-theme="dark"] .uv-polldetail-scope .uv-detail-mh-meta { color: rgba(232, 227, 214, 0.48); }
+[data-theme="dark"] .uv-polldetail-scope .uv-polls-head { border-color: rgba(232, 227, 214, 0.10); }
+
+/* --- Profile muted text & box borders --- */
+[data-theme="dark"] .uv-profile-header p { color: rgba(232, 227, 214, 0.58); }
+[data-theme="dark"] .uv-muted { color: rgba(232, 227, 214, 0.58); }
+[data-theme="dark"] .uv-profile-box h2 { border-color: rgba(232, 227, 214, 0.10); }
+
+/* --- Calendar left panel text --- */
+[data-theme="dark"] .uv-calendar-left { color: rgba(232, 227, 214, 0.92); }
+[data-theme="dark"] .uv-calendar-month-num { color: var(--uv-ink); }
+[data-theme="dark"] .uv-calendar-left-label { color: rgba(232, 227, 214, 0.58); }
+
+/* --- Neon/luminescent stat values in dark mode --- */
+[data-theme="dark"] .uv-stat-card-value {
+   text-shadow: 0 0 20px rgba(232, 227, 214, 0.30);
+}
+[data-theme="dark"] .uv-stat-card-icon--open {
+   box-shadow: 0 0 14px rgba(82, 201, 138, 0.35);
+}
+[data-theme="dark"] .uv-stat-card-icon--pending {
+   box-shadow: 0 0 14px rgba(240, 184, 67, 0.30);
+}
+[data-theme="dark"] .uv-stat-card-icon--closed {
+   box-shadow: 0 0 10px rgba(232, 227, 214, 0.12);
+}
+
+/* --- Explorer closed card title --- */
+[data-theme="dark"] .uv-explorer-card--closed .uv-explorer-card-body h3 {
+   color: rgba(232, 227, 214, 0.42);
+}
+
+/* --- About page muted subtitles --- */
+[data-theme="dark"] .uv-about-mh-kicker { color: rgba(232, 227, 214, 0.52); }
+[data-theme="dark"] .uv-about-badge {
+   border-color: rgba(232, 227, 214, 0.22);
+   color: rgba(232, 227, 214, 0.65);
+}
+[data-theme="dark"] .uv-about-quote span { color: rgba(232, 227, 214, 0.55); }
+
+/* --- CreatePoll muted labels --- */
+[data-theme="dark"] .uv-polls-scope .uv-label { color: rgba(232, 227, 214, 0.60); }
+[data-theme="dark"] .uv-polls-scope .uv-req { color: rgba(232, 227, 214, 0.42); }
+[data-theme="dark"] .uv-polls-scope .uv-mini-label { color: rgba(232, 227, 214, 0.55); }
+[data-theme="dark"] .uv-polls-scope .uv-mini-label-time { color: rgba(232, 227, 214, 0.72); }
+[data-theme="dark"] .uv-polls-scope .uv-date-hint { color: rgba(232, 227, 214, 0.55); }
+[data-theme="dark"] .uv-polls-scope .uv-excel-sub { color: rgba(232, 227, 214, 0.58); }
+[data-theme="dark"] .uv-polls-scope .uv-excel-sub2 { color: rgba(232, 227, 214, 0.48); }
+[data-theme="dark"] .uv-polls-scope .uv-excel-file-sub { color: rgba(232, 227, 214, 0.55); }
+[data-theme="dark"] .uv-polls-scope .uv-excel-note { color: rgba(232, 227, 214, 0.55); }
+[data-theme="dark"] .uv-polls-scope .uv-excel-empty { color: rgba(232, 227, 214, 0.60); }
+[data-theme="dark"] .uv-polls-scope .uv-dropzone-sub { color: rgba(232, 227, 214, 0.55); }
+[data-theme="dark"] .uv-polls-scope .uv-dropzone-sub2 { color: rgba(232, 227, 214, 0.48); }
+[data-theme="dark"] .uv-polls-scope .uv-dropzone-empty { color: rgba(232, 227, 214, 0.60); }
+[data-theme="dark"] .uv-polls-scope .uv-option-idx { color: rgba(232, 227, 214, 0.48); }
+[data-theme="dark"] .uv-polls-scope .uv-option-head { border-color: rgba(232, 227, 214, 0.10); }
+[data-theme="dark"] .uv-polls-scope .uv-upload-chip span { color: rgba(232, 227, 214, 0.52); }
+[data-theme="dark"] .uv-polls-scope .uv-academic-note {
+   border-color: rgba(232, 227, 214, 0.18);
+   background: rgba(232, 227, 214, 0.04);
+}
+[data-theme="dark"] .uv-polls-scope .uv-card-head { border-color: rgba(232, 227, 214, 0.10); }
+[data-theme="dark"] .uv-polls-scope .uv-select-icon { color: rgba(232, 227, 214, 0.52); }

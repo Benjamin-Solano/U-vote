@@ -12,8 +12,10 @@ import { useNavigate } from "react-router-dom";
 
 import "./login.css";
 import logo from "../../assets/U-VoteLogo.png";
+import logoW from "../../assets/U-VoteLogoW.png";
 
 import { useAuth } from "../../auth/useAuth";
+import { useTheme } from "../../context/ThemeContext";
 import { authApi } from "../../api/auth.api";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -44,6 +46,7 @@ const getLoginErrorMessage = (err) => {
 export default function Login() {
    const { login, isAuthenticated } = useAuth();
    const navigate = useNavigate();
+   const { theme } = useTheme();
 
    const [form, setForm] = useState({
       correo: "",
@@ -193,7 +196,7 @@ export default function Login() {
                <div className="uv-login-left-inner">
                   <motion.img
                      className="uv-login-logo"
-                     src={logo}
+                     src={theme === "dark" ? logoW : logo}
                      alt="U-Vote"
                      initial={{ y: 0, scale: 1 }}
                      animate={{ y: [0, -6, 0], scale: [1, 1.012, 1] }}
