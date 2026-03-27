@@ -34,7 +34,7 @@ function Footer() {
                   <div className="uv-footer-h">Síguenos</div>
                   <div className="uv-social">
                      <a
-                        href="https://www.instagram.com/"
+                        href="https://www.instagram.com/benjamiinn.exe/"
                         target="_blank"
                         rel="noreferrer"
                         className="uv-social-btn"

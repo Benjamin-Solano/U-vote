@@ -11,6 +11,8 @@ import {
 } from "react-icons/fi";
 
 import logo from "../../assets/U-VoteLogo.png";
+import logoW from "../../assets/U-VoteLogoW.png";
+import { useTheme } from "../../context/ThemeContext";
 
 /* =========================================================
    Animaciones bidireccionales (entrada + salida al hacer scroll)
@@ -73,6 +75,7 @@ const floatingLogo = {
    ========================================================= */
 
 export default function HomeLanding() {
+   const { theme } = useTheme();
    const today = new Date();
    const editionDate = today.toLocaleDateString("es-CR", {
       weekday: "long",
@@ -109,7 +112,7 @@ export default function HomeLanding() {
                   animate="animate"
                >
                   <img
-                     src={logo}
+                     src={theme === "dark" ? logoW : logo}
                      alt="U-Vote"
                      className="uv-paper-logo"
                   />

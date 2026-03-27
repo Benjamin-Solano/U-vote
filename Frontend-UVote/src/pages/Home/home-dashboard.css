@@ -1029,3 +1029,38 @@
 
    .uv-pie-animate { animation: none !important; }
 }
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+/* Labels de métricas (Opciones, Opción líder, porcentaje, etc.) */
+[data-theme="dark"] .uv-metrics-mini-stat span,
+[data-theme="dark"] .uv-metrics-summary-card-inline span {
+   color: rgba(232, 227, 214, 0.46);
+}
+
+[data-theme="dark"] .uv-metrics-legend-copy small {
+   color: rgba(232, 227, 214, 0.48);
+}
+
+[data-theme="dark"] .uv-metrics-hero-main p {
+   color: rgba(232, 227, 214, 0.55);
+}
+
+[data-theme="dark"] .uv-vbar-percent {
+   color: rgba(232, 227, 214, 0.46);
+}
+
+[data-theme="dark"] .uv-metrics-pie-hole span {
+   color: rgba(232, 227, 214, 0.48);
+}
+
+[data-theme="dark"] .uv-metrics-pie-hole {
+   background: var(--uv-bg-page);
+}
+
+/* Tooltip del calendario: fondo siempre oscuro, texto debe ser claro */
+[data-theme="dark"] .uv-calendar-tooltip {
+   color: rgba(232, 227, 214, 0.92);
+}

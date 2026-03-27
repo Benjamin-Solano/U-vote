@@ -1,8 +1,12 @@
 import { motion } from "framer-motion";
+import { useTheme } from "../../../context/ThemeContext";
 
-const PALETTE = ["#302f2c", "#5b554f", "#8b847c", "#b4aca2", "#d9d3c8", "#c8bbb0"];
+const PALETTE_LIGHT = ["#302f2c", "#5b554f", "#8b847c", "#b4aca2", "#d9d3c8", "#c8bbb0"];
+const PALETTE_DARK  = ["#c8c2ae", "#a89e8e", "#d4c8b4", "#b4a896", "#9e9282", "#c2b8a2"];
 
 export default function MetricsPieChart({ options, totalVotes }) {
+   const { theme } = useTheme();
+   const PALETTE = theme === "dark" ? PALETTE_DARK : PALETTE_LIGHT;
    const segments = options.map((option, index) => ({
       ...option,
       color: PALETTE[index % PALETTE.length],
