@@ -387,6 +387,80 @@ a {
    color: rgba(232, 227, 214, 0.42);
 }
 
+/* --- NotFound page --- */
+.uv-notfound {
+   padding: 48px 16px 80px;
+}
+
+.uv-notfound-rule-top {
+   height: 4px;
+   background: var(--uv-ink);
+   border: none;
+   margin: 0 0 12px;
+}
+
+.uv-notfound-eyebrow {
+   font-size: 0.74rem;
+   letter-spacing: 0.16em;
+   text-transform: uppercase;
+   font-weight: 800;
+   color: var(--uv-ink-muted);
+   margin: 0 0 6px;
+}
+
+.uv-notfound-title {
+   font-size: clamp(2rem, 5vw, 3.6rem);
+   font-weight: 900;
+   font-style: italic;
+   letter-spacing: -0.03em;
+   color: var(--uv-ink);
+   margin: 0 0 16px;
+   line-height: 1;
+}
+
+.uv-notfound-rule-double {
+   height: 1px;
+   background: var(--uv-ink);
+   border: none;
+   margin: 0 0 20px;
+   box-shadow: var(--uv-rule-double);
+}
+
+.uv-notfound-body {
+   color: var(--uv-ink-body);
+   font-size: 0.96rem;
+   line-height: 1.6;
+   max-width: 480px;
+   margin: 0 0 24px;
+}
+
+.uv-notfound-btn {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   padding: 10px 18px;
+   background: var(--uv-ink);
+   color: var(--uv-bg-page);
+   border-radius: 2px;
+   font-weight: 800;
+   font-size: 0.88rem;
+   letter-spacing: 0.04em;
+   text-decoration: none;
+   border: 1.5px solid var(--uv-ink);
+   transition: opacity 120ms ease;
+}
+
+.uv-notfound-btn:hover {
+   opacity: 0.85;
+}
+
+.uv-suspense-loader {
+   padding: 28px 16px;
+   color: var(--uv-ink-muted);
+   font-size: 0.9rem;
+   font-weight: 600;
+}
+
 /* --- About page muted subtitles --- */
 [data-theme="dark"] .uv-about-mh-kicker { color: rgba(232, 227, 214, 0.52); }
 [data-theme="dark"] .uv-about-badge {

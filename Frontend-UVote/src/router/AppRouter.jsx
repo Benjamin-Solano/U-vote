@@ -23,21 +23,15 @@ function PollsIdRedirect() {
 
 function NotFound() {
    return (
-      <div className="container" style={{ padding: "48px 16px 80px" }}>
-         <hr style={{ height: 4, background: "#302f2c", border: "none", margin: "0 0 12px" }} />
-         <p style={{ fontSize: "0.74rem", letterSpacing: "0.16em", textTransform: "uppercase", fontWeight: 800, color: "rgba(48,47,44,0.44)", margin: "0 0 6px" }}>
-            Error · 404
-         </p>
-         <h1 style={{ fontSize: "clamp(2rem,5vw,3.6rem)", fontWeight: 900, fontStyle: "italic", letterSpacing: "-0.03em", color: "#302f2c", margin: "0 0 16px", lineHeight: 1 }}>
-            Página no encontrada
-         </h1>
-         <hr style={{ height: 1, background: "#302f2c", border: "none", margin: "0 0 20px", boxShadow: "0 3px 0 0 #efede3, 0 4px 0 0 #302f2c" }} />
-         <p style={{ color: "#4a4745", fontSize: "0.96rem", lineHeight: 1.6, maxWidth: 480, margin: "0 0 24px" }}>
+      <div className="container uv-notfound">
+         <hr className="uv-notfound-rule-top" />
+         <p className="uv-notfound-eyebrow">Error · 404</p>
+         <h1 className="uv-notfound-title">Página no encontrada</h1>
+         <hr className="uv-notfound-rule-double" />
+         <p className="uv-notfound-body">
             La dirección que buscas no existe o fue removida. Verifica la URL o vuelve al inicio.
          </p>
-         <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 18px", background: "#302f2c", color: "#efede3", borderRadius: 2, fontWeight: 800, fontSize: "0.88rem", letterSpacing: "0.04em", textDecoration: "none", border: "1.5px solid #302f2c" }}>
-            Volver al inicio
-         </a>
+         <a href="/" className="uv-notfound-btn">Volver al inicio</a>
       </div>
    );
 }
@@ -45,9 +39,7 @@ function NotFound() {
 export default function AppRouter() {
    return (
       <Suspense fallback={
-         <div className="container" style={{ padding: "28px 16px", color: "rgba(48,47,44,0.5)", fontSize: "0.9rem", fontWeight: 600 }}>
-            Cargando…
-         </div>
+         <div className="container uv-suspense-loader">Cargando…</div>
       }>
          <Routes>
             {/* Públicas */}

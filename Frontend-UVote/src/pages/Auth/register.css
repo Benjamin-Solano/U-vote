@@ -610,6 +610,14 @@
 }
 
 /* DARK MODE */
+[data-theme="dark"] .uv-register-card {
+   box-shadow: var(--uv-shadow-l1);
+}
+
+[data-theme="dark"] .uv-register-left {
+   background: linear-gradient(135deg, rgba(232, 227, 214, 0.06), rgba(232, 227, 214, 0.01));
+}
+
 [data-theme="dark"] .uv-register-left::after {
    border-color: rgba(232, 227, 214, 0.35);
 }

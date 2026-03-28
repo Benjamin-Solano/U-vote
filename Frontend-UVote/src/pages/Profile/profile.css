@@ -931,6 +931,31 @@
    color: rgba(232, 227, 214, 0.60);
 }
 
+/* File/inline buttons border & hover in dark mode */
+[data-theme="dark"] .uv-file-btn {
+   border-color: rgba(232, 227, 214, 0.18);
+}
+
+[data-theme="dark"] .uv-inline-btn:hover {
+   background: rgba(232, 227, 214, 0.08);
+}
+
+[data-theme="dark"] .uv-polls-scroll {
+   scrollbar-color: rgba(232, 227, 214, 0.18) rgba(232, 227, 214, 0.04);
+}
+
+[data-theme="dark"] .uv-polls-scroll::-webkit-scrollbar-track {
+   background: rgba(232, 227, 214, 0.04);
+}
+
+[data-theme="dark"] .uv-polls-scroll::-webkit-scrollbar-thumb {
+   background: rgba(232, 227, 214, 0.18);
+}
+
+[data-theme="dark"] .uv-polls-scroll::-webkit-scrollbar-thumb:hover {
+   background: rgba(232, 227, 214, 0.28);
+}
+
 /* Poll status badges — neon glow in dark mode */
 [data-theme="dark"] .uv-pill {
    border-color: rgba(232, 227, 214, 0.16);
