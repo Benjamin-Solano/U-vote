@@ -5,7 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.backenduvote.model.Usuario;
-import org.example.backenduvote.repository.UsuarioRepository;
+import org.example.backenduvote.service.UsuarioCacheService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -24,12 +24,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtTokenService jwtTokenService;
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioCacheService usuarioCacheService;
+    private final JwtBlacklistService jwtBlacklistService;
 
     public JwtAuthenticationFilter(JwtTokenService jwtTokenService,
-                                   UsuarioRepository usuarioRepository) {
+                                   UsuarioCacheService usuarioCacheService,
+                                   JwtBlacklistService jwtBlacklistService) {
         this.jwtTokenService = jwtTokenService;
-        this.usuarioRepository = usuarioRepository;
+        this.usuarioCacheService = usuarioCacheService;
+        this.jwtBlacklistService = jwtBlacklistService;
     }
 
     @Override
@@ -51,8 +54,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 3. Validar token
+        // 3. Validar firma y expiración del token
         if (!jwtTokenService.esTokenValido(token)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 3.5 Verificar que el token no haya sido revocado (logout explícito)
+        if (jwtBlacklistService.estaRevocado(token)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -64,8 +73,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 5. Buscar usuario en BD
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByCorreo(correo);
+        // 5. Buscar usuario (con caché Caffeine, TTL 5 min)
+        Optional<Usuario> optionalUsuario = usuarioCacheService.findByCorreo(correo);
         if (optionalUsuario.isEmpty()) {
 
             filterChain.doFilter(request, response);

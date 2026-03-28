@@ -4,6 +4,9 @@ import jakarta.validation.Valid;
 import org.example.backenduvote.dtos.EncuestaCreateRequest;
 import org.example.backenduvote.dtos.EncuestaResponse;
 import org.example.backenduvote.service.EncuestaService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +30,12 @@ public class EncuestaController {
     }
 
     @GetMapping
-    public List<EncuestaResponse> listar() {
-        return encuestaService.listarEncuestas();
+    public Page<EncuestaResponse> listar(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        int safeSize = Math.min(size, 100);
+        return encuestaService.listarEncuestas(PageRequest.of(page, safeSize, Sort.by(Sort.Direction.DESC, "id")));
     }
 
     @GetMapping("/{id}")

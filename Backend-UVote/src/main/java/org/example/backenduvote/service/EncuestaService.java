@@ -4,19 +4,27 @@ import org.example.backenduvote.dtos.EncuestaCreateRequest;
 import org.example.backenduvote.dtos.EncuestaResponse;
 import org.example.backenduvote.model.CampusCarrera;
 import org.example.backenduvote.model.Encuesta;
+import org.example.backenduvote.model.EncuestaCorreoAutorizado;
 import org.example.backenduvote.model.Usuario;
 import org.example.backenduvote.repository.CampusCarreraRepository;
 import org.example.backenduvote.repository.EncuestaCorreoAutorizadoRepository;
 import org.example.backenduvote.repository.EncuestaRepository;
 import org.example.backenduvote.repository.UsuarioRepository;
 import org.example.backenduvote.repository.VotoRepository;
+import org.example.backenduvote.errors.ResourceNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class EncuestaService {
@@ -75,13 +83,16 @@ public class EncuestaService {
         return mapToResponse(guardada);
     }
 
-    public List<EncuestaResponse> listarEncuestas() {
-        return encuestaRepository.findAll().stream().map(this::mapToResponse).toList();
+    // ─── Listado paginado (reemplaza el anterior findAll sin límite) ──────────
+    public Page<EncuestaResponse> listarEncuestas(Pageable pageable) {
+        Page<Encuesta> pagina = encuestaRepository.findAllConRelaciones(pageable);
+        ContextoMapeo ctx = construirContexto(pagina.getContent());
+        return pagina.map(e -> mapToResponse(e, ctx));
     }
 
     public EncuestaResponse obtenerPorId(Long id) {
         Encuesta encuesta = encuestaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("La encuesta no existe"));
+                .orElseThrow(() -> new ResourceNotFoundException("La encuesta no existe"));
         return mapToResponse(encuesta);
     }
 
@@ -90,7 +101,7 @@ public class EncuestaService {
         Usuario usuarioActual = obtenerUsuarioAutenticado();
 
         Encuesta encuesta = encuestaRepository.findById(encuestaId)
-                .orElseThrow(() -> new IllegalArgumentException("La encuesta no existe"));
+                .orElseThrow(() -> new ResourceNotFoundException("La encuesta no existe"));
 
         if (!encuesta.getUsuarioId().equals(usuarioActual.getId())) {
             throw new IllegalArgumentException("No tienes permisos para cerrar esta encuesta");
@@ -101,17 +112,15 @@ public class EncuestaService {
     }
 
     public List<EncuestaResponse> listarPorCreador(Long usuarioId) {
-        return encuestaRepository.findByUsuarioIdOrderByIdDesc(usuarioId)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        List<Encuesta> encuestas = encuestaRepository.findByUsuarioIdConRelaciones(usuarioId);
+        ContextoMapeo ctx = construirContexto(encuestas);
+        return encuestas.stream().map(e -> mapToResponse(e, ctx)).toList();
     }
 
     public List<EncuestaResponse> listarPorCampusCarrera(Long campusCarreraId) {
-        return encuestaRepository.findByCampusCarreraIdOrderByIdDesc(campusCarreraId)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        List<Encuesta> encuestas = encuestaRepository.findByCampusCarreraIdConRelaciones(campusCarreraId);
+        ContextoMapeo ctx = construirContexto(encuestas);
+        return encuestas.stream().map(e -> mapToResponse(e, ctx)).toList();
     }
 
     public List<EncuestaResponse> listarPorCampusYCarrera(Long campusId, Long carreraId) {
@@ -119,7 +128,9 @@ public class EncuestaService {
         boolean tieneCarrera = carreraId != null;
 
         if (!tieneCampus && !tieneCarrera) {
-            return listarEncuestas();
+            List<Encuesta> encuestas = encuestaRepository.findAllConRelaciones();
+            ContextoMapeo ctx = construirContexto(encuestas);
+            return encuestas.stream().map(e -> mapToResponse(e, ctx)).toList();
         }
 
         if (tieneCampus != tieneCarrera) {
@@ -130,11 +141,12 @@ public class EncuestaService {
                 .findByCampusIdAndCarreraId(campusId, carreraId)
                 .orElseThrow(() -> new IllegalArgumentException("La combinación campus-carrera no existe"));
 
-        return encuestaRepository.findByCampusCarreraIdOrderByIdDesc(campusCarrera.getId())
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+        List<Encuesta> encuestas = encuestaRepository.findByCampusCarreraIdConRelaciones(campusCarrera.getId());
+        ContextoMapeo ctx = construirContexto(encuestas);
+        return encuestas.stream().map(e -> mapToResponse(e, ctx)).toList();
     }
+
+    // ─── Helpers de autenticación ─────────────────────────────────────────────
 
     private Usuario obtenerUsuarioAutenticado() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -176,6 +188,103 @@ public class EncuestaService {
         }
     }
 
+    // ─── Batch context para listados ──────────────────────────────────────────
+
+    private record ContextoMapeo(
+            Map<Long, String> nombresPorUsuarioId,
+            Map<Long, Long> cantidadCorreosPorEncuestaId,
+            Set<Long> encuestasYaVotadas,
+            Map<Long, Boolean> yaVotoEnListaAutorizadaPorEncuestaId
+    ) {}
+
+    /**
+     * Construye el contexto de mapeo para un conjunto de encuestas en 4 queries fijas
+     * (independientemente del tamaño de la lista), eliminando el patrón N+1.
+     */
+    private ContextoMapeo construirContexto(List<Encuesta> encuestas) {
+        if (encuestas.isEmpty()) {
+            return new ContextoMapeo(Map.of(), Map.of(), Set.of(), Map.of());
+        }
+
+        List<Long> encuestaIds = encuestas.stream().map(Encuesta::getId).toList();
+        List<Long> usuarioIds = encuestas.stream().map(Encuesta::getUsuarioId).distinct().toList();
+
+        // 1 query: nombres de creadores de todas las encuestas
+        Map<Long, String> nombresPorUsuarioId = usuarioRepository.findAllById(usuarioIds)
+                .stream()
+                .collect(Collectors.toMap(Usuario::getId, Usuario::getNombreUsuario));
+
+        // 1 query: cantidad de correos autorizados por encuesta
+        Map<Long, Long> cantidadCorreos = encuestaCorreoAutorizadoRepository
+                .countPorEncuestaIds(encuestaIds)
+                .stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],
+                        row -> (Long) row[1]
+                ));
+
+        // 1 query: encuestas donde el usuario autenticado ya votó
+        Long usuarioActualId = obtenerUsuarioAutenticadoIdNullable();
+        Set<Long> encuestasYaVotadas = Set.of();
+        if (usuarioActualId != null) {
+            encuestasYaVotadas = new HashSet<>(
+                    votoRepository.findEncuestaIdsVotadasPorUsuario(usuarioActualId, encuestaIds)
+            );
+        }
+
+        // 1 query: registros de lista autorizada para el correo autenticado
+        String correoActual = obtenerCorreoAutenticadoNullable();
+        Map<Long, Boolean> yaVotoEnLista = Map.of();
+        if (correoActual != null) {
+            yaVotoEnLista = encuestaCorreoAutorizadoRepository
+                    .findByCorreoAndEncuestaIdIn(correoActual, encuestaIds)
+                    .stream()
+                    .collect(Collectors.toMap(
+                            EncuestaCorreoAutorizado::getEncuestaId,
+                            EncuestaCorreoAutorizado::isYaVoto
+                    ));
+        }
+
+        return new ContextoMapeo(nombresPorUsuarioId, cantidadCorreos, encuestasYaVotadas, yaVotoEnLista);
+    }
+
+    // ─── Mappers ──────────────────────────────────────────────────────────────
+
+    /** Mapper para listados: usa datos pre-cargados en batch. */
+    private EncuestaResponse mapToResponse(Encuesta e, ContextoMapeo ctx) {
+        CampusCarrera cc = e.getCampusCarrera();
+
+        EncuestaResponse response = new EncuestaResponse(
+                e.getId(),
+                e.getUsuarioId(),
+                e.getNombre(),
+                e.getDescripcion(),
+                e.getImagenUrl(),
+                e.getCreadaEn(),
+                e.getFechaInicio(),
+                e.getFechaCierre(),
+                e.estaCerrada(),
+                cc != null ? cc.getId() : null,
+                cc != null ? cc.getCampus().getId() : null,
+                cc != null ? cc.getCampus().getNombre() : null,
+                cc != null ? cc.getCarrera().getId() : null,
+                cc != null ? cc.getCarrera().getNombre() : null
+        );
+
+        response.setUsuarioNombre(ctx.nombresPorUsuarioId().get(e.getUsuarioId()));
+
+        long cantidad = ctx.cantidadCorreosPorEncuestaId().getOrDefault(e.getId(), 0L);
+        response.setUsaListaCorreos(cantidad > 0);
+        response.setCantidadCorreosAutorizados(cantidad);
+
+        boolean yaVoto = ctx.encuestasYaVotadas().contains(e.getId())
+                || ctx.yaVotoEnListaAutorizadaPorEncuestaId().getOrDefault(e.getId(), false);
+        response.setYaVoto(yaVoto);
+
+        return response;
+    }
+
+    /** Mapper para entidad individual (crear, obtener, cerrar): queries directas. */
     private EncuestaResponse mapToResponse(Encuesta e) {
         CampusCarrera cc = e.getCampusCarrera();
 

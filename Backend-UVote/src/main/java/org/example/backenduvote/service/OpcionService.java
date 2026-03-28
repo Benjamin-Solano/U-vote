@@ -8,6 +8,7 @@ import org.example.backenduvote.model.Usuario;
 import org.example.backenduvote.repository.EncuestaRepository;
 import org.example.backenduvote.repository.OpcionRepository;
 import org.example.backenduvote.repository.UsuarioRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -91,7 +92,7 @@ public class OpcionService {
                 .orElseThrow(() -> new IllegalArgumentException("La encuesta no existe"));
 
         if (!encuesta.getUsuarioId().equals(usuarioActual.getId())) {
-            throw new IllegalArgumentException("No tienes permisos para eliminar opciones de esta encuesta");
+            throw new AccessDeniedException("No tienes permisos para eliminar esta opción");
         }
 
         if (encuesta.getFechaCierre() != null && !OffsetDateTime.now().isBefore(encuesta.getFechaCierre())) {

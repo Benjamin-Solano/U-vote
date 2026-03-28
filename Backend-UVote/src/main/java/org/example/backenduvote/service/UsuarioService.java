@@ -9,10 +9,13 @@ import org.example.backenduvote.repository.CampusCarreraRepository;
 import org.example.backenduvote.repository.UsuarioRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.Base64;
 import java.util.List;
 
@@ -23,15 +26,18 @@ public class UsuarioService {
     private final CampusCarreraRepository campusCarreraRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final VerificationCodeService verificationCodeService;
+    private final UsuarioCacheService usuarioCacheService;
 
     public UsuarioService(UsuarioRepository usuarioRepository,
                           CampusCarreraRepository campusCarreraRepository,
                           BCryptPasswordEncoder passwordEncoder,
-                          VerificationCodeService verificationCodeService) {
+                          VerificationCodeService verificationCodeService,
+                          UsuarioCacheService usuarioCacheService) {
         this.usuarioRepository = usuarioRepository;
         this.campusCarreraRepository = campusCarreraRepository;
         this.passwordEncoder = passwordEncoder;
         this.verificationCodeService = verificationCodeService;
+        this.usuarioCacheService = usuarioCacheService;
     }
 
     public UsuarioResponse registrarUsuario(UsuarioRegistroRequest request) {
@@ -66,6 +72,10 @@ public class UsuarioService {
         return usuarioRepository.findAll().stream().map(this::mapToResponse).toList();
     }
 
+    public Page<UsuarioResponse> listarUsuarios(Pageable pageable) {
+        return usuarioRepository.findAll(pageable).map(this::mapToResponse);
+    }
+
     public UsuarioResponse obtenerPorNombre(String nombre) {
         Usuario usuario = usuarioRepository.findByNombreUsuario(nombre)
                 .orElseThrow(() -> new IllegalArgumentException("El usuario no existe"));
@@ -78,9 +88,19 @@ public class UsuarioService {
 
     @Transactional
     public void eliminarPorId(Long id) {
-        if (!usuarioRepository.existsById(id)) {
-            throw new IllegalArgumentException("El usuario no existe");
+        Usuario usuarioAEliminar = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("El usuario no existe"));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getPrincipal() == null) {
+            throw new AccessDeniedException("No autenticado");
         }
+        String correoAuth = (String) auth.getPrincipal();
+
+        if (!usuarioAEliminar.getCorreo().equals(correoAuth)) {
+            throw new AccessDeniedException("No tienes permiso para eliminar este usuario");
+        }
+
         usuarioRepository.deleteById(id);
     }
 
@@ -147,7 +167,9 @@ public class UsuarioService {
             throw new AccessDeniedException("No tienes permiso para modificar este usuario");
         }
 
-        return actualizarUsuario(id, request);
+        UsuarioResponse resultado = actualizarUsuario(id, request);
+        usuarioCacheService.evictarPorCorreo(correoAuth);
+        return resultado;
     }
 
     private void validarFormatoFotoBase64(String foto) {

@@ -6,17 +6,14 @@ import org.example.backenduvote.dtos.AuthResponse;
 import org.example.backenduvote.dtos.ResendCodeRequest;
 import org.example.backenduvote.dtos.VerifyCodeRequest;
 import org.example.backenduvote.repository.UsuarioRepository;
+import org.example.backenduvote.security.JwtBlacklistService;
 import org.example.backenduvote.service.AuthService;
 import org.example.backenduvote.service.VerificationCodeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import org.example.backenduvote.dtos.AuthStatusResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.time.OffsetDateTime;
 
 
 @RestController
@@ -26,6 +23,7 @@ public class AuthController {
     private final AuthService authService;
     private final VerificationCodeService verificationCodeService;
     private final UsuarioRepository usuarioRepository;
+    private final JwtBlacklistService jwtBlacklistService;
 
     @Value("${app.otp.resend-seconds:60}")
     private int resendSeconds;
@@ -33,10 +31,12 @@ public class AuthController {
 
     public AuthController(AuthService authService,
                           VerificationCodeService verificationCodeService,
-                          UsuarioRepository usuarioRepository) {
+                          UsuarioRepository usuarioRepository,
+                          JwtBlacklistService jwtBlacklistService) {
         this.authService = authService;
         this.verificationCodeService = verificationCodeService;
         this.usuarioRepository = usuarioRepository;
+        this.jwtBlacklistService = jwtBlacklistService;
     }
 
     @PostMapping("/login")
@@ -60,38 +60,27 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-
-    @GetMapping("/status")
-    public ResponseEntity<AuthStatusResponse> status(@RequestParam("correo") String correo) {
-
-        // Respuesta por defecto (no revela existencia)
-        AuthStatusResponse resp = new AuthStatusResponse("LOGIN", null);
-
-        usuarioRepository.findByCorreo(correo).ifPresent(u -> {
-            if (!u.isEmailVerificado()) {
-
-                int remaining = 0;
-
-                OffsetDateTime last = u.getVerifUltimoEnvio();
-                if (last != null) {
-                    OffsetDateTime allowed = last.plusSeconds(resendSeconds);
-                    OffsetDateTime now = OffsetDateTime.now();
-
-                    if (now.isBefore(allowed)) {
-                        long diff = java.time.Duration.between(now, allowed).getSeconds();
-                        remaining = (int) Math.max(0, diff);
-                    }
-                }
-
-                // Solo si existe y está pendiente, indicamos VERIFY
-                resp.setNextStep("VERIFY");
-                resp.setResendAvailableIn(remaining);
-            }
-        });
-
-        return ResponseEntity.ok(resp);
+    /**
+     * Revoca el JWT actual agregándolo a la blacklist.
+     * Requiere autenticación (el token debe ser válido para poder revocarlo).
+     *
+     * // BREAKING: el frontend debe llamar a POST /api/auth/logout con el header
+     * // Authorization: Bearer <token> al cerrar sesión, en lugar de solo borrar
+     * // el token del almacenamiento local.
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            jwtBlacklistService.revocarToken(token);
+        }
+        return ResponseEntity.ok().build();
     }
 
-
-
+    // GET /api/auth/status eliminado — revelaba si un correo está registrado y
+    // pendiente de verificación, lo que permite enumeración de cuentas.
+    // El frontend debe determinar el nextStep a partir de la respuesta de
+    // POST /api/usuarios (registro devuelve 201 → mostrar pantalla OTP) y de
+    // POST /api/auth/login (403 "Cuenta no verificada" → mostrar pantalla OTP).
+    // BREAKING: el frontend debe actualizarse para no llamar a GET /api/auth/status.
 }

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs wc:*)",
+      "Bash(find 'c:\\\\Users\\\\user\\\\Desktop\\\\Proyectos en GitHub\\\\U-vote\\\\Backend-UVote\\\\src\\\\test' -type f -name *.java)",
+      "Bash(./mvnw --version)",
+      "Bash(./mvnw -v)",
+      "Bash(./mvnw help:describe -Dcmd=clean)",
+      "Bash(./mvnw compile:*)"
+    ]
+  }
+}

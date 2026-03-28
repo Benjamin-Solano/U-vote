@@ -1,6 +1,7 @@
 package org.example.backenduvote.config;
 
 import org.example.backenduvote.security.JwtAuthenticationFilter;
+import org.example.backenduvote.security.RateLimitFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -27,6 +28,11 @@ public class SecurityConfig {
     }
 
     @Bean
+    public RateLimitFilter rateLimitFilter() {
+        return new RateLimitFilter();
+    }
+
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
@@ -36,7 +42,13 @@ public class SecurityConfig {
                 "https://u-vote-git-main-benjaminsolanos-projects.vercel.app"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "Accept",
+                "Origin",
+                "X-Requested-With"
+        ));
         config.setAllowCredentials(true);
         config.setExposedHeaders(List.of("Authorization"));
 
@@ -45,9 +57,16 @@ public class SecurityConfig {
         return source;
     }
 
+    /**
+     * Cadena de autenticación (/api/auth/**).
+     * - Requiere JWT solo para POST /api/auth/logout (revocación de token).
+     * - El resto de endpoints de auth es público.
+     */
     @Bean
     @Order(1)
-    public SecurityFilterChain authChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain authChain(HttpSecurity http,
+                                         JwtAuthenticationFilter jwtFilter,
+                                         RateLimitFilter rateLimitFilter) throws Exception {
         http
                 .securityMatcher("/api/auth/**")
                 .cors(Customizer.withDefaults())
@@ -55,15 +74,20 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/logout").authenticated()
                         .anyRequest().permitAll()
-                );
+                )
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
     @Order(2)
-    public SecurityFilterChain apiChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter) throws Exception {
+    public SecurityFilterChain apiChain(HttpSecurity http,
+                                        JwtAuthenticationFilter jwtFilter,
+                                        RateLimitFilter rateLimitFilter) throws Exception {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
@@ -87,6 +111,7 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated()
                 )
+                .addFilterBefore(rateLimitFilter, JwtAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

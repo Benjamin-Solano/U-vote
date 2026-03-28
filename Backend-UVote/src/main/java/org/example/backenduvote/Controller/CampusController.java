@@ -21,6 +21,7 @@ public class CampusController {
         this.campusService = campusService;
     }
 
+    // TODO: Restringir a rol ADMIN cuando se implemente RBAC
     @PostMapping
     public ResponseEntity<CampusResponse> crear(@Valid @RequestBody CampusRequest request) {
         CampusResponse creado = campusService.crear(request);
@@ -42,6 +43,7 @@ public class CampusController {
         return campusService.listarCarrerasPorCampus(id);
     }
 
+    // TODO: Restringir a rol ADMIN cuando se implemente RBAC
     @PutMapping("/{id}")
     public ResponseEntity<CampusResponse> actualizar(
             @PathVariable Long id,
@@ -50,6 +52,7 @@ public class CampusController {
         return ResponseEntity.ok(campusService.actualizar(id, request));
     }
 
+    // TODO: Restringir a rol ADMIN cuando se implemente RBAC
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         campusService.eliminar(id);

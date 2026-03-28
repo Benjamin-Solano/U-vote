@@ -37,7 +37,11 @@ public interface VotoRepository extends JpaRepository<Voto, Long> {
            """)
     List<Object[]> contarVotosPorOpcionConNombre(@Param("encuestaId") Long encuestaId);
 
-
-
-
+    // Batch: todas las encuestasIds donde el usuario ya votó (evita N queries en listados)
+    @Query("""
+           SELECT v.encuestaId FROM Voto v
+           WHERE v.usuarioId = :usuarioId AND v.encuestaId IN :encuestaIds
+           """)
+    List<Long> findEncuestaIdsVotadasPorUsuario(@Param("usuarioId") Long usuarioId,
+                                                @Param("encuestaIds") java.util.Collection<Long> encuestaIds);
 }

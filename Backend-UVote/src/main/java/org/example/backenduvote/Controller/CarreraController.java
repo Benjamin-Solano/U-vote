@@ -21,6 +21,7 @@ public class CarreraController {
         this.carreraService = carreraService;
     }
 
+    // TODO: Restringir a rol ADMIN cuando se implemente RBAC
     @PostMapping
     public ResponseEntity<CarreraResponse> crear(@Valid @RequestBody CarreraRequest request) {
         CarreraResponse creada = carreraService.crear(request);
@@ -42,6 +43,7 @@ public class CarreraController {
         return carreraService.listarCampusPorCarrera(id);
     }
 
+    // TODO: Restringir a rol ADMIN cuando se implemente RBAC
     @PutMapping("/{id}")
     public ResponseEntity<CarreraResponse> actualizar(
             @PathVariable Long id,
@@ -50,6 +52,7 @@ public class CarreraController {
         return ResponseEntity.ok(carreraService.actualizar(id, request));
     }
 
+    // TODO: Restringir a rol ADMIN cuando se implemente RBAC
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         carreraService.eliminar(id);

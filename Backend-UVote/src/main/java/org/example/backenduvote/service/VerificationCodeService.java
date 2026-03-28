@@ -6,11 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.time.OffsetDateTime;
+import java.util.HexFormat;
 
 @Service
 public class VerificationCodeService {
@@ -18,7 +21,6 @@ public class VerificationCodeService {
     private static final Logger log = LoggerFactory.getLogger(VerificationCodeService.class);
 
     private final UsuarioRepository usuarioRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
     private final SecureRandom random = new SecureRandom();
@@ -33,10 +35,8 @@ public class VerificationCodeService {
     private int resendSeconds;
 
     public VerificationCodeService(UsuarioRepository usuarioRepository,
-                                   BCryptPasswordEncoder passwordEncoder,
                                    EmailService emailService) {
         this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
     }
 
@@ -56,7 +56,7 @@ public class VerificationCodeService {
 
         String code = generarCodigo6();
 
-        usuario.setVerifCodigoHash(passwordEncoder.encode(code));
+        usuario.setVerifCodigoHash(generarHashOtp(code));
         usuario.setVerifExpiraEn(ahora.plusMinutes(otpMinutes));
         usuario.setVerifUltimoEnvio(ahora);
         usuario.setVerifIntentos(0);
@@ -92,7 +92,7 @@ public class VerificationCodeService {
             throw new AccessDeniedException("Demasiados intentos. Solicita un nuevo código.");
         }
 
-        boolean ok = passwordEncoder.matches(codigo, usuario.getVerifCodigoHash());
+        boolean ok = verificarHashOtp(codigo, usuario.getVerifCodigoHash());
         if (!ok) {
             usuario.setVerifIntentos(usuario.getVerifIntentos() + 1);
             usuarioRepository.save(usuario);
@@ -105,6 +105,43 @@ public class VerificationCodeService {
         usuario.setVerifIntentos(0);
 
         usuarioRepository.save(usuario);
+    }
+
+    // ─── OTP hashing con HMAC-SHA256 (reemplaza BCrypt para códigos temporales) ─
+
+    /**
+     * Genera un hash HMAC-SHA256 del código OTP con un salt aleatorio.
+     * Formato almacenado: "{saltHex}:{hmacHex}"
+     */
+    private String generarHashOtp(String code) {
+        byte[] saltBytes = new byte[16];
+        random.nextBytes(saltBytes);
+        String saltHex = HexFormat.of().formatHex(saltBytes);
+        return saltHex + ":" + calcularHmac(saltHex, code);
+    }
+
+    /**
+     * Verifica un código OTP contra el hash almacenado usando comparación timing-safe.
+     */
+    private boolean verificarHashOtp(String code, String hashAlmacenado) {
+        String[] partes = hashAlmacenado.split(":", 2);
+        if (partes.length != 2) return false;
+        byte[] esperado = calcularHmac(partes[0], code).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        byte[] actual   = partes[1].getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        return MessageDigest.isEqual(esperado, actual);
+    }
+
+    private String calcularHmac(String saltHex, String code) {
+        try {
+            byte[] saltBytes = HexFormat.of().parseHex(saltHex);
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(new SecretKeySpec(saltBytes, "HmacSHA256"));
+            return HexFormat.of().formatHex(
+                    mac.doFinal(code.getBytes(java.nio.charset.StandardCharsets.UTF_8))
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Error calculando HMAC-SHA256", e);
+        }
     }
 
     private String generarCodigo6() {
