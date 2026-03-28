@@ -47,8 +47,8 @@ export default function Navbar() {
       return () => document.removeEventListener("mousedown", onDocClick);
    }, []);
 
-   const handleLogout = () => {
-      logout();
+   const handleLogout = async () => {
+      await logout();
       setOpen(false);
       navigate("/", { replace: true });
    };

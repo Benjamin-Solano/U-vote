@@ -36,6 +36,7 @@ const getLoginErrorMessage = (err) => {
    const status = err?.response?.status;
    const msg = err?.response?.data?.message || err?.message || "";
 
+   if (status === 429) return msg || "Demasiadas solicitudes. Espera unos segundos e intenta de nuevo.";
    if (status === 401) return "Credenciales incorrectas. Verifica tu correo y contraseña.";
    if (status === 403) return msg || "Acceso denegado.";
    if (status === 400) return msg || "Revisa los datos ingresados.";

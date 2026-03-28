@@ -49,7 +49,13 @@ export function AuthProvider({ children }) {
       setUsuario(newUser);
    };
 
-   const logout = () => {
+   const logout = async () => {
+      try {
+         await authApi.logout();
+      } catch (_) {
+         // Si falla (token expirado, red caída), igual limpiamos local
+      }
+
       localStorage.removeItem("token");
       localStorage.removeItem("usuario");
       setToken(null);

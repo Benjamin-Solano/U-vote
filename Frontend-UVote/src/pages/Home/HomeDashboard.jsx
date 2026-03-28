@@ -24,6 +24,7 @@ import {
    getPollStatus,
    paginate,
 } from "../../utils/home.utils";
+import { extractList } from "../../utils/api.utils";
 
 import {
    StatCard,
@@ -89,13 +90,8 @@ export default function HomeDashboard() {
          setPollsError("");
 
          try {
-            const res =
-               typeof pollsApi.list === "function"
-                  ? await pollsApi.list()
-                  : await pollsApi.getAll();
-
-            const data = Array.isArray(res?.data) ? res.data : [];
-            if (!ignore) setPolls(data);
+            const res = await pollsApi.list({ size: 1000 });
+            if (!ignore) setPolls(extractList(res?.data));
          } catch (err) {
             if (!ignore) {
                setPolls([]);

@@ -26,6 +26,7 @@ const getVerifyErrorMessage = (err) => {
    const msg = getApiMessage(err);
 
    if (!err?.response) return "No se pudo conectar con el servidor. Intenta de nuevo.";
+   if (status === 429) return msg || "Demasiadas solicitudes. Espera unos segundos e intenta de nuevo.";
    if (status === 400) return msg || "Código inválido. Revisa e inténtalo de nuevo.";
    if (status === 403) return msg || "Demasiados intentos. Solicita un nuevo código.";
    if (status === 404) return msg || "El correo no existe.";
@@ -37,6 +38,7 @@ const getResendErrorMessage = (err) => {
    const msg = getApiMessage(err);
 
    if (!err?.response) return "No se pudo conectar con el servidor. Intenta de nuevo.";
+   if (status === 429) return msg || "Demasiadas solicitudes. Espera unos segundos e intenta de nuevo.";
    if (status === 400) return msg || "No se pudo reenviar el código. Revisa el correo.";
    if (status === 404) return msg || "El correo no existe.";
    return msg || "No se pudo reenviar el código.";

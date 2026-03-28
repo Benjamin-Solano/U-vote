@@ -17,6 +17,7 @@ import {
 import { useAuth } from "../../auth/useAuth";
 import { usersApi } from "../../api/users.api";
 import { pollsApi } from "../../api/polls.api";
+import { extractList } from "../../utils/api.utils";
 
 import "./profile.css";
 
@@ -168,8 +169,8 @@ export default function Profile() {
          setPollsLoading(true);
 
          try {
-            const res = await pollsApi.listByCreadorId(userId);
-            setPolls(res?.data ?? []);
+            const res = await pollsApi.listByCreadorId(userId, { size: 500 });
+            setPolls(extractList(res?.data));
          } catch (err) {
             const msg = normalizeError(err, "No se pudieron cargar tus encuestas.");
             setError(msg);
@@ -397,7 +398,7 @@ export default function Profile() {
                </div>
 
                <div className="uv-logout-wrap">
-                  <button className="uv-profile-logout" onClick={logout} type="button">
+                  <button className="uv-profile-logout" onClick={async () => { await logout(); navigate("/"); }} type="button">
                      <FiLogOut aria-hidden="true" />
                      Cerrar sesión
                   </button>

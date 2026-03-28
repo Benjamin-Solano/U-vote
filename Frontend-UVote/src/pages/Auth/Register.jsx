@@ -31,6 +31,7 @@ const getRegisterErrorMessage = (err) => {
    const status = err?.response?.status;
    const msg = err?.response?.data?.message || err?.message || "";
 
+   if (status === 429) return msg || "Demasiadas solicitudes. Espera unos segundos e intenta de nuevo.";
    if (status === 409) return msg || "El correo o usuario ya está registrado.";
    if (status === 400) return msg || "Revisa los datos del formulario e inténtalo de nuevo.";
    if (status === 403) return msg || "No tienes permisos para acceder a esta información.";

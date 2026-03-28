@@ -16,6 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import { pollsApi } from "../../api/polls.api";
+import { extractList } from "../../utils/api.utils";
 import { campusApi } from "../../api/campus.api";
 
 import "./pollExplorer.css";
@@ -73,10 +74,8 @@ export default function PollExplorer() {
          setLoading(true);
          setError("");
          try {
-            const res = typeof pollsApi.list === "function"
-               ? await pollsApi.list()
-               : await pollsApi.getAll();
-            if (!ignore) setPolls(Array.isArray(res?.data) ? res.data : []);
+            const res = await pollsApi.list({ size: 1000 });
+            if (!ignore) setPolls(extractList(res?.data));
          } catch (err) {
             if (!ignore) {
                setError(err?.response?.data?.message || "No se pudieron cargar las votaciones.");
