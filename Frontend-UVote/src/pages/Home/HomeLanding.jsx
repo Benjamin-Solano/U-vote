@@ -128,8 +128,8 @@ export default function HomeLanding() {
             </motion.div>
 
             <motion.div className="uv-paper-meta-row" variants={heroFade}>
-               <span>V.2.0.9 · N.º 404</span>
-               <span>San José, Costa Rica</span>
+               <span>V.2.1.6 · N.º 404</span>
+               <span>Universidad Nacional de Costa Rica</span>
                <span>Voto Estudiantil</span>
             </motion.div>
          </motion.header>
@@ -150,7 +150,7 @@ export default function HomeLanding() {
 
             <motion.p className="uv-paper-headline-lead" variants={heroFade}>
                U-Vote transforma la manera en que las comunidades universitarias organizan
-               sus procesos de decisión colectiva — desde elecciones estudiantiles hasta
+               sus procesos de decisión colectiva, desde elecciones estudiantiles hasta
                encuestas de retroalimentación, todo en una sola plataforma.
             </motion.p>
 
