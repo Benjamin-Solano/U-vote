@@ -344,7 +344,7 @@ export default function HomeDashboard() {
                            </h2>
                            <p>
                               Explora resultados, cambia de visualización y consulta
-                              el comportamiento de cada encuesta.
+                              el comportamiento de cada votación.
                            </p>
                         </div>
 

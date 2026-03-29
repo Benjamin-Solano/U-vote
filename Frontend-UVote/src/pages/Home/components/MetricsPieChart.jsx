@@ -59,9 +59,9 @@ export default function MetricsPieChart({ options, totalVotes }) {
                      style={{ background: segment.color }}
                   />
                   <div className="uv-metrics-legend-copy">
-                     <strong>{segment.label}</strong>
+                     <strong>{segment.label + "  "}</strong>
                      <small>
-                        {segment.votes} voto{segment.votes === 1 ? "" : "s"} ·{" "}
+                        {segment.votes}  voto{segment.votes === 1 ? "" : "s"} ·{" "}
                         {segment.percent}%
                      </small>
                   </div>
