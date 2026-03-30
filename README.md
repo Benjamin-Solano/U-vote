@@ -1,5 +1,5 @@
 <img src = "./imgs/bannerGithub.png"/>
-<h1 align="center"> 🫵 U-VOTE 🫵 </h1>
+<h1 align="center"> U-VOTE </h1>
 <p> pensada para facilitar la creación y participación en votaciones de forma clara y ordenada. Permite a los usuarios crear encuestas, votar de manera sencilla y visualizar los resultados en tiempo real, promoviendo la participación y la toma de decisiones colectivas. Su objetivo principal es ofrecer un espacio accesible y confiable donde comunidades, como estudiantes u organizaciones, puedan expresar su opinión y llegar a acuerdos de forma transparente.</p>
 
 
