@@ -1076,3 +1076,109 @@
    color: var(--uv-danger-color);
    box-shadow: 0 0 0 1px var(--uv-danger-border), 0 0 14px rgba(240, 90, 80, 0.40);
 }
+
+/* Labels */
+[data-theme="dark"] .uv-polls-scope .uv-label {
+   color: rgba(230, 225, 210, 0.52);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-req {
+   color: rgba(230, 225, 210, 0.38);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-mini-label {
+   color: rgba(230, 225, 210, 0.45);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-mini-label-time {
+   color: rgba(230, 225, 210, 0.62);
+}
+
+/* Comboboxes / selects — fondo y texto */
+[data-theme="dark"] .uv-polls-scope .uv-input,
+[data-theme="dark"] .uv-polls-scope .uv-textarea,
+[data-theme="dark"] .uv-polls-scope .uv-select {
+   background: var(--uv-bg-l2);
+   border-color: rgba(230, 225, 210, 0.16);
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-input:focus,
+[data-theme="dark"] .uv-polls-scope .uv-textarea:focus,
+[data-theme="dark"] .uv-polls-scope .uv-select:focus {
+   border-color: rgba(230, 225, 210, 0.4);
+}
+
+/* Opciones del dropdown nativo */
+[data-theme="dark"] .uv-polls-scope .uv-select option {
+   background: var(--uv-bg-l2);
+   color: var(--uv-ink);
+}
+
+/* Ícono dentro del select-wrap */
+[data-theme="dark"] .uv-polls-scope .uv-select-icon {
+   color: rgba(230, 225, 210, 0.42);
+}
+
+/* Nota académica */
+[data-theme="dark"] .uv-polls-scope .uv-academic-note {
+   background: rgba(230, 225, 210, 0.04);
+   border-left-color: rgba(230, 225, 210, 0.18);
+}
+
+/* Date hints */
+[data-theme="dark"] .uv-polls-scope .uv-date-hint {
+   color: rgba(230, 225, 210, 0.5);
+}
+
+/* Option card head separator */
+[data-theme="dark"] .uv-polls-scope .uv-option-head {
+   border-bottom-color: rgba(230, 225, 210, 0.1);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-option-idx {
+   color: rgba(230, 225, 210, 0.42);
+}
+
+/* Excel / dropzone text */
+[data-theme="dark"] .uv-polls-scope .uv-excel-empty {
+   color: rgba(230, 225, 210, 0.52);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-excel-sub {
+   color: rgba(230, 225, 210, 0.52);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-excel-sub2 {
+   color: rgba(230, 225, 210, 0.38);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-excel-file-sub {
+   color: rgba(230, 225, 210, 0.48);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-excel-note {
+   color: rgba(230, 225, 210, 0.48);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-upload-chip span {
+   color: rgba(230, 225, 210, 0.42);
+}
+
+/* Dropzone text */
+[data-theme="dark"] .uv-polls-scope .uv-dropzone-empty {
+   color: rgba(230, 225, 210, 0.55);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-dropzone-sub {
+   color: rgba(230, 225, 210, 0.5);
+}
+
+[data-theme="dark"] .uv-polls-scope .uv-dropzone-sub2 {
+   color: rgba(230, 225, 210, 0.38);
+}
+
+/* Card head separator */
+[data-theme="dark"] .uv-polls-scope .uv-card-head {
+   border-bottom-color: rgba(230, 225, 210, 0.1);
+}
