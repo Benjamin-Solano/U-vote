@@ -703,3 +703,140 @@
    .uv-explorer-sk-badge,
    .uv-explorer-sk-line { animation: none; }
 }
+
+/* =========================================================
+   Dark mode overrides
+   ========================================================= */
+
+[data-theme="dark"] .uv-explorer-mh-kicker {
+   color: rgba(230, 225, 210, 0.48);
+}
+
+[data-theme="dark"] .uv-explorer-mh-sub {
+   color: rgba(230, 225, 210, 0.5);
+}
+
+[data-theme="dark"] .uv-explorer-mh-meta {
+   color: rgba(230, 225, 210, 0.42);
+}
+
+[data-theme="dark"] .uv-explorer-sidebar {
+   background: var(--uv-bg-l1);
+}
+
+[data-theme="dark"] .uv-explorer-label,
+[data-theme="dark"] .uv-explorer-side-title {
+   color: rgba(230, 225, 210, 0.5);
+}
+
+[data-theme="dark"] .uv-explorer-clear-btn,
+[data-theme="dark"] .uv-explorer-clear-main {
+   color: rgba(230, 225, 210, 0.58);
+   border-color: rgba(230, 225, 210, 0.14);
+}
+
+[data-theme="dark"] .uv-explorer-clear-btn:hover,
+[data-theme="dark"] .uv-explorer-clear-main:hover {
+   color: var(--uv-ink);
+   border-color: rgba(230, 225, 210, 0.28);
+}
+
+/* Combobox / selects */
+[data-theme="dark"] .uv-explorer-input,
+[data-theme="dark"] .uv-explorer-select {
+   background: var(--uv-bg-l2);
+   border-color: rgba(230, 225, 210, 0.16);
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-explorer-input::placeholder {
+   color: rgba(230, 225, 210, 0.35);
+}
+
+[data-theme="dark"] .uv-explorer-input:focus,
+[data-theme="dark"] .uv-explorer-select:focus {
+   border-color: rgba(230, 225, 210, 0.32);
+   box-shadow: 0 0 0 2px rgba(230, 225, 210, 0.07);
+}
+
+[data-theme="dark"] .uv-explorer-select option {
+   background: var(--uv-bg-l2);
+   color: var(--uv-ink);
+}
+
+[data-theme="dark"] .uv-explorer-search-icon,
+[data-theme="dark"] .uv-explorer-select-icon {
+   color: rgba(230, 225, 210, 0.42);
+}
+
+/* Status buttons */
+[data-theme="dark"] .uv-explorer-status-btn {
+   background: rgba(40, 39, 36, 0.6);
+   border-color: rgba(230, 225, 210, 0.14);
+   color: rgba(230, 225, 210, 0.55);
+}
+
+[data-theme="dark"] .uv-explorer-status-btn:hover {
+   background: rgba(60, 58, 54, 0.8);
+   color: var(--uv-ink);
+}
+
+/* Side chips */
+[data-theme="dark"] .uv-explorer-side-chip {
+   background: rgba(40, 39, 36, 0.5);
+   border-color: rgba(230, 225, 210, 0.1);
+   color: rgba(230, 225, 210, 0.72);
+}
+
+[data-theme="dark"] .uv-explorer-side-chip:hover {
+   background: rgba(60, 58, 54, 0.85);
+   border-color: rgba(230, 225, 210, 0.2);
+}
+
+[data-theme="dark"] .uv-explorer-side-empty {
+   color: rgba(230, 225, 210, 0.42);
+}
+
+/* Applied filter chips */
+[data-theme="dark"] .uv-explorer-applied-label {
+   color: rgba(230, 225, 210, 0.42);
+}
+
+[data-theme="dark"] .uv-explorer-filter-chip {
+   background: rgba(40, 39, 36, 0.6);
+   border-color: rgba(230, 225, 210, 0.14);
+}
+
+/* Cards */
+[data-theme="dark"] .uv-explorer-card {
+   background: var(--uv-bg-l1);
+}
+
+[data-theme="dark"] .uv-explorer-card:hover {
+   background: var(--uv-hover-bg);
+}
+
+[data-theme="dark"] .uv-explorer-card-campus {
+   color: rgba(230, 225, 210, 0.38);
+}
+
+[data-theme="dark"] .uv-explorer-card--closed .uv-explorer-card-body h3 {
+   color: rgba(230, 225, 210, 0.48);
+}
+
+[data-theme="dark"] .uv-explorer-card-body p {
+   color: rgba(230, 225, 210, 0.6);
+}
+
+[data-theme="dark"] .uv-explorer-card-meta span {
+   color: rgba(230, 225, 210, 0.48);
+}
+
+[data-theme="dark"] .uv-explorer-card-footer small {
+   color: rgba(230, 225, 210, 0.4);
+}
+
+/* Empty state */
+[data-theme="dark"] .uv-explorer-empty p {
+   color: rgba(230, 225, 210, 0.58);
+}

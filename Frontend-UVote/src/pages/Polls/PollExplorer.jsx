@@ -173,7 +173,7 @@ export default function PollExplorer() {
    const groupedCampus = useMemo(() => {
       const map = new Map();
       filteredPolls.forEach((poll) => {
-         const key = poll?.campusNombre || "Sin campus";
+         const key = poll?.campusNombre || "No Obligatorio";
          map.set(key, (map.get(key) || 0) + 1);
       });
       return Array.from(map.entries()).map(([name, count]) => ({ name, count }));
@@ -182,7 +182,7 @@ export default function PollExplorer() {
    const groupedCarrera = useMemo(() => {
       const map = new Map();
       filteredPolls.forEach((poll) => {
-         const key = poll?.carreraNombre || "Sin carrera";
+         const key = poll?.carreraNombre || "No Obligatorio";
          map.set(key, (map.get(key) || 0) + 1);
       });
       return Array.from(map.entries()).map(([name, count]) => ({ name, count }));
@@ -213,8 +213,8 @@ export default function PollExplorer() {
                </p>
                <div className="uv-explorer-mh-rule uv-explorer-mh-rule--double" />
                <div className="uv-explorer-mh-meta">
-                  <span>Buscador de Sufragios</span>
-                  <span>San José, Costa Rica</span>
+                  <span>Sufragios</span>
+                  <span>Universidad Nacional de Costa Rica</span>
                   <span>{loading ? "Cargando…" : `${filteredPolls.length} resultado${filteredPolls.length !== 1 ? "s" : ""}`}</span>
                </div>
             </div>
@@ -431,7 +431,7 @@ export default function PollExplorer() {
                                     {status.label}
                                  </span>
                                  <span className="uv-explorer-card-campus">
-                                    {poll?.campusNombre || "Sin campus"}
+                                    {poll?.campusNombre || "No Obligatorio"}
                                  </span>
                               </div>
 
@@ -445,8 +445,8 @@ export default function PollExplorer() {
                                     {poll?.descripcion?.trim() ? poll.descripcion : "Votación sin descripción."}
                                  </p>
                                  <div className="uv-explorer-card-meta">
-                                    <span><FiBookOpen />{poll?.carreraNombre || "Sin carrera"}</span>
-                                    <span><FiMapPin />{poll?.campusNombre || "Sin campus"}</span>
+                                    <span><FiBookOpen />{poll?.carreraNombre || "No Obligatorio"}</span>
+                                    <span><FiMapPin />{poll?.campusNombre || "No Obligatorio"}</span>
                                  </div>
                               </div>
 

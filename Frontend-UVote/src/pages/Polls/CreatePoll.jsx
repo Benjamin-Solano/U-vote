@@ -1072,7 +1072,7 @@ export default function CreatePoll() {
                            disabled={saving || loadingCampus}
                         >
                            <option value="">
-                              {loadingCampus ? "Cargando campus..." : "Sin campus"}
+                              {loadingCampus ? "Cargando campus..." : "No Obligatorio"}
                            </option>
                            {campusOptions.map((campus) => (
                               <option key={campus.id} value={campus.id}>
@@ -1095,10 +1095,10 @@ export default function CreatePoll() {
                         >
                            <option value="">
                               {!campusId
-                                 ? "Sin carrera"
+                                 ? "No Obligatorio"
                                  : loadingCarreras
                                  ? "Cargando carreras..."
-                                 : "Sin carrera"}
+                                 : "No Obligatorio"}
                            </option>
                            {carreraOptions.map((item) => (
                               <option key={item.campusCarreraId} value={item.carreraId}>
@@ -1115,7 +1115,7 @@ export default function CreatePoll() {
                      <FiInfo />
                   </div>
                   <div className="uv-academic-note-content">
-                     Si dejas <strong>Sin campus</strong> y <strong>Sin carrera</strong>, la votación quedará disponible
+                     Si dejas <strong>No Obligatorio</strong> en campus y carrera, la votación quedará disponible
                      para cualquier estudiante, sin importar su campus o carrera.
                   </div>
                </div>
