@@ -127,6 +127,9 @@
 }
 
 .uv-polls-scope .uv-btn-primary:hover {
+   background: var(--uv-ink);
+   border-color: var(--uv-ink);
+   color: var(--uv-bg-page);
    opacity: 0.88;
 }
 
@@ -412,9 +415,9 @@
 }
 
 .uv-polls-scope .uv-badge--closed {
-   border-color: rgba(48, 47, 44, 0.18);
-   background: rgba(48, 47, 44, 0.06);
-   color: rgba(48, 47, 44, 0.5);
+   border-color: var(--uv-badge-closed-border);
+   background: var(--uv-badge-closed-bg);
+   color: var(--uv-badge-closed-color);
 }
 
 /* =========================================================

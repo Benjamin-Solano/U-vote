@@ -52,9 +52,9 @@
    --uv-badge-pending-bg:     rgba(160, 100, 5, 0.09);
    --uv-badge-pending-border: rgba(160, 100, 5, 0.45);
 
-   --uv-badge-closed-color:   rgba(48, 47, 44, 0.48);
-   --uv-badge-closed-bg:      rgba(48, 47, 44, 0.06);
-   --uv-badge-closed-border:  rgba(48, 47, 44, 0.18);
+   --uv-badge-closed-color:   rgba(160, 0, 0, 0.82);
+   --uv-badge-closed-bg:      rgba(160, 0, 0, 0.06);
+   --uv-badge-closed-border:  rgba(160, 0, 0, 0.35);
 
    /* --- Alertas / Peligro --- */
    --uv-danger-color:  rgba(160, 0, 0, 0.82);
@@ -124,9 +124,9 @@
    --uv-badge-pending-bg:     rgba(240, 184, 67, 0.14);
    --uv-badge-pending-border: rgba(240, 184, 67, 0.55);
 
-   --uv-badge-closed-color:   rgba(232, 227, 214, 0.38);
-   --uv-badge-closed-bg:      rgba(232, 227, 214, 0.06);
-   --uv-badge-closed-border:  rgba(232, 227, 214, 0.14);
+   --uv-badge-closed-color:   rgba(240, 90, 80, 0.92);
+   --uv-badge-closed-bg:      rgba(240, 90, 80, 0.12);
+   --uv-badge-closed-border:  rgba(240, 90, 80, 0.40);
 
    /* --- Alertas --- */
    --uv-danger-color:  rgba(240, 90, 80, 0.92);

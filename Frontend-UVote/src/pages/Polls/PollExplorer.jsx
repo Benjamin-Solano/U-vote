@@ -146,8 +146,8 @@ export default function PollExplorer() {
          return (
             (!q || (poll?.nombre || "").toLowerCase().includes(q)) &&
             (!selectedStatus || status.key === selectedStatus) &&
-            (!selectedCampusName || (poll?.campusNombre || "").toLowerCase() === selectedCampusName.toLowerCase()) &&
-            (!selectedCarreraName || (poll?.carreraNombre || "").toLowerCase() === selectedCarreraName.toLowerCase())
+            (!selectedCampusName || (poll?.campusNombre || "No Obligatorio").toLowerCase() === selectedCampusName.toLowerCase()) &&
+            (!selectedCarreraName || (poll?.carreraNombre || "No Obligatorio").toLowerCase() === selectedCarreraName.toLowerCase())
          );
       });
    }, [polls, search, selectedStatus, selectedCampusName, selectedCarreraName]);

@@ -247,8 +247,8 @@
 /* Cerradas */
 .uv-explorer-status-btn--closed.is-active {
    background: var(--uv-badge-closed-bg);
-   color: rgba(48, 47, 44, 0.62);
-   border-color: rgba(48, 47, 44, 0.2);
+   color: var(--uv-badge-closed-color);
+   border-color: var(--uv-badge-closed-border);
 }
 
 /* ---- Search & select ---- */
@@ -777,8 +777,33 @@
 }
 
 [data-theme="dark"] .uv-explorer-status-btn:hover {
-   background: rgba(60, 58, 54, 0.8);
-   color: var(--uv-ink);
+   background: rgba(230, 225, 210, 0.1);
+   border-color: rgba(230, 225, 210, 0.28);
+   color: #e8e3d6;
+}
+
+[data-theme="dark"] .uv-explorer-status-btn--open.is-active:hover {
+   background: rgba(82, 201, 138, 0.22);
+   border-color: rgba(82, 201, 138, 0.55);
+   color: #52c98a;
+}
+
+[data-theme="dark"] .uv-explorer-status-btn--pending.is-active:hover {
+   background: var(--uv-badge-pending-bg);
+   border-color: var(--uv-badge-pending-border);
+   color: var(--uv-badge-pending-color);
+}
+
+[data-theme="dark"] .uv-explorer-status-btn--closed.is-active:hover {
+   background: var(--uv-badge-closed-bg);
+   border-color: var(--uv-badge-closed-border);
+   color: var(--uv-badge-closed-color);
+}
+
+[data-theme="dark"] .uv-explorer-status-btn--all.is-active:hover {
+   background: var(--uv-ink);
+   border-color: var(--uv-ink);
+   color: var(--uv-bg-page);
 }
 
 /* Side chips */
@@ -805,6 +830,13 @@
 [data-theme="dark"] .uv-explorer-filter-chip {
    background: rgba(40, 39, 36, 0.6);
    border-color: rgba(230, 225, 210, 0.14);
+   color: rgba(230, 225, 210, 0.8);
+}
+
+[data-theme="dark"] .uv-explorer-filter-chip:hover {
+   background: rgba(230, 225, 210, 0.14);
+   border-color: rgba(230, 225, 210, 0.3);
+   color: #e8e3d6;
 }
 
 /* Cards */
