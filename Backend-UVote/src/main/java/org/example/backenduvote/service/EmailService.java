@@ -15,15 +15,15 @@ import java.util.Map;
 public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
-    private static final String SENDGRID_URL = "https://api.sendgrid.com/v3/mail/send";
+    private static final String RESEND_URL = "https://api.resend.com/emails";
 
     private final RestTemplate restTemplate;
 
     @Value("${app.mail.from}")
     private String from;
 
-    @Value("${sendgrid.api-key}")
-    private String sendGridApiKey;
+    @Value("${resend.api-key}")
+    private String resendApiKey;
 
     public EmailService() {
         this.restTemplate = new RestTemplate();
@@ -41,45 +41,34 @@ public class EmailService {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(sendGridApiKey);
+            headers.setBearerAuth(resendApiKey);
 
             Map<String, Object> payload = Map.of(
-                    "personalizations", List.of(
-                            Map.of(
-                                    "to", List.of(
-                                            Map.of("email", to)
-                                    )
-                            )
-                    ),
-                    "from", Map.of("email", from),
+                    "from", from,
+                    "to", List.of(to),
                     "subject", subject,
-                    "content", List.of(
-                            Map.of(
-                                    "type", "text/plain",
-                                    "value", body
-                            )
-                    )
+                    "text", body
             );
 
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
 
             ResponseEntity<String> response = restTemplate.exchange(
-                    SENDGRID_URL,
+                    RESEND_URL,
                     HttpMethod.POST,
                     request,
                     String.class
             );
 
             if (!response.getStatusCode().is2xxSuccessful()) {
-                log.error("SendGrid respondió con estado {} para {}", response.getStatusCode(), to);
-                throw new RuntimeException("Error enviando correo con SendGrid");
+                log.error("Resend respondió con estado {} para {}", response.getStatusCode(), to);
+                throw new RuntimeException("Error enviando correo con Resend");
             }
 
             log.info("Correo enviado correctamente a {}", to);
 
         } catch (RestClientResponseException e) {
-            log.error("Error SendGrid enviando correo a {}. Status: {} Body: {}",
-                    to, e.getRawStatusCode(), e.getResponseBodyAsString(), e);
+            log.error("Error Resend enviando correo a {}. Status: {} Body: {}",
+                    to, e.getStatusCode(), e.getResponseBodyAsString(), e);
             throw new RuntimeException("Error enviando correo", e);
         } catch (Exception e) {
             log.error("Error enviando correo a {} desde {}", to, from, e);
