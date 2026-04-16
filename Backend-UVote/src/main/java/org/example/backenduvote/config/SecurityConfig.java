@@ -39,7 +39,9 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "https://u-vote-three.vercel.app",
-                "https://u-vote-git-main-benjaminsolanos-projects.vercel.app"
+                "https://u-vote-git-main-benjaminsolanos-projects.vercel.app",
+                "https://www.uvotecr.com",
+                "https://uvotecr.com"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of(
