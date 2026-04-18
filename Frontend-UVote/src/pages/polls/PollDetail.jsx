@@ -140,13 +140,9 @@ export default function PollDetail() {
       return results.reduce((acc, r) => acc + Number(r.votos || 0), 0);
    }, [results]);
 
-   // Dark mode: cream/paper shades · Light mode: earthy ink tones
    const CHART_COLORS = useMemo(
-      () =>
-         theme === "dark"
-            ? ["#c8c2ae", "#a89e8e", "#d4c8b4", "#b4a896", "#9e9282", "#c2b8a2", "#8e8478", "#bab0a0"]
-            : ["#3d6b59", "#7c5c38", "#3a5478", "#6e3d5a", "#5a6e3a", "#783a3a", "#3a6e70", "#70503a"],
-      [theme]
+      () => ["#3d6b59", "#7c5c38", "#3a5478", "#6e3d5a", "#5a6e3a", "#783a3a", "#3a6e70", "#70503a"],
+      []
    );
 
    const chartData = useMemo(() => {

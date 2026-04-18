@@ -181,6 +181,9 @@
 }
 
 .uv-polldetail-scope .uv-btn-dark:hover {
+   background: var(--uv-ink);
+   border-color: var(--uv-ink);
+   color: var(--uv-bg-page);
    opacity: 0.88;
 }
 
@@ -1570,6 +1573,7 @@
 [data-theme="dark"] .uv-polldetail-scope .uv-vote-btn-disabled-msg {
    background: rgba(232, 227, 214, 0.12);
    border-color: rgba(232, 227, 214, 0.12);
+   color: rgba(232, 227, 214, 0.65);
 }
 
 /* State cards */
@@ -1793,4 +1797,8 @@
 
 [data-theme="dark"] .uv-polldetail-scope .recharts-text {
    fill: rgba(232, 227, 214, 0.72);
+}
+
+[data-theme="dark"] .uv-polldetail-scope .recharts-rectangle.recharts-tooltip-cursor {
+   fill: rgba(232, 227, 214, 0.06);
 }
