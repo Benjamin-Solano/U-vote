@@ -80,8 +80,8 @@ export default function Login() {
          errs.correo = "Campo obligatorio. Ingresa tu correo institucional.";
       } else if (!emailRegex.test(correoNorm)) {
          errs.correo = "Formato de correo inválido.";
-      } else if (!/@est\.una\.ac\.cr$/i.test(correoNorm)) {
-         errs.correo = "Debes usar tu correo institucional @est.una.ac.cr.";
+      } else if (!/@est\.una\.ac\.cr$|@una\.cr$/i.test(correoNorm)) {
+         errs.correo = "Debes usar tu correo institucional @est.una.ac.cr o @una.cr.";
       } else if (correoNorm.length > 100) {
          errs.correo = "Máximo 100 caracteres.";
       }
@@ -252,7 +252,7 @@ export default function Login() {
                         <input
                            type="email"
                            name="correo"
-                           placeholder="nombre.apellido1.apellido2@est.una.ac.cr"
+                           placeholder="correo@est.una.ac.cr o correo@una.cr"
                            value={form.correo}
                            onChange={onChange}
                            onBlur={onBlur}

@@ -66,18 +66,19 @@ export default function Navbar() {
                   <span className="uv-link-label">Inicio</span>
                </NavLink>
 
-               <NavLink to="/encuestas/buscar" className={linkClass}>
-                  <FiCompass />
-                  <span className="uv-link-label">Explorar</span>
-               </NavLink>
+               {isAuthenticated && (
+                  <NavLink to="/encuestas/buscar" className={linkClass}>
+                     <FiCompass />
+                     <span className="uv-link-label">Explorar</span>
+                  </NavLink>
+               )}
 
-               <NavLink
-                  to={isAuthenticated ? "/encuestas/crear" : "/login"}
-                  className={linkClass}
-               >
-                  <FiPlusCircle />
-                  <span className="uv-link-label">Crear Votación</span>
-               </NavLink>
+               {isAuthenticated && (
+                  <NavLink to="/encuestas/crear" className={linkClass}>
+                     <FiPlusCircle />
+                     <span className="uv-link-label">Crear Votación</span>
+                  </NavLink>
+               )}
 
                {!isAuthenticated ? (
                   <NavLink
